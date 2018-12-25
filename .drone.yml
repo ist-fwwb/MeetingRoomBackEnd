@@ -1,0 +1,7 @@
+pipeline:
+  build: 
+    image: registry.cn-hangzhou.aliyuncs.com/acs/maven
+    commands:
+      - mvn clean package -DskipTests
+    volumes:
+      - /root/maven/repository:/usr/share/maven/ref
