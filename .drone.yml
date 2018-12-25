@@ -6,3 +6,11 @@ pipeline:
     volumes:
       - /root/maven/repository:/usr/share/maven/ref
       - /root/maven/settings.xml:/usr/share/maven/conf/settings.xml
+  
+  publish:
+    image: plugins/docker
+    settings:
+      username: ${DOCKER_USERNAME}
+      password: ${DOCKER_PASSWORD}
+      repo: registry.cn-shenzhen.aliyuncs.com/pipipan/meetingroom
+      tags: latest
