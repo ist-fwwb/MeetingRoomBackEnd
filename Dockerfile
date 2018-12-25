@@ -1,4 +1,4 @@
-FROM java:8
+FROM registry.cn-shenzhen.aliyuncs.com/javajs/java
 VOLUME /tmp
 RUN mkdir /app
 ADD target/meetingroom-core-0.0.1-SNAPSHOT.jar /app/app.jar
