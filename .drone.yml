@@ -9,8 +9,8 @@ pipeline:
   
   publish:
     image: plugins/docker
-    settings:
-      username: ${DOCKER_USERNAME}
-      password: ${DOCKER_PASSWORD}
-      repo: registry.cn-shenzhen.aliyuncs.com/pipipan/meetingroom
-      tags: v1
+    secret: [ docker_username, docker_password ]
+    username: ${DOCKER_USERNAME}
+    password: ${DOCKER_PASSWORD}
+    repo: registry.cn-shenzhen.aliyuncs.com/pipipan/meetingroom
+    tags: latest
