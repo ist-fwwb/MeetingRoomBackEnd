@@ -13,3 +13,4 @@ pipeline:
       username: ${DOCKER_USERNAME}
       password: ${DOCKER_PASSWORD}
       repo: registry.cn-shenzhen.aliyuncs.com/pipipan/meetingroom
+      tags: v1
