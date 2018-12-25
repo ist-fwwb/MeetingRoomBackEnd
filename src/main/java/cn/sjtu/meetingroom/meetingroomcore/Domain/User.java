@@ -4,10 +4,15 @@ import cn.sjtu.meetingroom.meetingroomcore.Util.Type;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.Map;
+
 @Document
 public class User {
     @Id
     String id;
+    String enterpriceId;
+    String phone;
+    String password;
     String name;
     Type type;
     Byte[] faceFile;
@@ -52,4 +57,30 @@ public class User {
     public void setFeatureFile(Byte[] featureFile) {
         this.featureFile = featureFile;
     }
+
+    public String getEnterpriceId() {
+        return enterpriceId;
+    }
+
+    public void setEnterpriceId(String enterpriceId) {
+        this.enterpriceId = enterpriceId;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+
 }
