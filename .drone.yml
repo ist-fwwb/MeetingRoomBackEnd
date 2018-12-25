@@ -5,3 +5,4 @@ pipeline:
       - mvn clean package -DskipTests
     volumes:
       - /root/maven/repository:/usr/share/maven/ref
+      - /root/maven/settings.xml:/usr/share/maven/conf/settings.xml
