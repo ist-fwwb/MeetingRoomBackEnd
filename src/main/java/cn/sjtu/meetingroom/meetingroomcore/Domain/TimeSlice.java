@@ -16,7 +16,7 @@ public class TimeSlice {
 
     String roomId;
     List<String> timeSlice;
-    Date date;
+    String date;
 
     public TimeSlice(){
         List<String> occupied = new ArrayList<>();
@@ -52,11 +52,11 @@ public class TimeSlice {
         this.timeSlice = timeSlice;
     }
 
-    public Date getDate() {
+    public String getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(String date) {
         this.date = date;
     }
 }
