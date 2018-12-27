@@ -19,3 +19,6 @@ pipeline:
     when:
         branch: master
         status: success
+  services:
+    mongodb:
+      image: registry.cn-shenzhen.aliyuncs.com/sessionboy/mongo:v1

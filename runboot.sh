@@ -1,1 +1,1 @@
-java -Djava.security.egd=file:/dev/./urandom -jar /app/app.jar --spring.config.location=classpath:/application-product.properties
+java -Djava.security.egd=file:/dev/./urandom -jar /app/app.jar
