@@ -26,13 +26,10 @@ public class InitTimeSliceApplicationRunner implements ApplicationRunner {
     TimeSliceRepository timeSliceRepository;
     @Autowired
     TimeSliceFactory timeSliceFactory;
-    @Autowired
-    MeetingRoomFactory meetingRoomFactory;
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
     @Override
     public void run(ApplicationArguments args) throws Exception{
-        meetingRoomFactory.create();
         List<MeetingRoom> meetingRoomList = meetingRoomRepository.findAll();
         for (MeetingRoom meetingRoom : meetingRoomList){
             Date date = new Date();
