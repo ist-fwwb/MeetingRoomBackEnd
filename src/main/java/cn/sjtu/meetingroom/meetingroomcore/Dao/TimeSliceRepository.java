@@ -9,4 +9,6 @@ import java.util.List;
 @Repository
 public interface TimeSliceRepository extends MongoRepository<TimeSlice, String> {
     List<TimeSlice> findAllByDateLike(String date);
+    List<TimeSlice> findAllByDateLikeAndRoomIdLike(String date, String roomId);
+
 }
