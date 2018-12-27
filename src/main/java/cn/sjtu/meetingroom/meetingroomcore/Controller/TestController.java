@@ -7,17 +7,24 @@ import cn.sjtu.meetingroom.meetingroomcore.Domain.MeetingRoom;
 import cn.sjtu.meetingroom.meetingroomcore.Domain.TimeSlice;
 import cn.sjtu.meetingroom.meetingroomcore.Domain.User;
 import cn.sjtu.meetingroom.meetingroomcore.Service.UserService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.Map;
 
+@Validated
+@RequestMapping("/test")
 @RestController
+@Api(value = "Test", description = "测试TestController")
 public class TestController {
     @Autowired
     UserRepository userRepository;
@@ -31,6 +38,7 @@ public class TestController {
     UserService userService;
 
     @RequestMapping("/testMongoFindUser")
+    @ApiOperation(value = "查询个人信息接口",notes = "查询个人信息接口")
     public User testMongoFind(HttpServletRequest request){
         return userRepository.findByName("hahaha");
     }
