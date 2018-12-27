@@ -46,4 +46,16 @@ public class InitTimeSliceApplicationRunner implements ApplicationRunner {
     private boolean existTimeSlice(Calendar calendar, String id){
         return !timeSliceRepository.findAllByDateLikeAndRoomIdLike(sdf.format(calendar.getTime()), id).isEmpty();
     }
+
+    public void setMeetingRoomRepository(MeetingRoomRepository meetingRoomRepository) {
+        this.meetingRoomRepository = meetingRoomRepository;
+    }
+
+    public void setTimeSliceFactory(TimeSliceFactory timeSliceFactory) {
+        this.timeSliceFactory = timeSliceFactory;
+    }
+
+    public void setTimeSliceRepository(TimeSliceRepository timeSliceRepository) {
+        this.timeSliceRepository = timeSliceRepository;
+    }
 }

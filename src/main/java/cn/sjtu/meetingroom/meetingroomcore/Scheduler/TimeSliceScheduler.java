@@ -15,8 +15,6 @@ import java.util.List;
 
 @Component
 public class TimeSliceScheduler {
-    @Value("${timeSlice.totalDates}")
-    int totalDates;
     @Autowired
     TimeSliceRepository timeSliceRepository;
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -27,11 +25,23 @@ public class TimeSliceScheduler {
         calendar.setTime(new Date());
         calendar.add(Calendar.DATE, -1);
         List<TimeSlice> timeSliceList = timeSliceRepository.findAllByDateLike(sdf.format(calendar.getTime()));
-        calendar.add(Calendar.DATE, totalDates);
+        calendar.add(Calendar.DATE, 8);
+        updateTimeSlice(timeSliceList, calendar);
+    }
+
+    public void updateTimeSlice(List<TimeSlice> timeSliceList, Calendar calendar){
         for (TimeSlice timeSlice : timeSliceList){
             timeSlice.getTimeSlice().replaceAll((x) -> null);
             timeSlice.setDate(sdf.format(calendar.getTime()));
             timeSliceRepository.save(timeSlice);
         }
+    }
+
+    public void setTimeSliceRepository(TimeSliceRepository timeSliceRepository) {
+        this.timeSliceRepository = timeSliceRepository;
+    }
+
+    public void setSdf(SimpleDateFormat sdf) {
+        this.sdf = sdf;
     }
 }
