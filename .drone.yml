@@ -13,12 +13,21 @@ pipeline:
     commands:
         - docker login --username=$DOCKER_USERNAME --password=$DOCKER_PASSWORD registry.cn-shenzhen.aliyuncs.com/pipipan/meetingroom
         - docker build -t registry.cn-shenzhen.aliyuncs.com/pipipan/meetingroom:master -f Dockerfile .
-        - docker push registry.cn-shenzhen.aliyuncs.com/pipipan/meetingroom:master
+#        - docker push registry.cn-shenzhen.aliyuncs.com/pipipan/meetingroom:master
     volumes:
         - /var/run/docker.sock:/var/run/docker.sock
     when:
         branch: master
         status: success
+
+  deploy:
+    image: appleboy/drone-ssh
+    host: 129.211.119.51
+    secrets: [ssh_username, ssh_password]
+    port: 22
+    script:
+      - /root/shell/deployment.sh
+
 services:
   mongodb:
     image: registry.cn-shenzhen.aliyuncs.com/sessionboy/mongo:v1
