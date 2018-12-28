@@ -16,7 +16,6 @@ public class MeetingRoom {
     Size size;
     String location;
 
-
     public String getId() {
         return id;
     }

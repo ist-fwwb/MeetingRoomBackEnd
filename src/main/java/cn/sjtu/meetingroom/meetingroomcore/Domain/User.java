@@ -15,8 +15,8 @@ public class User {
     String password;
     String name;
     Type type;
-    Byte[] faceFile;
-    Byte[] featureFile;
+    byte[] faceFile;
+    byte[] featureFile;
 
     public String getId() {
         return id;
@@ -42,19 +42,19 @@ public class User {
         this.type = type;
     }
 
-    public Byte[] getFaceFile() {
+    public byte[] getFaceFile() {
         return faceFile;
     }
 
-    public void setFaceFile(Byte[] faceFile) {
+    public void setFaceFile(byte[] faceFile) {
         this.faceFile = faceFile;
     }
 
-    public Byte[] getFeatureFile() {
+    public byte[] getFeatureFile() {
         return featureFile;
     }
 
-    public void setFeatureFile(Byte[] featureFile) {
+    public void setFeatureFile(byte[] featureFile) {
         this.featureFile = featureFile;
     }
 

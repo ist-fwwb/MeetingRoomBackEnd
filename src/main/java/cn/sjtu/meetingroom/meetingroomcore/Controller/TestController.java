@@ -7,6 +7,7 @@ import cn.sjtu.meetingroom.meetingroomcore.Domain.MeetingRoom;
 import cn.sjtu.meetingroom.meetingroomcore.Domain.TimeSlice;
 import cn.sjtu.meetingroom.meetingroomcore.Domain.User;
 import cn.sjtu.meetingroom.meetingroomcore.Service.UserService;
+import cn.sjtu.meetingroom.meetingroomcore.Util.PageRequestFactory;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,17 +33,12 @@ public class TestController {
     MeetingRoomRepository meetingRoomRepository;
     @Autowired
     TimeSliceRepository timeSliceRepository;
+    @Autowired
+    PageRequestFactory pageRequestFactory;
 
     @Autowired
     @Qualifier("userServiceImp")
     UserService userService;
-
-    @RequestMapping("/testMongoFindUser")
-    @ApiOperation(value = "查询个人信息接口",notes = "查询个人信息接口")
-    public User testMongoFind(HttpServletRequest request){
-        return userRepository.findByName("hahaha");
-    }
-
 
     @RequestMapping("/testMongoSaveUser")
     public void testMongoSave(HttpServletRequest request){

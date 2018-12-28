@@ -15,6 +15,9 @@ public class Meeting {
 
     String heading;
     String description;
+    String location;
+    int startTime;
+    int endTime;
     String hostId;
     List<String> attendants;
     boolean needSignIn;
@@ -88,6 +91,30 @@ public class Meeting {
 
     public Type getType() {
         return type;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    public int getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(int startTime) {
+        this.startTime = startTime;
+    }
+
+    public int getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(int endTime) {
+        this.endTime = endTime;
     }
 
     public void setType(Type type) {
