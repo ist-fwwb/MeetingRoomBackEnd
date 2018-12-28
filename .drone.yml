@@ -14,7 +14,6 @@ pipeline:
         - docker login --username=$DOCKER_USERNAME --password=$DOCKER_PASSWORD registry.cn-shenzhen.aliyuncs.com/pipipan/meetingroom
         - docker build -t registry.cn-shenzhen.aliyuncs.com/pipipan/meetingroom:master -f Dockerfile .
         - docker push registry.cn-shenzhen.aliyuncs.com/pipipan/meetingroom:master
-        - docker images | grep meetingroom | gawk ' { print $3 } ' | xargs docker rmi
     volumes:
         - /var/run/docker.sock:/var/run/docker.sock
     when:
