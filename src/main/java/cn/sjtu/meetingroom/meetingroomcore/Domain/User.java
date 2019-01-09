@@ -18,6 +18,20 @@ public class User {
     String faceFile;
     String featureFile;
 
+    public User(String id, String enterpriceId, String phone, String password, String name, Type type, String faceFile, String featureFile) {
+        this.id = id;
+        this.enterpriceId = enterpriceId;
+        this.phone = phone;
+        this.password = password;
+        this.name = name;
+        this.type = type;
+        this.faceFile = faceFile;
+        this.featureFile = featureFile;
+    }
+
+    public User() {
+    }
+
     public String getId() {
         return id;
     }

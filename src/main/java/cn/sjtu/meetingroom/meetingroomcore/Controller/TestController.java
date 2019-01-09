@@ -14,12 +14,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Validated
@@ -61,4 +61,10 @@ public class TestController {
         TimeSlice timeSlice = new TimeSlice();
         System.out.println(timeSliceRepository.save(timeSlice).getId());
     }
+
+    @PostMapping("/")
+    public String testDuplicate(@RequestBody List<String> macroPath, @RequestParam(name="test") String name){
+        return name;
+    }
+
 }

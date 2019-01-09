@@ -52,8 +52,8 @@ public class UserController {
 
     @PutMapping("/{id}")
     @ApiOperation(value="modify a specified user's status")
-    public User modify(@PathVariable(name="id")String id, @RequestParam(name="type") Type type){
-        return userService.modifyType(id, type);
+    public User modify(@RequestBody User user){
+        return userService.modify(user);
     }
 
     @PostMapping("/login")

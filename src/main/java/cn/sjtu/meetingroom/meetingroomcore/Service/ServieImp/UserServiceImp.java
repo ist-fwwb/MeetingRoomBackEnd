@@ -26,9 +26,7 @@ public class UserServiceImp implements UserService {
     public User register(String enterpriseId, String phone, String password, String faceFile, String featureFile, String name){
         return userFactory.create(enterpriseId, phone, password, faceFile, featureFile, name);
     }
-    public User modifyType(String id, Type type){
-        User user = userRepository.findUserById(id);
-        user.setType(type);
+    public User modify(User user){
         return userRepository.save(user);
     }
     public User login(String phone, String password){

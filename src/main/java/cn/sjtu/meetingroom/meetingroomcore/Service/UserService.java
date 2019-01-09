@@ -11,6 +11,6 @@ public interface UserService {
     public Page<User> showAll(PageRequest pageRequest);
     public User showOne(String id);
     public User register(String enterpriseId, String phone, String password, String faceFile, String featureFile, String name);
-    public User modifyType(String id, Type type);
+    public User modify(User user);
     public User login(String phone, String password);
 }
