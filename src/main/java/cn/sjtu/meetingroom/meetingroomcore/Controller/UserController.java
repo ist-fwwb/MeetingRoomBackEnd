@@ -11,7 +11,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -39,10 +38,10 @@ public class UserController {
     @ApiOperation(value="registor a user")
     public User register(@RequestParam(name = "enterpriseId") String enterpriseId,
                          @RequestParam(name = "phone") String phone, @RequestParam(name ="password") String password,
-                         @RequestParam(name = "faceFile") MultipartFile faceFile,
-                         @RequestParam(name = "fetureFile") MultipartFile featureFile,
+                         @RequestParam(name = "faceFile") String faceFile,
+                         @RequestParam(name = "featureFile") String featureFile,
                          @RequestParam(name = "name") String name) throws Exception{
-        return userService.register(enterpriseId, phone, password, faceFile.getBytes(), featureFile.getBytes(), name);
+        return userService.register(enterpriseId, phone, password, faceFile, featureFile, name);
     }
 
     @GetMapping("/{id}")

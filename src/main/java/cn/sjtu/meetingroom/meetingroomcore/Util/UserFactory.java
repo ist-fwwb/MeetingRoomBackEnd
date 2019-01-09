@@ -10,7 +10,7 @@ public class UserFactory {
     @Autowired
     UserRepository userRepository;
 
-    public User create(String enterpriseId, String phone, String password, byte[] faceFile, byte[] featureFile, String name){
+    public User create(String enterpriseId, String phone, String password, String faceFile, String featureFile, String name){
         User user = new User();
         user.setName(name);
         user.setEnterpriceId(enterpriseId);

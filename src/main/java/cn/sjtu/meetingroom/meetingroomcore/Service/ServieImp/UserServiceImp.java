@@ -23,7 +23,7 @@ public class UserServiceImp implements UserService {
     public User showOne(String id){
         return userRepository.findUserById(id);
     }
-    public User register(String enterpriseId, String phone, String password, byte[] faceFile, byte[] featureFile, String name){
+    public User register(String enterpriseId, String phone, String password, String faceFile, String featureFile, String name){
         return userFactory.create(enterpriseId, phone, password, faceFile, featureFile, name);
     }
     public User modifyType(String id, Type type){
