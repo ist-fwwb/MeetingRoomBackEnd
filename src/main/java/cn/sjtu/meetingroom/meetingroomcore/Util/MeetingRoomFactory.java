@@ -19,8 +19,8 @@ public class MeetingRoomFactory {
     @Autowired
     TimeSliceFactory timeSliceFactory;
 
-    public MeetingRoom create(){
-        MeetingRoom meetingRoom = new MeetingRoom();
+    public MeetingRoom create(MeetingRoom meetingRoom){
+        meetingRoom.setId(null);
         meetingRoomRepository.save(meetingRoom);
         Calendar calendar = new GregorianCalendar();
         calendar.setTime(new Date());

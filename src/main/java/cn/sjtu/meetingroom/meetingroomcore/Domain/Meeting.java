@@ -1,5 +1,6 @@
 package cn.sjtu.meetingroom.meetingroomcore.Domain;
 
+import cn.sjtu.meetingroom.meetingroomcore.Util.MeetingType;
 import cn.sjtu.meetingroom.meetingroomcore.Util.Status;
 import cn.sjtu.meetingroom.meetingroomcore.Util.Type;
 import org.springframework.data.annotation.Id;
@@ -23,7 +24,7 @@ public class Meeting {
     boolean needSignIn;
     String attendantNum;  // a four digit number to attend the meeting
     Status status;
-    Type type;
+    MeetingType type;
 
     public String getId() {
         return id;
@@ -89,7 +90,7 @@ public class Meeting {
         this.status = status;
     }
 
-    public Type getType() {
+    public MeetingType getType() {
         return type;
     }
 
@@ -117,7 +118,7 @@ public class Meeting {
         this.endTime = endTime;
     }
 
-    public void setType(Type type) {
+    public void setType(MeetingType type) {
         this.type = type;
     }
 }

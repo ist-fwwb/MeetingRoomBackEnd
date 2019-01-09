@@ -7,7 +7,7 @@ import cn.sjtu.meetingroom.meetingroomcore.Domain.MeetingRoom;
 import cn.sjtu.meetingroom.meetingroomcore.Domain.TimeSlice;
 import cn.sjtu.meetingroom.meetingroomcore.Domain.User;
 import cn.sjtu.meetingroom.meetingroomcore.Service.UserService;
-import cn.sjtu.meetingroom.meetingroomcore.Util.PageRequestFactory;
+import cn.sjtu.meetingroom.meetingroomcore.Util.MeetingRoomUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +21,7 @@ import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 @Validated
 @RequestMapping("/test")
@@ -33,8 +34,6 @@ public class TestController {
     MeetingRoomRepository meetingRoomRepository;
     @Autowired
     TimeSliceRepository timeSliceRepository;
-    @Autowired
-    PageRequestFactory pageRequestFactory;
 
     @Autowired
     @Qualifier("userServiceImp")
@@ -50,9 +49,6 @@ public class TestController {
     @RequestMapping("/testMongoSaveMeetingRoom")
     public void testMongoSaveMeetingRoom(HttpServletRequest request){
         MeetingRoom meetingRoom = new MeetingRoom();
-        Map<String, String> map = new HashMap<>();
-        map.put("hhh", "hhh");
-        meetingRoom.setUtils(map);
         meetingRoomRepository.save(meetingRoom);
     }
 
@@ -63,8 +59,13 @@ public class TestController {
     }
 
     @PostMapping("/")
-    public String testDuplicate(@RequestBody List<String> macroPath, @RequestParam(name="test") String name){
-        return name;
+    public Set<String> testDuplicate(@RequestBody Set<String> macroPath, @RequestParam(name="test") String name){
+        return macroPath;
+    }
+
+    @GetMapping("/")
+    public MeetingRoomUtils[] test(MeetingRoomUtils[] macroPath, @RequestParam(name="test") String name){
+        return macroPath;
     }
 
 }

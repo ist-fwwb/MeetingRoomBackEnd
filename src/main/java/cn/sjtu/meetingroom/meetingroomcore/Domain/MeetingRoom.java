@@ -1,20 +1,31 @@
 package cn.sjtu.meetingroom.meetingroomcore.Domain;
 
+import cn.sjtu.meetingroom.meetingroomcore.Util.MeetingRoomUtils;
 import cn.sjtu.meetingroom.meetingroomcore.Util.Size;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Map;
+import java.util.Set;
 
 @Document
 public class MeetingRoom {
     @Id
     String id;
-
-    Map<String, String> utils;
+    Set<MeetingRoomUtils> utils;
     Size size;
     String location;
+
+    public MeetingRoom() {
+    }
+
+    public MeetingRoom(String id, Set<MeetingRoomUtils> utils, Size size, String location) {
+        this.id = id;
+        this.utils = utils;
+        this.size = size;
+        this.location = location;
+    }
 
     public String getId() {
         return id;
@@ -24,11 +35,11 @@ public class MeetingRoom {
         this.id = id;
     }
 
-    public Map<String, String> getUtils() {
+    public Set<MeetingRoomUtils> getUtils() {
         return utils;
     }
 
-    public void setUtils(Map<String, String> utils) {
+    public void setUtils(Set<MeetingRoomUtils> utils) {
         this.utils = utils;
     }
 

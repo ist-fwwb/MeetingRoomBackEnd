@@ -6,8 +6,4 @@ public enum Type {
     ORDINARY,
     SUPERIORY,
     ADMINISTOR,
-
-    //meeting type
-    COMMON,
-    URGECY
 }

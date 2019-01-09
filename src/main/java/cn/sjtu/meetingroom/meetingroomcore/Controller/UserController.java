@@ -2,8 +2,8 @@ package cn.sjtu.meetingroom.meetingroomcore.Controller;
 
 import cn.sjtu.meetingroom.meetingroomcore.Domain.User;
 import cn.sjtu.meetingroom.meetingroomcore.Service.UserService;
-import cn.sjtu.meetingroom.meetingroomcore.Util.PageRequestFactory;
 import cn.sjtu.meetingroom.meetingroomcore.Util.Type;
+import cn.sjtu.meetingroom.meetingroomcore.Util.Util;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,14 +23,13 @@ import java.util.List;
 public class UserController {
     @Autowired
     UserService userService;
-    @Autowired
-    PageRequestFactory pageRequestFactory;
     @GetMapping("/")
     @ApiOperation(value="get all of the user's detail information")
 
     public Page<User> showAll(@RequestParam(name="pageNumber") int pageNumber,
-                              @RequestParam(name="pageSize") int pageSize){
-        PageRequest pageRequest = pageRequestFactory.create(pageNumber, pageSize);
+                              @RequestParam(name="pageSize") int pageSize,
+                              @RequestParam(name="type", required = false) Type type){
+        PageRequest pageRequest = Util.createPageRequest(pageNumber, pageSize);
         return userService.showAll(pageRequest);
     }
 
