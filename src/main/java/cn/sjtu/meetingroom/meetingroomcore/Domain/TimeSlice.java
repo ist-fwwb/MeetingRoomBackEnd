@@ -19,13 +19,6 @@ public class TimeSlice {
     String date;
 
     public TimeSlice(){
-        List<String> occupied = new ArrayList<>();
-        // the slices of one day
-        int total = 24 * (60 / 15);
-        for (int i=0; i<total; ++i) {
-            occupied.add(null);
-        }
-        this.timeSlice = occupied;
     }
 
     public String getId() {

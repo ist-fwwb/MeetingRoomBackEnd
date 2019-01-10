@@ -2,6 +2,7 @@ package cn.sjtu.meetingroom.meetingroomcore.Domain;
 
 import cn.sjtu.meetingroom.meetingroomcore.Util.MeetingRoomUtils;
 import cn.sjtu.meetingroom.meetingroomcore.Util.Size;
+import io.swagger.annotations.ApiModelProperty;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -12,6 +13,7 @@ import java.util.Set;
 @Document
 public class MeetingRoom {
     @Id
+    @ApiModelProperty(hidden = true)
     String id;
     Set<MeetingRoomUtils> utils;
     Size size;

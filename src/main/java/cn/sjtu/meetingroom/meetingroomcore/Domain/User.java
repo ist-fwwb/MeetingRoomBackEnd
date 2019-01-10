@@ -1,6 +1,7 @@
 package cn.sjtu.meetingroom.meetingroomcore.Domain;
 
 import cn.sjtu.meetingroom.meetingroomcore.Util.Type;
+import io.swagger.annotations.ApiModelProperty;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -9,6 +10,7 @@ import java.util.Map;
 @Document
 public class User {
     @Id
+    @ApiModelProperty(hidden = true)
     String id;
     String enterpriceId;
     String phone;

@@ -3,28 +3,60 @@ package cn.sjtu.meetingroom.meetingroomcore.Domain;
 import cn.sjtu.meetingroom.meetingroomcore.Util.MeetingType;
 import cn.sjtu.meetingroom.meetingroomcore.Util.Status;
 import cn.sjtu.meetingroom.meetingroomcore.Util.Type;
+import io.swagger.annotations.ApiModelProperty;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import javax.xml.crypto.Data;
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 @Document
 public class Meeting {
     @Id
+    @ApiModelProperty(hidden = true)
     String id;
 
     String heading;
     String description;
+    String roomId;
+    Date date;
     String location;
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
     int startTime;
     int endTime;
     String hostId;
-    List<String> attendants;
+    Map<String, Date> attendants;
     boolean needSignIn;
     String attendantNum;  // a four digit number to attend the meeting
     Status status;
     MeetingType type;
+
+    public String getRoomId() {
+        return roomId;
+    }
+
+    public void setRoomId(String roomId) {
+        this.roomId = roomId;
+    }
+
+    public Map<String, Date> getAttendants() {
+        return attendants;
+    }
+
+    public void setAttendants(Map<String, Date> attendants) {
+        this.attendants = attendants;
+    }
 
     public String getId() {
         return id;
@@ -56,14 +88,6 @@ public class Meeting {
 
     public void setHostId(String hostId) {
         this.hostId = hostId;
-    }
-
-    public List<String> getAttendants() {
-        return attendants;
-    }
-
-    public void setAttendants(List<String> attendants) {
-        this.attendants = attendants;
     }
 
     public boolean isNeedSignIn() {

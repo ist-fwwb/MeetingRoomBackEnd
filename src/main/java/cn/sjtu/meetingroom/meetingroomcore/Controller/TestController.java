@@ -8,20 +8,23 @@ import cn.sjtu.meetingroom.meetingroomcore.Domain.TimeSlice;
 import cn.sjtu.meetingroom.meetingroomcore.Domain.User;
 import cn.sjtu.meetingroom.meetingroomcore.Service.UserService;
 import cn.sjtu.meetingroom.meetingroomcore.Util.MeetingRoomUtils;
+import com.sun.deploy.net.HttpResponse;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ResponseHeader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.swagger.readers.operation.ResponseHeaders;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 @Validated
 @RequestMapping("/test")
@@ -40,6 +43,7 @@ public class TestController {
     UserService userService;
 
     @RequestMapping("/testMongoSaveUser")
+    @ResponseHeader(name="head1",description="response head conf")
     public void testMongoSave(HttpServletRequest request){
         User test = new User();
         test.setName("hhh");
@@ -64,8 +68,10 @@ public class TestController {
     }
 
     @GetMapping("/")
-    public MeetingRoomUtils[] test(MeetingRoomUtils[] macroPath, @RequestParam(name="test") String name){
-        return macroPath;
+    public ResponseEntity<Date> test(MeetingRoomUtils[] macroPath, @RequestParam(name="test") String name){
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.set("hahah", "hhh");
+        return new ResponseEntity<>(null, httpHeaders, HttpStatus.OK);
     }
 
 }
