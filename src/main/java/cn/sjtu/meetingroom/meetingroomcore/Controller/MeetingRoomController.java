@@ -30,10 +30,11 @@ public class MeetingRoomController {
                                   @RequestParam(name="utils", required = false) MeetingRoomUtils[] utils,
                                   @RequestParam(name="size", required = false) Size size){
         PageRequest pageRequest = Util.createPageRequest(pageNumber, pageSize);
-        if (utils == null) return meetingRoomService.showAll(pageRequest);
-        else {
-            return meetingRoomService.findByUtils(Arrays.asList(utils), pageRequest);
-        }
+        Page<MeetingRoom> meetingRooms = meetingRoomService.showAll(pageRequest);
+        if (utils == null && size == null) return meetingRooms;
+        else if (utils == null) return meetingRoomService.findBySize(size, pageRequest);
+        else if (size == null) return meetingRoomService.findByUtils(Arrays.asList(utils), meetingRooms);
+        else return meetingRoomService.findByUtils(Arrays.asList(utils), meetingRoomService.findBySize(size, pageRequest));
     }
 
     @GetMapping("/{id}")
@@ -43,7 +44,7 @@ public class MeetingRoomController {
     }
 
     @PostMapping("/")
-    @ApiOperation(value="add a meetingroom")
+    @ApiOperation(value="add a meetingroom (id should be null)")
     public MeetingRoom add(@RequestBody MeetingRoom meetingRoom){
         return meetingRoomService.add(meetingRoom);
     }
