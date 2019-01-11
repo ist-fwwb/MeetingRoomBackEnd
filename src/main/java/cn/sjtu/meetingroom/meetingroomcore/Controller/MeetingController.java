@@ -26,17 +26,18 @@ public class MeetingController {
     MeetingService meetingService;
     @PostMapping("/")
     @ApiOperation("registor a meeting, StatusNum: { '200' : 'success', '400' : 'fail' }")
-    public ResponseEntity<Meeting> addMeeting(){
+    public ResponseEntity<Meeting> addMeeting(@RequestBody Meeting meeting){
+        Meeting res = meetingService.add(meeting);
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.set("StatusNum", "200");
-        return new ResponseEntity<Meeting>(null, responseHeaders, HttpStatus.OK);
+        return new ResponseEntity<Meeting>(res, responseHeaders, HttpStatus.OK);
     }
 
     @GetMapping("/")
     @ApiOperation("get all of the meeting through condition")
     public Page<Meeting> getMeeting(@RequestParam(name="pageNumber") int pageNumber,
                                     @RequestParam(name="pageSize") int pageSize,
-                                    @RequestParam(name="date") Date date,
+                                    @RequestParam(name="date") String date,
                                     @RequestParam(name="roomId") String roomId){
         PageRequest pageRequest = Util.createPageRequest(pageNumber, pageSize);
         Page<Meeting> meetings = meetingService.findByDateAndRoomId(date, roomId, pageRequest);
@@ -45,9 +46,11 @@ public class MeetingController {
 
     @PostMapping("/{attendantNum}/attendants")
     @ApiOperation("attendent to the meetign , StatusNum: { '200' : 'success', '400' : 'fail' }")
-    public ResponseEntity<Meeting> addend(@PathVariable(name = "attendantNum") String attendantNum){
+    public ResponseEntity<Meeting> attend(@PathVariable(name = "attendantNum") String attendantNum,
+                                          @RequestParam(name="userId") String userId){
+        Meeting res = meetingService.attend(attendantNum, userId);
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.set("StatusNum", "200");
-        return new ResponseEntity<Meeting>(null, responseHeaders, HttpStatus.OK);
+        return new ResponseEntity<Meeting>(res, responseHeaders, HttpStatus.OK);
     }
 }

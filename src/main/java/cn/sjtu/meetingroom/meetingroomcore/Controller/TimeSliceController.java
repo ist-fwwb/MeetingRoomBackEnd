@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @Validated
@@ -21,8 +22,10 @@ public class TimeSliceController {
     TimeSliceService timeSliceService;
 
     @GetMapping("/")
-    @ApiOperation(value="get the timeSlice's detail information through conditions")
-    public Page<TimeSlice> show(){
-        return null;
+    @ApiOperation(value="get the timeSlice's detail information through roomId and date")
+    public TimeSlice show(@RequestParam(name="date") String date,
+                          @RequestParam(name="roomId") String roomId){
+        return timeSliceService.show(date, roomId);
     }
+
 }

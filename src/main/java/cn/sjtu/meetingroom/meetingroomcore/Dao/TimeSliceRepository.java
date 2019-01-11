@@ -13,5 +13,6 @@ import java.util.List;
 public interface TimeSliceRepository extends MongoRepository<TimeSlice, String> {
     List<TimeSlice> findAllByDateLike(String date);
     List<TimeSlice> findAllByDateLikeAndRoomIdLike(String date, String roomId);
+    TimeSlice findTimeSliceByDateLikeAndRoomIdLike(String date, String roomId);
     Page<TimeSlice> findAllByDateLike(String date, Pageable pageable);
 }

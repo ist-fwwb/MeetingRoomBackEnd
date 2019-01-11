@@ -7,5 +7,7 @@ import org.springframework.data.domain.PageRequest;
 import java.util.Date;
 
 public interface MeetingService {
-    public Page<Meeting> findByDateAndRoomId(Date date, String id, PageRequest pageRequest);
+    public Page<Meeting> findByDateAndRoomId(String date, String id, PageRequest pageRequest);
+    public Meeting add(Meeting meeting);
+    public Meeting attend(String attendantNum, String userId);
 }

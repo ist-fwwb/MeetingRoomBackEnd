@@ -3,6 +3,7 @@ package cn.sjtu.meetingroom.meetingroomcore.Domain;
 import cn.sjtu.meetingroom.meetingroomcore.Util.MeetingType;
 import cn.sjtu.meetingroom.meetingroomcore.Util.Status;
 import cn.sjtu.meetingroom.meetingroomcore.Util.Type;
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
@@ -22,22 +23,16 @@ public class Meeting {
     String heading;
     String description;
     String roomId;
-    Date date;
+
+    @ApiModelProperty(notes = "yyyy-MM-dd")
+    String date;
     String location;
-
-    public Date getDate() {
-        return date;
-    }
-
-    public void setDate(Date date) {
-        this.date = date;
-    }
-
     int startTime;
     int endTime;
     String hostId;
     Map<String, Date> attendants;
     boolean needSignIn;
+    @ApiModelProperty(notes = "a four digit number")
     String attendantNum;  // a four digit number to attend the meeting
     Status status;
     MeetingType type;
@@ -144,5 +139,12 @@ public class Meeting {
 
     public void setType(MeetingType type) {
         this.type = type;
+    }
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
     }
 }

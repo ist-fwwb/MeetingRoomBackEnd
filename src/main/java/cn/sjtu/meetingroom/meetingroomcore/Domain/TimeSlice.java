@@ -1,5 +1,6 @@
 package cn.sjtu.meetingroom.meetingroomcore.Domain;
 
+import io.swagger.annotations.ApiModelProperty;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
@@ -16,6 +17,7 @@ public class TimeSlice {
 
     String roomId;
     List<String> timeSlice;
+    @ApiModelProperty(notes = "yyyy-MM-dd")
     String date;
 
     public TimeSlice(){
