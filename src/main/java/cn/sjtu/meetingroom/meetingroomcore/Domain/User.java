@@ -12,12 +12,19 @@ public class User {
     @Id
     @ApiModelProperty(hidden = true)
     String id;
+    @ApiModelProperty(required = true)
     String enterpriceId;
+    @ApiModelProperty(required = true)
     String phone;
+    @ApiModelProperty(required = true)
     String password;
+    @ApiModelProperty(required = true)
     String name;
+    @ApiModelProperty(required = false)
     Type type;
+    @ApiModelProperty(required = true, notes = "just the name of the file")
     String faceFile;
+    @ApiModelProperty(required = true, notes = "just the name of the file")
     String featureFile;
 
     public User(String id, String enterpriceId, String phone, String password, String name, Type type, String faceFile, String featureFile) {

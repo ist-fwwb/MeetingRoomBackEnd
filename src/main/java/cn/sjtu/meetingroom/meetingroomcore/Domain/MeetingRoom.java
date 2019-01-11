@@ -15,9 +15,11 @@ public class MeetingRoom {
     @Id
     @ApiModelProperty(hidden = true)
     String id;
-    @ApiModelProperty(notes = "AIRCONDITIONER, BLOCAKBOARD, TABLE, PROJECTOR, POWERSUPPLY")
+    @ApiModelProperty(notes = "AIRCONDITIONER, BLOCAKBOARD, TABLE, PROJECTOR, POWERSUPPLY",required = true)
     Set<MeetingRoomUtils> utils;
+    @ApiModelProperty(required = true)
     Size size;
+    @ApiModelProperty(required = true)
     String location;
 
     public MeetingRoom() {

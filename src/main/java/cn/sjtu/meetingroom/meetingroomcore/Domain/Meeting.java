@@ -20,21 +20,31 @@ public class Meeting {
     @ApiModelProperty(hidden = true)
     String id;
 
+    @ApiModelProperty(required = true)
     String heading;
+    @ApiModelProperty(required = true)
     String description;
+    @ApiModelProperty(required = true)
     String roomId;
-
     @ApiModelProperty(notes = "yyyy-MM-dd")
     String date;
+    @ApiModelProperty(required = false)
     String location;
+    @ApiModelProperty(required = true)
     int startTime;
+    @ApiModelProperty(required = true)
     int endTime;
+    @ApiModelProperty(required = true)
     String hostId;
+    @ApiModelProperty(required = false)
     Map<String, Date> attendants;
+    @ApiModelProperty(required = true)
     boolean needSignIn;
-    @ApiModelProperty(notes = "a four digit number")
+    @ApiModelProperty(notes = "a four digit number", required = false)
     String attendantNum;  // a four digit number to attend the meeting
+    @ApiModelProperty(required = false)
     Status status;
+    @ApiModelProperty(required = true)
     MeetingType type;
 
     public String getRoomId() {
