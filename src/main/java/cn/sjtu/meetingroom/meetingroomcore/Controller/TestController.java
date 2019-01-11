@@ -8,7 +8,6 @@ import cn.sjtu.meetingroom.meetingroomcore.Domain.TimeSlice;
 import cn.sjtu.meetingroom.meetingroomcore.Domain.User;
 import cn.sjtu.meetingroom.meetingroomcore.Service.UserService;
 import cn.sjtu.meetingroom.meetingroomcore.Util.MeetingRoomUtils;
-import com.sun.deploy.net.HttpResponse;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ResponseHeader;
@@ -20,10 +19,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import springfox.documentation.swagger.readers.operation.ResponseHeaders;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
 import java.util.*;
 
 @Validated
@@ -60,18 +57,6 @@ public class TestController {
     public void testMongoSaveTimeSlice(HttpServletRequest request){
         TimeSlice timeSlice = new TimeSlice();
         System.out.println(timeSliceRepository.save(timeSlice).getId());
-    }
-
-    @PostMapping("/")
-    public Set<String> testDuplicate(@RequestBody Set<String> macroPath, @RequestParam(name="test") String name){
-        return macroPath;
-    }
-
-    @GetMapping("/")
-    public ResponseEntity<Date> test(MeetingRoomUtils[] macroPath, @RequestParam(name="test") String name){
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.set("hahah", "hhh");
-        return new ResponseEntity<>(null, httpHeaders, HttpStatus.OK);
     }
 
 }
