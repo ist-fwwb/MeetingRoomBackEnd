@@ -42,7 +42,7 @@ public class MeetingServiceImp implements MeetingService {
         String date = meeting.getDate();
         int startTime = meeting.getStartTime();
         int endTime = meeting.getEndTime();
-        Map<String, Date> attendants = meeting.getAttendants();
+        Map<String, String> attendants = meeting.getAttendants();
         modifyTimeSlice(date, roomId, startTime, endTime, id);
         setLocation(meeting, roomId);
         setAttendents(meeting, attendants);
@@ -53,7 +53,7 @@ public class MeetingServiceImp implements MeetingService {
     public Meeting attend(String attendantNum, String userId){
         //TODO
         Meeting meeting = meetingReposiroty.findMeetingByAttendantNumLikeAndStatusLike(attendantNum, Status.Pending);
-        Map<String, Date> attendants = meeting.getAttendants();
+        Map<String, String> attendants = meeting.getAttendants();
         if (attendants.containsKey(userId)) return meeting;
         else {
             attendants.put(userId, null);
@@ -74,7 +74,7 @@ public class MeetingServiceImp implements MeetingService {
         meeting.setLocation(meetingRoom.getLocation());
     }
 
-    private void setAttendents(Meeting meeting, Map<String, Date> attendants){
+    private void setAttendents(Meeting meeting, Map<String, String> attendants){
         String hostId = meeting.getHostId();
         if (attendants == null) attendants = new HashMap<>();
         if (attendants.isEmpty()) attendants.put(hostId, null);

@@ -37,7 +37,7 @@ public class Meeting {
     @ApiModelProperty(required = true)
     String hostId;
     @ApiModelProperty(required = false)
-    Map<String, Date> attendants;
+    Map<String, String> attendants;
     @ApiModelProperty(required = true)
     boolean needSignIn;
     @ApiModelProperty(notes = "a four digit number", required = false)
@@ -55,11 +55,11 @@ public class Meeting {
         this.roomId = roomId;
     }
 
-    public Map<String, Date> getAttendants() {
+    public Map<String, String> getAttendants() {
         return attendants;
     }
 
-    public void setAttendants(Map<String, Date> attendants) {
+    public void setAttendants(Map<String, String> attendants) {
         this.attendants = attendants;
     }
 
