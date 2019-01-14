@@ -36,6 +36,7 @@ public class MeetingServiceImp implements MeetingService {
         return meetingReposiroty.findAllByRoomIdEqualsAndDateLike(id, date, pageRequest);
     }
     public Meeting add(Meeting meeting){
+        //TODO
         meetingReposiroty.save(meeting);
         String id = meeting.getId();
         String roomId = meeting.getRoomId();
@@ -69,6 +70,10 @@ public class MeetingServiceImp implements MeetingService {
         timeSliceRepository.save(timeSlice);
     }
 
+    public Meeting findById(String id){
+        return meetingReposiroty.findMeetingById(id);
+    }
+
     private void setLocation(Meeting meeting, String roomId){
         MeetingRoom meetingRoom = meetingRoomRepository.findMeetingRoomById(roomId);
         meeting.setLocation(meetingRoom.getLocation());
@@ -80,4 +85,5 @@ public class MeetingServiceImp implements MeetingService {
         if (attendants.isEmpty()) attendants.put(hostId, null);
         meeting.setAttendants(attendants);
     }
+
 }

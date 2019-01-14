@@ -35,7 +35,7 @@ public class MeetingController {
 
     @GetMapping("/")
     @ApiOperation("get all of the meeting through condition")
-    public Page<Meeting> getMeeting(@RequestParam(name="pageNumber") int pageNumber,
+    public Page<Meeting> getMeetings(@RequestParam(name="pageNumber") int pageNumber,
                                     @RequestParam(name="pageSize") int pageSize,
                                     @RequestParam(name="date") String date,
                                     @RequestParam(name="roomId") String roomId){
@@ -45,12 +45,25 @@ public class MeetingController {
     }
 
     @PostMapping("/{attendantNum}/attendants")
-    @ApiOperation("attendent to the meetign , StatusNum: { '200' : 'success', '400' : 'fail' }")
+    @ApiOperation("attendent to the meeting , StatusNum: { '200' : 'success', '400' : 'fail' }")
     public ResponseEntity<Meeting> attend(@PathVariable(name = "attendantNum") String attendantNum,
                                           @RequestParam(name="userId") String userId){
         Meeting res = meetingService.attend(attendantNum, userId);
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.set("StatusNum", "200");
         return new ResponseEntity<Meeting>(res, responseHeaders, HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}")
+    @ApiOperation("get the detail information of a specified meeting room")
+    public Meeting getMeeting(@PathVariable(name="id") String id){
+        return meetingService.findById(id);
+    }
+
+    @PutMapping("/")
+    @ApiOperation("modify the status of the meeting")
+    public Meeting modify(@RequestBody Meeting meeting){
+        //TODO
+        return null;
     }
 }
