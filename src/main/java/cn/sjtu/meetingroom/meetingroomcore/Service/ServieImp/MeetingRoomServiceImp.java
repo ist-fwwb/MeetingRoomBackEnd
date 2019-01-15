@@ -1,8 +1,10 @@
 package cn.sjtu.meetingroom.meetingroomcore.Service.ServieImp;
 
 import cn.sjtu.meetingroom.meetingroomcore.Dao.MeetingRoomRepository;
+import cn.sjtu.meetingroom.meetingroomcore.Dao.TimeSliceRepository;
 import cn.sjtu.meetingroom.meetingroomcore.Domain.Meeting;
 import cn.sjtu.meetingroom.meetingroomcore.Domain.MeetingRoom;
+import cn.sjtu.meetingroom.meetingroomcore.Domain.TimeSlice;
 import cn.sjtu.meetingroom.meetingroomcore.Service.MeetingRoomService;
 import cn.sjtu.meetingroom.meetingroomcore.Util.MeetingRoomFactory;
 import cn.sjtu.meetingroom.meetingroomcore.Util.MeetingRoomUtils;
@@ -22,9 +24,15 @@ public class MeetingRoomServiceImp implements MeetingRoomService {
     @Autowired
     MeetingRoomRepository meetingRoomRepository;
     @Autowired
+    TimeSliceRepository timeSliceRepository;
+    @Autowired
     MeetingRoomFactory meetingRoomFactory;
+
     public Page<MeetingRoom> showAll(PageRequest pageRequest){
         return meetingRoomRepository.findAll(pageRequest);
+    }
+    public List<MeetingRoom> showAll(){
+        return meetingRoomRepository.findAll();
     }
     public MeetingRoom add(MeetingRoom meetingRoom){
         return meetingRoomFactory.create(meetingRoom);
@@ -32,23 +40,46 @@ public class MeetingRoomServiceImp implements MeetingRoomService {
     public MeetingRoom modify(MeetingRoom meetingRoom){
         return meetingRoomRepository.save(meetingRoom);
     }
-    public Page<MeetingRoom> findByUtils(List<MeetingRoomUtils> utils, Page<MeetingRoom> meetingRooms){
-        List<MeetingRoom> meetingRoomList = meetingRooms.getContent();
+    public List<MeetingRoom> findByUtils(List<MeetingRoomUtils> utils, List<MeetingRoom> meetingRooms){
         List<MeetingRoom> res = new ArrayList<>();
-        for (MeetingRoom meetingRoom : meetingRoomList){
+        for (MeetingRoom meetingRoom : meetingRooms){
             if (isUtilsSatisfy(utils, meetingRoom)) res.add(meetingRoom);
         }
-        return new PageImpl(res, new PageRequest(meetingRooms.getNumber(), meetingRooms.getSize()), meetingRooms.getTotalElements());
+        return res;
     }
-    public Page<MeetingRoom> findBySize(Size size,PageRequest pageRequest){
-        return meetingRoomRepository.findAllBySize(size, pageRequest);
+    public List<MeetingRoom> findBySize(Size size, List<MeetingRoom> meetingRooms){
+        List<MeetingRoom> res = new ArrayList<>();
+        for (MeetingRoom meetingRoom : meetingRooms){
+            if (isSizeSatisfy(size, meetingRoom)) res.add(meetingRoom);
+        }
+        return res;
     }
     public MeetingRoom findById(String id){
         return meetingRoomRepository.findMeetingRoomById(id);
     }
 
+    public List<MeetingRoom> findByStartTimeAndEndTime(Integer startTime, Integer endTime,String date,  List<MeetingRoom> meetingRooms){
+        List<MeetingRoom> res = new ArrayList<>();
+        for (MeetingRoom meetingRoom : meetingRooms){
+            if (isStartAndEndSatisfy(startTime, endTime, date, meetingRoom)) res.add(meetingRoom);
+        }
+        return res;
+    }
     private boolean isUtilsSatisfy(List<MeetingRoomUtils> utils, MeetingRoom meetingRoom){
         Set<MeetingRoomUtils> existUtils = meetingRoom.getUtils();
         return existUtils.containsAll(utils);
+    }
+
+    private boolean isSizeSatisfy(Size size, MeetingRoom meetingRoom){
+        return meetingRoom.getSize().equals(size);
+    }
+
+    private boolean isStartAndEndSatisfy(Integer startTime, Integer endTime, String date, MeetingRoom meetingRoom){
+        TimeSlice timeSlice = timeSliceRepository.findTimeSliceByDateLikeAndRoomIdLike(date, meetingRoom.getId());
+        List<String> timeSlices = timeSlice.getTimeSlice();
+        for (int i=startTime; i<endTime; ++i) {
+            if (timeSlices.get(i) != null) return false;
+        }
+        return true;
     }
 }

@@ -10,9 +10,11 @@ import java.util.List;
 
 public interface MeetingRoomService {
     public Page<MeetingRoom> showAll(PageRequest pageRequest);
+    public List<MeetingRoom> showAll();
     public MeetingRoom add(MeetingRoom origin);
     public MeetingRoom modify(MeetingRoom meetingRoom);
-    public Page<MeetingRoom> findByUtils(List<MeetingRoomUtils> utils, Page<MeetingRoom> meetingRooms);
-    public Page<MeetingRoom> findBySize(Size size, PageRequest pageRequest);
+    public List<MeetingRoom> findByUtils(List<MeetingRoomUtils> utils, List<MeetingRoom> meetingRooms);
+    public List<MeetingRoom> findBySize(Size size, List<MeetingRoom> meetingRooms);
+    public List<MeetingRoom> findByStartTimeAndEndTime(Integer startTime, Integer endTime, String date, List<MeetingRoom> meetingRooms);
     public MeetingRoom findById(String id);
 }
