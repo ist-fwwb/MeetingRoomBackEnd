@@ -1,5 +1,6 @@
 package cn.sjtu.meetingroom.meetingroomcore.Service;
 
+import cn.sjtu.meetingroom.meetingroomcore.Domain.Meeting;
 import cn.sjtu.meetingroom.meetingroomcore.Domain.User;
 import cn.sjtu.meetingroom.meetingroomcore.Util.Type;
 import org.springframework.data.domain.Page;
@@ -13,4 +14,5 @@ public interface UserService {
     public User register(String enterpriseId, String phone, String password, String faceFile, String featureFile, String name);
     public User modify(User user);
     public User login(String phone, String password);
+    public List<Meeting> findMeetingsByIdAndDate(String id, String date);
 }

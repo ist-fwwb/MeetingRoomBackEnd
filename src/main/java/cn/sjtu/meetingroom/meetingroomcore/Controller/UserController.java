@@ -1,11 +1,13 @@
 package cn.sjtu.meetingroom.meetingroomcore.Controller;
 
+import cn.sjtu.meetingroom.meetingroomcore.Domain.Meeting;
 import cn.sjtu.meetingroom.meetingroomcore.Domain.User;
 import cn.sjtu.meetingroom.meetingroomcore.Service.UserService;
 import cn.sjtu.meetingroom.meetingroomcore.Util.Type;
 import cn.sjtu.meetingroom.meetingroomcore.Util.Util;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -33,6 +35,19 @@ public class UserController {
         return userService.showAll(pageRequest);
     }
 
+    @GetMapping("/{id}")
+    @ApiOperation(value="get a specified user's detail informatipon")
+    public User showOne(@PathVariable(name="id")String id){
+        return userService.showOne(id);
+    }
+
+    @GetMapping("/{id}/meeting/{date}")
+    @ApiOperation(value = "get user's meeting of a specified day")
+    public List<Meeting> getMeeting(@PathVariable(name="id") String id, @PathVariable(name="date") String date){
+        return userService.findMeetingsByIdAndDate(id, date);
+    }
+
+
     @PostMapping("/")
     @ApiOperation(value="registor a user")
     public User register(@RequestParam(name = "enterpriseId") String enterpriseId,
@@ -41,18 +56,6 @@ public class UserController {
                          @RequestParam(name = "featureFile") String featureFile,
                          @RequestParam(name = "name") String name) throws Exception{
         return userService.register(enterpriseId, phone, password, faceFile, featureFile, name);
-    }
-
-    @GetMapping("/{id}")
-    @ApiOperation(value="get a specified user's detail informatipon")
-    public User showOne(@PathVariable(name="id")String id){
-        return userService.showOne(id);
-    }
-
-    @PutMapping("/{id}")
-    @ApiOperation(value="modify a specified user's status")
-    public User modify(@RequestBody User user){
-        return userService.modify(user);
     }
 
     @PostMapping("/login")
@@ -67,5 +70,12 @@ public class UserController {
             return user;
         }
     }
+
+    @PutMapping("/{id}")
+    @ApiOperation(value="modify a specified user's status")
+    public User modify(@RequestBody User user){
+        return userService.modify(user);
+    }
+
 
 }
