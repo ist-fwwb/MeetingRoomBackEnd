@@ -13,7 +13,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service("userServiceImp")
 public class UserServiceImp implements UserService {
@@ -46,5 +48,22 @@ public class UserServiceImp implements UserService {
             if (meeting.getAttendants().containsKey(id)) res.add(meeting);
         }
         return res;
+    }
+    public List<User> findByType(Type type, List<User> users){
+        List<User> res = new ArrayList<>();
+        for (User user : users) {
+            if (user.getType().equals(type)) res.add(user);
+        }
+        return res;
+    }
+    public List<User> findByIds(String[] ids, List<User> users){
+        Map<String, User> recorder = new HashMap<>();
+        for (User user : users) recorder.put(user.getId(), user);
+        List<User> res = new ArrayList<>();
+        for (String id : ids) res.add(recorder.get(id));
+        return res;
+    }
+    public List<User> showAll(){
+        return userRepository.findAll();
     }
 }
