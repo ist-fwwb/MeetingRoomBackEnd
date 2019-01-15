@@ -78,6 +78,4 @@ public class UserController {
     public User modify(@RequestBody User user){
         return userService.modify(user);
     }
-
-
 }

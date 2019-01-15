@@ -74,6 +74,19 @@ public class MeetingServiceImp implements MeetingService {
         return meetingReposiroty.findMeetingById(id);
     }
 
+    public void cancelMeeting(String id){
+        Meeting meeting = meetingReposiroty.findMeetingById(id);
+        meeting.setStatus(Status.Cancelled);
+        meetingReposiroty.save(meeting);
+        //TODO
+    }
+
+    public void exitFromMeeting(String id, String userId){
+        Meeting meeting = meetingReposiroty.findMeetingById(id);
+        meeting.getAttendants().remove(userId);
+        meetingReposiroty.save(meeting);
+    }
+
     private void setLocation(Meeting meeting, String roomId){
         MeetingRoom meetingRoom = meetingRoomRepository.findMeetingRoomById(roomId);
         meeting.setLocation(meetingRoom.getLocation());

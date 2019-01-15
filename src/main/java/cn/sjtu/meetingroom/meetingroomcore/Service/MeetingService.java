@@ -11,4 +11,6 @@ public interface MeetingService {
     public Meeting findById(String id);
     public Meeting add(Meeting meeting);
     public Meeting attend(String attendantNum, String userId);
+    public void exitFromMeeting(String id, String userId);
+    public void cancelMeeting(String id);
 }

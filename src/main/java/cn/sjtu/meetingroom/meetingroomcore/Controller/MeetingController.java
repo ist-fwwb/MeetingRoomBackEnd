@@ -24,14 +24,6 @@ import java.util.Date;
 public class MeetingController {
     @Autowired
     MeetingService meetingService;
-    @PostMapping("/")
-    @ApiOperation("registor a meeting, StatusNum: { '200' : 'success', '400' : 'fail' }")
-    public ResponseEntity<Meeting> addMeeting(@RequestBody Meeting meeting){
-        Meeting res = meetingService.add(meeting);
-        HttpHeaders responseHeaders = new HttpHeaders();
-        responseHeaders.set("StatusNum", "200");
-        return new ResponseEntity<Meeting>(res, responseHeaders, HttpStatus.OK);
-    }
 
     @GetMapping("/")
     @ApiOperation("get all of the meeting through condition")
@@ -44,6 +36,21 @@ public class MeetingController {
         return meetings;
     }
 
+    @GetMapping("/{id}")
+    @ApiOperation("get the detail information of a specified meeting room")
+    public Meeting getMeeting(@PathVariable(name="id") String id){
+        return meetingService.findById(id);
+    }
+
+    @PostMapping("/")
+    @ApiOperation("registor a meeting, StatusNum: { '200' : 'success', '400' : 'fail' }")
+    public ResponseEntity<Meeting> addMeeting(@RequestBody Meeting meeting){
+        Meeting res = meetingService.add(meeting);
+        HttpHeaders responseHeaders = new HttpHeaders();
+        responseHeaders.set("StatusNum", "200");
+        return new ResponseEntity<Meeting>(res, responseHeaders, HttpStatus.OK);
+    }
+
     @PostMapping("/{attendantNum}/attendants")
     @ApiOperation("attendent to the meeting , StatusNum: { '200' : 'success', '400' : 'fail' }")
     public ResponseEntity<Meeting> attend(@PathVariable(name = "attendantNum") String attendantNum,
@@ -54,16 +61,24 @@ public class MeetingController {
         return new ResponseEntity<Meeting>(res, responseHeaders, HttpStatus.OK);
     }
 
-    @GetMapping("/{id}")
-    @ApiOperation("get the detail information of a specified meeting room")
-    public Meeting getMeeting(@PathVariable(name="id") String id){
-        return meetingService.findById(id);
-    }
-
     @PutMapping("/")
     @ApiOperation("modify the status of the meeting")
     public Meeting modify(@RequestBody Meeting meeting){
         //TODO
         return null;
+    }
+
+    @DeleteMapping("/{id}")
+    @ApiOperation("cancel a meeting")
+    public String delete(@PathVariable(name="id") String id){
+        meetingService.cancelMeeting(id);
+        return "ok";
+    }
+
+    @DeleteMapping("/{id}/attendants/{userId}")
+    @ApiOperation("exit from a meeting")
+    public String exitFromMeeting(@PathVariable(name="id") String id, @PathVariable(name="userId") String userId){
+        meetingService.exitFromMeeting(id, userId);
+        return "ok";
     }
 }
