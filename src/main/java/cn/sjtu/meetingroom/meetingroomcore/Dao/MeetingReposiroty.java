@@ -16,4 +16,5 @@ public interface MeetingReposiroty extends MongoRepository<Meeting, String> {
     Meeting findMeetingByAttendantNumLikeAndStatusLike(String attendantNum, Status status);
     Meeting findMeetingById(String id);
     List<Meeting> findMeeingsByDate(String date);
+    List<Meeting> findAllByRoomIdEqualsAndDateLike(String id, String date);
 }

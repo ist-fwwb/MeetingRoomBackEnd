@@ -13,12 +13,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class MeetingServiceImp implements MeetingService {
@@ -30,11 +28,43 @@ public class MeetingServiceImp implements MeetingService {
     TimeSliceRepository timeSliceRepository;
 
     @Value("${meeting.attendantNum.size}")
-    int size;
+    int RandomNumberSize;
 
-    public Page<Meeting> findByDateAndRoomId(String date, String id, PageRequest pageRequest){
-        return meetingReposiroty.findAllByRoomIdEqualsAndDateLike(id, date, pageRequest);
+    public List<Meeting> showAll(){
+        return meetingReposiroty.findAll();
     }
+    public List<Meeting> findByDate(String date, List<Meeting> meetings){
+        List<Meeting> res = new ArrayList<>();
+        for (Meeting meeting : meetings) {
+            if (meeting.getDate().equals(date)) res.add(meeting);
+        }
+        return res;
+    }
+    public List<Meeting> findByRoomId(String roomId, List<Meeting> meetings){
+        List<Meeting> res = new ArrayList<>();
+        for (Meeting meeting : meetings) {
+            if (meeting.getRoomId().equals(roomId)) res.add(meeting);
+        }
+        return res;
+
+    }
+    public List<Meeting> findByTime(Integer time, List<Meeting> meetings){
+        List<Meeting> res = new ArrayList<>();
+        int latestTime = Integer.MAX_VALUE;
+        Meeting chosenMeeting = null;
+        for (Meeting meeting : meetings){
+            int startTime = meeting.getStartTime(), endTime = meeting.getEndTime();
+            if (startTime <= time && time < endTime) {
+                res.add(meeting); return res;
+            }
+            else if (startTime >= time && time < latestTime) {
+                latestTime = time; chosenMeeting = meeting;
+            }
+        }
+        res.add(chosenMeeting);
+        return res;
+    }
+
     public Meeting add(Meeting meeting){
         //TODO
         meetingReposiroty.save(meeting);
@@ -47,7 +77,7 @@ public class MeetingServiceImp implements MeetingService {
         modifyTimeSlice(date, roomId, startTime, endTime, id);
         setLocation(meeting, roomId);
         setAttendents(meeting, attendants);
-        meeting.setAttendantNum(Util.generateAttendantNum(size));
+        meeting.setAttendantNum(Util.generateAttendantNum(RandomNumberSize));
         meeting.setStatus(Status.Pending);
         return meetingReposiroty.save(meeting);
     }
