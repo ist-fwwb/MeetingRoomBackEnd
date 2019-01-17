@@ -25,7 +25,7 @@ public class TimeSliceScheduler {
         calendar.setTime(new Date());
         calendar.add(Calendar.DATE, -1);
         List<TimeSlice> timeSliceList = timeSliceRepository.findAllByDateLike(sdf.format(calendar.getTime()));
-        calendar.add(Calendar.DATE, 8);
+        calendar.add(Calendar.DATE, 7);
         updateTimeSlice(timeSliceList, calendar);
     }
 
