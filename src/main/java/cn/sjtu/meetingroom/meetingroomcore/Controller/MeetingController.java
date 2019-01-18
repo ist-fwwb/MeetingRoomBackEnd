@@ -2,24 +2,16 @@ package cn.sjtu.meetingroom.meetingroomcore.Controller;
 
 
 import cn.sjtu.meetingroom.meetingroomcore.Domain.Meeting;
-import cn.sjtu.meetingroom.meetingroomcore.Domain.TimeSlice;
 import cn.sjtu.meetingroom.meetingroomcore.Service.MeetingService;
-import cn.sjtu.meetingroom.meetingroomcore.Service.TimeSliceService;
-import cn.sjtu.meetingroom.meetingroomcore.Util.Util;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Date;
 import java.util.List;
 
 @Validated
@@ -32,17 +24,15 @@ public class MeetingController {
 
     @GetMapping("/")
     @ApiOperation("get all of the meeting through condition, if the condition contains time then return the Page<Meeting> with a Running status or Pending status")
-    public Page<Meeting> getMeetings(@RequestParam(name="pageNumber") int pageNumber,
-                                    @RequestParam(name="pageSize") int pageSize,
+    public List<Meeting> getMeetings(
                                     @RequestParam(name="date", required = false) String date,
                                     @RequestParam(name="roomId", required = false) String roomId,
                                      @RequestParam(name="time", required = false) Integer time){
-        PageRequest pageRequest = Util.createPageRequest(pageNumber, pageSize);
         List<Meeting> meetings = meetingService.showAll();
         if (date != null) meetings = meetingService.findByDate(date, meetings);
         if (roomId != null) meetings = meetingService.findByRoomId(roomId, meetings);
         if (time != null) meetings = meetingService.findByTime(time, meetings);
-        return new PageImpl<>(meetings, pageRequest, meetings.size());
+        return meetings;
     }
 
     @GetMapping("/{id}")
@@ -70,7 +60,7 @@ public class MeetingController {
         return new ResponseEntity<Meeting>(res, responseHeaders, HttpStatus.OK);
     }
 
-    @PutMapping("/")
+    @PutMapping("/{id}")
     @ApiOperation("modify the status of the meeting")
     public Meeting modify(@RequestBody Meeting meeting){
         //TODO

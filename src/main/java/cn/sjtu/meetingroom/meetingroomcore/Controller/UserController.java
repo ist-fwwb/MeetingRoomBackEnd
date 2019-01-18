@@ -4,12 +4,9 @@ import cn.sjtu.meetingroom.meetingroomcore.Domain.Meeting;
 import cn.sjtu.meetingroom.meetingroomcore.Domain.User;
 import cn.sjtu.meetingroom.meetingroomcore.Service.UserService;
 import cn.sjtu.meetingroom.meetingroomcore.Util.Type;
-import cn.sjtu.meetingroom.meetingroomcore.Util.Util;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,14 +24,12 @@ public class UserController {
     @GetMapping("/")
     @ApiOperation(value="get all of the user's detail information")
 
-    public Page<User> showAll(@RequestParam(name="pageNumber") int pageNumber,
-                              @RequestParam(name="pageSize") int pageSize,
-                              @RequestParam(name="type", required = false) Type type,
+    public List<User> showAll(@RequestParam(name="type", required = false) Type type,
                               @RequestParam(name="ids", required = false) String[] ids){
         List<User> users = userService.showAll();
         if (ids != null) users = userService.findByIds(ids, users);
         if (type != null) users = userService.findByType(type, users);
-        return new PageImpl<>(users, Util.createPageRequest(pageNumber, pageSize), users.size());
+        return users;
     }
 
     @GetMapping("/{id}")

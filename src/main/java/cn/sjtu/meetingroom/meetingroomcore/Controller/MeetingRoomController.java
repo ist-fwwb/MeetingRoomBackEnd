@@ -1,16 +1,12 @@
 package cn.sjtu.meetingroom.meetingroomcore.Controller;
 
-import cn.sjtu.meetingroom.meetingroomcore.Domain.Meeting;
 import cn.sjtu.meetingroom.meetingroomcore.Domain.MeetingRoom;
 import cn.sjtu.meetingroom.meetingroomcore.Service.MeetingRoomService;
 import cn.sjtu.meetingroom.meetingroomcore.Util.MeetingRoomUtils;
 import cn.sjtu.meetingroom.meetingroomcore.Util.Size;
-import cn.sjtu.meetingroom.meetingroomcore.Util.Util;
-import io.swagger.annotations.*;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,9 +23,7 @@ public class MeetingRoomController {
 
     @GetMapping("/")
     @ApiOperation(value="get the meetingrom's detail information through conditions")
-    public Page<MeetingRoom> show(@RequestParam(name="pageNumber") int pageNumber,
-                                     @RequestParam(name="pageSize") int pageSize,
-                                  @RequestParam(name="utils", required = false) MeetingRoomUtils[] utils,
+    public List<MeetingRoom> show(@RequestParam(name="utils", required = false) MeetingRoomUtils[] utils,
                                   @RequestParam(name="size", required = false) Size size,
                                   @RequestParam(name="startTime", required = false) Integer startTime,
                                   @RequestParam(name="endTime", required = false) Integer endTime,
@@ -38,7 +32,7 @@ public class MeetingRoomController {
         if (utils != null) meetingRooms = meetingRoomService.findByUtils(Arrays.asList(utils), meetingRooms);
         if (size != null) meetingRooms = meetingRoomService.findBySize(size, meetingRooms);
         if (startTime != null && endTime != null && date != null) meetingRooms = meetingRoomService.findByStartTimeAndEndTime(startTime, endTime, date, meetingRooms);
-        return new PageImpl<>(meetingRooms, Util.createPageRequest(pageNumber, pageSize), meetingRooms.size());
+        return meetingRooms;
     }
 
     @GetMapping("/{id}")
