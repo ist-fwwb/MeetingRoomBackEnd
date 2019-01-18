@@ -22,7 +22,7 @@ public class MeetingController {
     @Autowired
     MeetingService meetingService;
 
-    @GetMapping("/")
+    @GetMapping("")
     @ApiOperation("get all of the meeting through condition, if the condition contains time then return the Page<Meeting> with a Running status or Pending status")
     public List<Meeting> getMeetings(
                                     @RequestParam(name="date", required = false) String date,
@@ -41,7 +41,7 @@ public class MeetingController {
         return meetingService.findById(id);
     }
 
-    @PostMapping("/")
+    @PostMapping("")
     @ApiOperation("registor a meeting, StatusNum: { '200' : 'success', '400' : 'fail' }")
     public ResponseEntity<Meeting> addMeeting(@RequestBody Meeting meeting){
         Meeting res = meetingService.add(meeting);

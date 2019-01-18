@@ -21,7 +21,7 @@ public class MeetingRoomController {
     @Autowired
     MeetingRoomService meetingRoomService;
 
-    @GetMapping("/")
+    @GetMapping("")
     @ApiOperation(value="get the meetingrom's detail information through conditions")
     public List<MeetingRoom> show(@RequestParam(name="utils", required = false) MeetingRoomUtils[] utils,
                                   @RequestParam(name="size", required = false) Size size,
@@ -41,7 +41,7 @@ public class MeetingRoomController {
         return meetingRoomService.findById(id);
     }
 
-    @PostMapping("/")
+    @PostMapping("")
     @ApiOperation(value="add a meetingroom (id should be null)")
     public MeetingRoom add(@RequestBody MeetingRoom meetingRoom){
         return meetingRoomService.add(meetingRoom);

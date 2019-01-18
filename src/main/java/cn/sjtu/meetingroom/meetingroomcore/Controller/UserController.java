@@ -21,7 +21,7 @@ import java.util.List;
 public class UserController {
     @Autowired
     UserService userService;
-    @GetMapping("/")
+    @GetMapping("")
     @ApiOperation(value="get all of the user's detail information")
 
     public List<User> showAll(@RequestParam(name="type", required = false) Type type,
@@ -45,7 +45,7 @@ public class UserController {
     }
 
 
-    @PostMapping("/")
+    @PostMapping("")
     @ApiOperation(value="registor a user")
     public User register(@RequestParam(name = "enterpriseId") String enterpriseId,
                          @RequestParam(name = "phone") String phone, @RequestParam(name ="password") String password,
