@@ -51,7 +51,7 @@ public class MeetingController {
     }
 
     @PostMapping("/{attendantNum}/attendants")
-    @ApiOperation("attendent to the meeting , StatusNum: { '200' : 'success', '400' : 'fail' }")
+    @ApiOperation("attendent to the meeting By attendantNum or meetingId , StatusNum: { '200' : 'success', '400' : 'fail' }")
     public ResponseEntity<Meeting> attend(@PathVariable(name = "attendantNum") String attendantNum,
                                           @RequestParam(name="userId") String userId){
         Meeting res = meetingService.attend(attendantNum, userId);

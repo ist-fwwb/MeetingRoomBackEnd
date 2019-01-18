@@ -11,12 +11,12 @@ import cn.sjtu.meetingroom.meetingroomcore.Util.Status;
 import cn.sjtu.meetingroom.meetingroomcore.Util.Util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 public class MeetingServiceImp implements MeetingService {
@@ -84,9 +84,9 @@ public class MeetingServiceImp implements MeetingService {
     public Meeting attend(String attendantNum, String userId){
         //TODO
         Meeting meeting = meetingReposiroty.findMeetingByAttendantNumLikeAndStatusLike(attendantNum, Status.Pending);
+        if (meeting == null) meeting = meetingReposiroty.findMeetingById(attendantNum);
         Map<String, String> attendants = meeting.getAttendants();
-        if (attendants.containsKey(userId)) return meeting;
-        else {
+        if (!attendants.containsKey(userId)){
             attendants.put(userId, null);
             meetingReposiroty.save(meeting);
         }
