@@ -4,16 +4,14 @@ import cn.sjtu.meetingroom.meetingroomcore.Util.MeetingRoomUtils;
 import cn.sjtu.meetingroom.meetingroomcore.Util.Size;
 import io.swagger.annotations.ApiModelProperty;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.util.Map;
 import java.util.Set;
 
 @Document
 public class MeetingRoom {
     @Id
-    @ApiModelProperty(hidden = true)
+    @ApiModelProperty(required = false)
     String id;
     @ApiModelProperty(notes = "AIRCONDITIONER, BLOCAKBOARD, TABLE, PROJECTOR, POWERSUPPLY",required = true)
     Set<MeetingRoomUtils> utils;

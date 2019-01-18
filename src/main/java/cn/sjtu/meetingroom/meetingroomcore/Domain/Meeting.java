@@ -2,22 +2,16 @@ package cn.sjtu.meetingroom.meetingroomcore.Domain;
 
 import cn.sjtu.meetingroom.meetingroomcore.Util.MeetingType;
 import cn.sjtu.meetingroom.meetingroomcore.Util.Status;
-import cn.sjtu.meetingroom.meetingroomcore.Util.Type;
-import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import javax.xml.crypto.Data;
-import java.util.Date;
-import java.util.List;
 import java.util.Map;
 
 @Document
 public class Meeting {
     @Id
-    @ApiModelProperty(hidden = true)
+    @ApiModelProperty(required = false)
     String id;
 
     @ApiModelProperty(required = true)
@@ -26,7 +20,7 @@ public class Meeting {
     String description;
     @ApiModelProperty(required = true)
     String roomId;
-    @ApiModelProperty(notes = "yyyy-MM-dd")
+    @ApiModelProperty(notes = "yyyy-MM-dd", required = true)
     String date;
     @ApiModelProperty(required = false)
     String location;
@@ -44,7 +38,7 @@ public class Meeting {
     String attendantNum;  // a four digit number to attend the meeting
     @ApiModelProperty(required = false)
     Status status;
-    @ApiModelProperty(required = true)
+    @ApiModelProperty(required = false)
     MeetingType type;
 
     public String getRoomId() {

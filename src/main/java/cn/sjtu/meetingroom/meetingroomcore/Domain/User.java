@@ -5,12 +5,10 @@ import io.swagger.annotations.ApiModelProperty;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.util.Map;
-
 @Document
 public class User {
     @Id
-    @ApiModelProperty(hidden = true)
+    @ApiModelProperty(required = false)
     String id;
     @ApiModelProperty(required = true)
     String enterpriceId;
