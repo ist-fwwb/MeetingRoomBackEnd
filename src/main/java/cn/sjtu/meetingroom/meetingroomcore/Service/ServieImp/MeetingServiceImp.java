@@ -67,19 +67,25 @@ public class MeetingServiceImp implements MeetingService {
 
     public Meeting add(Meeting meeting){
         //TODO
-        meetingReposiroty.save(meeting);
-        String id = meeting.getId();
-        String roomId = meeting.getRoomId();
-        String date = meeting.getDate();
-        int startTime = meeting.getStartTime();
-        int endTime = meeting.getEndTime();
-        Map<String, String> attendants = meeting.getAttendants();
-        modifyTimeSlice(date, roomId, startTime, endTime, id);
-        setLocation(meeting, roomId);
-        setAttendents(meeting, attendants);
-        meeting.setAttendantNum(Util.generateAttendantNum(RandomNumberSize));
-        meeting.setStatus(Status.Pending);
-        return meetingReposiroty.save(meeting);
+        try {
+            meetingReposiroty.save(meeting);
+            String id = meeting.getId();
+            String roomId = meeting.getRoomId();
+            String date = meeting.getDate();
+            int startTime = meeting.getStartTime();
+            int endTime = meeting.getEndTime();
+            Map<String, String> attendants = meeting.getAttendants();
+            modifyTimeSlice(date, roomId, startTime, endTime, id);
+            setLocation(meeting, roomId);
+            setAttendents(meeting, attendants);
+            meeting.setAttendantNum(Util.generateAttendantNum(RandomNumberSize));
+            meeting.setStatus(Status.Pending);
+            return meetingReposiroty.save(meeting);
+        }
+        catch (Exception e) {
+            meetingReposiroty.delete(meeting);
+            return null;
+        }
     }
     public Meeting attend(String attendantNum, String userId){
         //TODO
