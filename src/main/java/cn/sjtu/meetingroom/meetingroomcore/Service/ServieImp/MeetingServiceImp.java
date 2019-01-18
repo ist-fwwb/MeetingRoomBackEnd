@@ -83,12 +83,15 @@ public class MeetingServiceImp implements MeetingService {
     }
     public Meeting attend(String attendantNum, String userId){
         //TODO
-        Meeting meeting = meetingReposiroty.findMeetingByAttendantNumLikeAndStatusLike(attendantNum, Status.Pending);
-        if (meeting == null) meeting = meetingReposiroty.findMeetingById(attendantNum);
-        Map<String, String> attendants = meeting.getAttendants();
-        if (!attendants.containsKey(userId)){
-            attendants.put(userId, null);
-            meetingReposiroty.save(meeting);
+        Meeting meeting = null;
+        if (isAttendantNum(attendantNum)) meeting = meetingReposiroty.findMeetingByAttendantNumLikeAndStatusLike(attendantNum, Status.Pending);
+        else meeting = meetingReposiroty.findMeetingById(attendantNum);
+        if (meeting != null) {
+            Map<String, String> attendants = meeting.getAttendants();
+            if (!attendants.containsKey(userId)){
+                attendants.put(userId, null);
+                meetingReposiroty.save(meeting);
+            }
         }
         return meeting;
     }
@@ -127,6 +130,10 @@ public class MeetingServiceImp implements MeetingService {
         if (attendants == null) attendants = new HashMap<>();
         if (attendants.isEmpty()) attendants.put(hostId, null);
         meeting.setAttendants(attendants);
+    }
+
+    private boolean isAttendantNum(String attendantNum){
+        return attendantNum.length() == RandomNumberSize;
     }
 
 }
