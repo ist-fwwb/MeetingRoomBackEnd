@@ -1,13 +1,9 @@
 package cn.sjtu.meetingroom.meetingroomcore.Domain;
 
 import io.swagger.annotations.ApiModelProperty;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Document
@@ -21,6 +17,13 @@ public class TimeSlice {
     String date;
 
     public TimeSlice(){
+    }
+
+    public TimeSlice(String id, String roomId, List<String> timeSlice, String date) {
+        this.id = id;
+        this.roomId = roomId;
+        this.timeSlice = timeSlice;
+        this.date = date;
     }
 
     public String getId() {

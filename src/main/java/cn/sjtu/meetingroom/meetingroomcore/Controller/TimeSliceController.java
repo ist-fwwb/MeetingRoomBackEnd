@@ -1,6 +1,7 @@
 package cn.sjtu.meetingroom.meetingroomcore.Controller;
 
 import cn.sjtu.meetingroom.meetingroomcore.Domain.TimeSlice;
+import cn.sjtu.meetingroom.meetingroomcore.Domain.TimeSliceWrapper;
 import cn.sjtu.meetingroom.meetingroomcore.Service.TimeSliceService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -24,9 +25,9 @@ public class TimeSliceController {
 
     @GetMapping("")
     @ApiOperation(value="get the timeSlice's detail information through roomId and date")
-    public List<TimeSlice> show(@RequestParam(name="date", required = false) String date,
+    public List<TimeSliceWrapper> show(@RequestParam(name="date", required = false) String date,
                                 @RequestParam(name="roomId") String roomId){
-        List<TimeSlice> timeSlices = timeSliceService.show(roomId);
+        List<TimeSliceWrapper> timeSlices = timeSliceService.show(roomId);
         if (date != null) timeSlices = timeSliceService.findByDate(date, timeSlices);
         return timeSlices;
     }
