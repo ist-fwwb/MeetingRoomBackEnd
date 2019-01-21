@@ -1,12 +1,8 @@
 package cn.sjtu.meetingroom.meetingroomcore.Service;
 
 import cn.sjtu.meetingroom.meetingroomcore.Domain.Meeting;
-import cn.sjtu.meetingroom.meetingroomcore.Domain.TimeSlice;
 import cn.sjtu.meetingroom.meetingroomcore.Domain.User;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 
-import java.util.Date;
 import java.util.List;
 
 public interface MeetingService {

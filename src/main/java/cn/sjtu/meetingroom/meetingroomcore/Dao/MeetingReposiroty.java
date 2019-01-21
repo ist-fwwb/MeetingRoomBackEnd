@@ -7,7 +7,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.Date;
 import java.util.List;
 
 @Repository
@@ -17,4 +16,5 @@ public interface MeetingReposiroty extends MongoRepository<Meeting, String> {
     Meeting findMeetingById(String id);
     List<Meeting> findMeeingsByDate(String date);
     List<Meeting> findAllByRoomIdEqualsAndDateLike(String id, String date);
+    List<Meeting> findMeetingsByStatus(Status status);
 }

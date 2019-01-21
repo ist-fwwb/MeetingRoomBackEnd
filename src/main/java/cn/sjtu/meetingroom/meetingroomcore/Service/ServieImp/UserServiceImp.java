@@ -5,6 +5,7 @@ import cn.sjtu.meetingroom.meetingroomcore.Dao.UserRepository;
 import cn.sjtu.meetingroom.meetingroomcore.Domain.Meeting;
 import cn.sjtu.meetingroom.meetingroomcore.Domain.User;
 import cn.sjtu.meetingroom.meetingroomcore.Service.UserService;
+import cn.sjtu.meetingroom.meetingroomcore.Util.Status;
 import cn.sjtu.meetingroom.meetingroomcore.Util.Type;
 import cn.sjtu.meetingroom.meetingroomcore.Util.UserFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,12 +43,12 @@ public class UserServiceImp implements UserService {
         return userRepository.findUserByPhoneLikeAndPasswordLike(phone, password);
     }
     public List<Meeting> findMeetingsByIdAndDate(String id, String date){
-        List<Meeting> res = new ArrayList<>();
         List<Meeting> tmp = meetingReposiroty.findMeeingsByDate(date);
-        for (Meeting meeting : tmp){
-            if (meeting.getAttendants().containsKey(id)) res.add(meeting);
-        }
-        return res;
+        return filterAttendantsById(tmp, id);
+    }
+    public List<Meeting> findMeetingsById(String id){
+        List<Meeting> tmp = meetingReposiroty.findMeetingsByStatus(Status.Pending);
+        return filterAttendantsById(tmp, id);
     }
     public List<User> findByType(Type type, List<User> users){
         List<User> res = new ArrayList<>();
@@ -65,5 +66,12 @@ public class UserServiceImp implements UserService {
     }
     public List<User> showAll(){
         return userRepository.findAll();
+    }
+    private List<Meeting> filterAttendantsById(List<Meeting> tmp, String id){
+        List<Meeting> res = new ArrayList<>();
+        for (Meeting meeting : tmp){
+            if (meeting.getAttendants().containsKey(id)) res.add(meeting);
+        }
+        return res;
     }
 }

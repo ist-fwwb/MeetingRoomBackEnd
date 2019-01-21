@@ -38,6 +38,12 @@ public class UserController {
         return userService.showOne(id);
     }
 
+    @GetMapping("/{id}/meeting")
+    @ApiOperation(value = "get user's all of the meeting which is pending")
+    public List<Meeting> getAllMeeting(@PathVariable(name="id") String id){
+        return userService.findMeetingsById(id);
+    }
+
     @GetMapping("/{id}/meeting/{date}")
     @ApiOperation(value = "get user's meeting of a specified day")
     public List<Meeting> getMeeting(@PathVariable(name="id") String id, @PathVariable(name="date") String date){

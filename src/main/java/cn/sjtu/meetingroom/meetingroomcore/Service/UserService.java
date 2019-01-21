@@ -15,6 +15,7 @@ public interface UserService {
     public User modify(User user);
     public User login(String phone, String password);
     public List<Meeting> findMeetingsByIdAndDate(String id, String date);
+    public List<Meeting> findMeetingsById(String id);
     public List<User> findByIds(String[] ids, List<User> users);
     public List<User> findByType(Type type, List<User> users);
     public List<User> showAll();
