@@ -140,6 +140,10 @@ public class MeetingServiceImp implements MeetingService {
         meetingReposiroty.save(meeting);
     }
 
+    public Meeting save(Meeting meeting){
+        return meetingReposiroty.save(meeting);
+    }
+
     private void setLocation(Meeting meeting, String roomId){
         MeetingRoom meetingRoom = meetingRoomRepository.findMeetingRoomById(roomId);
         meeting.setLocation(meetingRoom.getLocation());
