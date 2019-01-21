@@ -98,7 +98,7 @@ public class MeetingServiceImp implements MeetingService {
         else meeting = meetingReposiroty.findMeetingById(attendantNum);
         if (meeting != null) {
             Map<String, String> attendants = meeting.getAttendants();
-            if (!attendants.containsKey(userId)){
+            if (!attendants.containsKey(userId) && userId != null){
                 attendants.put(userId, null);
                 meetingReposiroty.save(meeting);
             }
