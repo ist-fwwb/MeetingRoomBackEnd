@@ -2,6 +2,7 @@ package cn.sjtu.meetingroom.meetingroomcore.Service;
 
 import cn.sjtu.meetingroom.meetingroomcore.Domain.Meeting;
 import cn.sjtu.meetingroom.meetingroomcore.Domain.TimeSlice;
+import cn.sjtu.meetingroom.meetingroomcore.Domain.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
@@ -18,4 +19,5 @@ public interface MeetingService {
     public Meeting attend(String attendantNum, String userId);
     public void exitFromMeeting(String id, String userId);
     public void cancelMeeting(String id);
+    public List<User> findAttendants(String id);
 }

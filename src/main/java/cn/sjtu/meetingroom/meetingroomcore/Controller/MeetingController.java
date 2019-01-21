@@ -2,6 +2,7 @@ package cn.sjtu.meetingroom.meetingroomcore.Controller;
 
 
 import cn.sjtu.meetingroom.meetingroomcore.Domain.Meeting;
+import cn.sjtu.meetingroom.meetingroomcore.Domain.User;
 import cn.sjtu.meetingroom.meetingroomcore.Service.MeetingService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -39,6 +40,12 @@ public class MeetingController {
     @ApiOperation("get the detail information of a specified meeting room")
     public Meeting getMeeting(@PathVariable(name="id") String id){
         return meetingService.findById(id);
+    }
+
+    @GetMapping("/{id}/attendants")
+    @ApiOperation("get user information of all attendants")
+    public List<User> getMeetingAttendants(@PathVariable(name="id") String id){
+        return meetingService.findAttendants(id);
     }
 
     @PostMapping("")
