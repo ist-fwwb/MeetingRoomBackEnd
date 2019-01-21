@@ -70,14 +70,7 @@ public class MeetingController {
     @PutMapping("/{id}")
     @ApiOperation("modify the status of the meeting")
     public Meeting modify(@RequestBody Meeting meeting){
-        Meeting res = null;
-        switch (meeting.getStatus()){
-            case Stopped:
-                res = meetingService.save(meeting);
-                break;
-            case Cancelled:
-                //TODO Add the logical of cancelling a meeting
-        }
+        Meeting res = meetingService.save(meeting);
         return res;
     }
 

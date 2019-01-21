@@ -70,7 +70,7 @@ public class MeetingServiceImp implements MeetingService {
     }
 
     public Meeting add(Meeting meeting){
-        //TODO
+        //TODO add the case that there is not enough space the meeting
         try {
             meetingReposiroty.save(meeting);
             String id = meeting.getId();
@@ -121,7 +121,13 @@ public class MeetingServiceImp implements MeetingService {
         Meeting meeting = meetingReposiroty.findMeetingById(id);
         meeting.setStatus(Status.Cancelled);
         meetingReposiroty.save(meeting);
-        //TODO
+        TimeSlice timeSlice = timeSliceRepository.findTimeSliceByDateLikeAndRoomIdLike(meeting.getDate(), meeting.getRoomId());
+        List<String> timeSclices = timeSlice.getTimeSlice();
+        for (int i=meeting.getStartTime(); i<meeting.getEndTime(); ++i) {
+            timeSclices.set(i, null);
+        }
+        timeSliceRepository.save(timeSlice);
+        //TODO Awake the user waiting for the meeting
     }
 
     @Override
