@@ -3,9 +3,11 @@ package cn.sjtu.meetingroom.meetingroomcore.Service.ServieImp;
 import cn.sjtu.meetingroom.meetingroomcore.Dao.MeetingReposiroty;
 import cn.sjtu.meetingroom.meetingroomcore.Dao.MeetingRoomRepository;
 import cn.sjtu.meetingroom.meetingroomcore.Dao.TimeSliceRepository;
+import cn.sjtu.meetingroom.meetingroomcore.Dao.UserRepository;
 import cn.sjtu.meetingroom.meetingroomcore.Domain.Meeting;
 import cn.sjtu.meetingroom.meetingroomcore.Domain.MeetingRoom;
 import cn.sjtu.meetingroom.meetingroomcore.Domain.TimeSlice;
+import cn.sjtu.meetingroom.meetingroomcore.Domain.User;
 import cn.sjtu.meetingroom.meetingroomcore.Service.MeetingService;
 import cn.sjtu.meetingroom.meetingroomcore.Util.Status;
 import cn.sjtu.meetingroom.meetingroomcore.Util.Util;
@@ -26,6 +28,8 @@ public class MeetingServiceImp implements MeetingService {
     MeetingRoomRepository meetingRoomRepository;
     @Autowired
     TimeSliceRepository timeSliceRepository;
+    @Autowired
+    UserRepository userRepository;
 
     @Value("${meeting.attendantNum.size}")
     int RandomNumberSize;
@@ -118,6 +122,16 @@ public class MeetingServiceImp implements MeetingService {
         meeting.setStatus(Status.Cancelled);
         meetingReposiroty.save(meeting);
         //TODO
+    }
+
+    @Override
+    public List<User> findAttendants(String id) {
+        Meeting meeting = meetingReposiroty.findMeetingById(id);
+        List<User> users = new ArrayList<>();
+        for (String uid : meeting.getAttendants().keySet()) {
+            users.add(userRepository.findUserById(uid));
+        }
+        return users;
     }
 
     public void exitFromMeeting(String id, String userId){
