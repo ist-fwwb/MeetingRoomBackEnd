@@ -26,16 +26,16 @@ public class CancelScheduler {
         Date date = new Date();
         List<Meeting> meetings = meetingReposiroty.findMeeingsByDateAndStatus(sdf.format(date), Status.Pending);
         for (Meeting meeting : meetings){
-            if (isTimeOut(meeting)) meetingService.cancelMeeting(meeting.getId());
+            if (isTimeOut(meeting.getStartTime(), meeting.getEndTime())) meetingService.cancelMeeting(meeting.getId());
         }
     }
 
-    private boolean isTimeOut(Meeting meeting){
+    private boolean isTimeOut(int startTime, int endTime){
         Calendar calendar = Calendar.getInstance();
         int hour = calendar.get(Calendar.HOUR_OF_DAY);
         int minutes = calendar.get(Calendar.MINUTE);
         int time = hour * 2 + minutes / 30;
-        if (time >= meeting.getStartTime() && time < meeting.getEndTime()) return true;
+        if (time >= startTime && time < endTime) return true;
         else return false;
     }
 }

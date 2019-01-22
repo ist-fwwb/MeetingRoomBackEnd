@@ -26,4 +26,11 @@ public class Util {
         }
         return sb.toString();
     }
+
+    public static String parseIntToTime(int time){
+        StringBuilder sb = new StringBuilder();
+        sb.append(time / 2); sb.append(':');
+        sb.append(time % 2 == 0 ? "00" : "30");
+        return sb.toString();
+    }
 }

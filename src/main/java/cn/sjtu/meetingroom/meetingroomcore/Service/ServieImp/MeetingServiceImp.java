@@ -114,9 +114,12 @@ public class MeetingServiceImp implements MeetingService {
         return meeting;
     }
 
-    private void modifyTimeSlice(String date, String roomId, int startTime, int endTime, String id){
+    private void modifyTimeSlice(String date, String roomId, int startTime, int endTime, String id) throws Exception{
         TimeSlice timeSlice = timeSliceRepository.findTimeSliceByDateLikeAndRoomIdLike(date, roomId);
         List<String> timeSlices = timeSlice.getTimeSlice();
+        for (int i=startTime; i<endTime; ++i) {
+            if (timeSlices.get(i) != null) throw new Exception();
+        }
         for (int i=startTime; i<endTime; ++i) timeSlices.set(i, id);
         timeSliceRepository.save(timeSlice);
     }
