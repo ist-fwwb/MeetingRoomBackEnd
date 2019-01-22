@@ -2,6 +2,7 @@ package cn.sjtu.meetingroom.meetingroomcore.Controller;
 
 import cn.sjtu.meetingroom.meetingroomcore.Domain.Meeting;
 import cn.sjtu.meetingroom.meetingroomcore.Domain.User;
+import cn.sjtu.meetingroom.meetingroomcore.Service.MeetingService;
 import cn.sjtu.meetingroom.meetingroomcore.Service.UserService;
 import cn.sjtu.meetingroom.meetingroomcore.Util.Status;
 import cn.sjtu.meetingroom.meetingroomcore.Util.Type;
@@ -22,6 +23,9 @@ import java.util.List;
 public class UserController {
     @Autowired
     UserService userService;
+    @Autowired
+    MeetingService meetingService;
+
     @GetMapping("")
     @ApiOperation(value="get all of the user's detail information")
 
@@ -41,16 +45,13 @@ public class UserController {
 
     @GetMapping("/{id}/meeting")
     @ApiOperation(value = "get user's all of the meeting by status")
-    public List<Meeting> getAllMeeting(@PathVariable(name="id") String id, @RequestParam(name="status", required = false) Status status){
-        return userService.findMeetingsByIdAndStatus(id, status);
+    public List<Meeting> getAllMeeting(@PathVariable(name="id") String id, @RequestParam(name="status", required = false) Status status,
+                                       @RequestParam(name="date", required = false) String date){
+        List<Meeting> res = userService.findMeetingsById(id);
+        if (status != null) res = meetingService.findByStatus(status, res);
+        if (date != null) res = meetingService.findByDate(date, res);
+        return res;
     }
-
-    @GetMapping("/{id}/meeting/{date}")
-    @ApiOperation(value = "get user's meeting of a specified day")
-    public List<Meeting> getMeeting(@PathVariable(name="id") String id, @PathVariable(name="date") String date){
-        return userService.findMeetingsByIdAndDate(id, date);
-    }
-
 
     @PostMapping("")
     @ApiOperation(value="registor a user")

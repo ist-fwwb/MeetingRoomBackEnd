@@ -5,7 +5,6 @@ import cn.sjtu.meetingroom.meetingroomcore.Dao.UserRepository;
 import cn.sjtu.meetingroom.meetingroomcore.Domain.Meeting;
 import cn.sjtu.meetingroom.meetingroomcore.Domain.User;
 import cn.sjtu.meetingroom.meetingroomcore.Service.UserService;
-import cn.sjtu.meetingroom.meetingroomcore.Util.Status;
 import cn.sjtu.meetingroom.meetingroomcore.Util.Type;
 import cn.sjtu.meetingroom.meetingroomcore.Util.UserFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,10 +50,8 @@ public class UserServiceImp implements UserService {
         List<Meeting> tmp = meetingReposiroty.findMeeingsByDate(date);
         return filterAttendantsById(tmp, id);
     }
-    public List<Meeting> findMeetingsByIdAndStatus(String id, Status status){
-        List<Meeting> tmp = new ArrayList<>();
-        if (status == null) tmp = meetingReposiroty.findAll();
-        else tmp = meetingReposiroty.findMeetingsByStatus(status);
+    public List<Meeting> findMeetingsById(String id){
+        List<Meeting> tmp = meetingReposiroty.findAll();
         return filterAttendantsById(tmp, id);
     }
     public List<User> findByType(Type type, List<User> users){
