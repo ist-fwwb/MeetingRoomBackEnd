@@ -6,6 +6,7 @@ import cn.sjtu.meetingroom.meetingroomcore.Dao.UserRepository;
 import cn.sjtu.meetingroom.meetingroomcore.Domain.MeetingRoom;
 import cn.sjtu.meetingroom.meetingroomcore.Domain.User;
 import cn.sjtu.meetingroom.meetingroomcore.Service.UserService;
+import cn.sjtu.meetingroom.meetingroomcore.Util.PushFactory;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ResponseHeader;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,6 +52,11 @@ public class TestController {
     public int testMongoSaveTimeSlice(HttpServletRequest request){
         Calendar calendar = Calendar.getInstance();
                 return calendar.get(Calendar.HOUR_OF_DAY);
+    }
+    @RequestMapping("/testPush")
+    public void testPush(){
+        PushFactory.push(null, null,null);
+
     }
 
 }
