@@ -3,6 +3,7 @@ package cn.sjtu.meetingroom.meetingroomcore.Controller;
 import cn.sjtu.meetingroom.meetingroomcore.Domain.Meeting;
 import cn.sjtu.meetingroom.meetingroomcore.Domain.User;
 import cn.sjtu.meetingroom.meetingroomcore.Service.UserService;
+import cn.sjtu.meetingroom.meetingroomcore.Util.Status;
 import cn.sjtu.meetingroom.meetingroomcore.Util.Type;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -39,9 +40,9 @@ public class UserController {
     }
 
     @GetMapping("/{id}/meeting")
-    @ApiOperation(value = "get user's all of the meeting which is pending")
-    public List<Meeting> getAllMeeting(@PathVariable(name="id") String id){
-        return userService.findMeetingsById(id);
+    @ApiOperation(value = "get user's all of the meeting by status")
+    public List<Meeting> getAllMeeting(@PathVariable(name="id") String id, @RequestParam(name="status", required = false) Status status){
+        return userService.findMeetingsByIdAndStatus(id, status);
     }
 
     @GetMapping("/{id}/meeting/{date}")

@@ -51,8 +51,10 @@ public class UserServiceImp implements UserService {
         List<Meeting> tmp = meetingReposiroty.findMeeingsByDate(date);
         return filterAttendantsById(tmp, id);
     }
-    public List<Meeting> findMeetingsById(String id){
-        List<Meeting> tmp = meetingReposiroty.findMeetingsByStatus(Status.Pending);
+    public List<Meeting> findMeetingsByIdAndStatus(String id, Status status){
+        List<Meeting> tmp = new ArrayList<>();
+        if (status == null) tmp = meetingReposiroty.findAll();
+        else tmp = meetingReposiroty.findMeetingsByStatus(status);
         return filterAttendantsById(tmp, id);
     }
     public List<User> findByType(Type type, List<User> users){
