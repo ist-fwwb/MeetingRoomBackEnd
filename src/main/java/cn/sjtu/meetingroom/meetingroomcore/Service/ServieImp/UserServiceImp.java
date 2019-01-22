@@ -39,8 +39,13 @@ public class UserServiceImp implements UserService {
     public User modify(User user){
         return userRepository.save(user);
     }
-    public User login(String phone, String password){
-        return userRepository.findUserByPhoneLikeAndPasswordLike(phone, password);
+    public User login(String phone, String password, String deviceId){
+        User user = userRepository.findUserByPhoneLikeAndPasswordLike(phone, password);
+        if (user != null && deviceId != null) {
+            user.setDeviceId(deviceId);
+            userRepository.save(user);
+        }
+        return user;
     }
     public List<Meeting> findMeetingsByIdAndDate(String id, String date){
         List<Meeting> tmp = meetingReposiroty.findMeeingsByDate(date);

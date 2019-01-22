@@ -63,9 +63,9 @@ public class UserController {
 
     @PostMapping("/login")
     @ApiOperation(value="log in the app with phone and password")
-    public User login(@RequestParam(name="phone") String phone, @RequestParam(name="password") String password,
+    public User login(@RequestParam(name="phone") String phone, @RequestParam(name="password") String password, @RequestParam(name="deviceId", required = false) String deviceId,
                       HttpServletRequest request){
-        User user = userService.login(phone, password);
+        User user = userService.login(phone, password, deviceId);
         if (user == null) return null;
         else {
             HttpSession session = request.getSession();

@@ -24,6 +24,8 @@ public class User {
     String faceFile;
     @ApiModelProperty(required = true, notes = "just the name of the file")
     String featureFile;
+    @ApiModelProperty(required = false, hidden = true)
+    String deviceId;
 
     public User(String id, String enterpriceId, String phone, String password, String name, Type type, String faceFile, String featureFile) {
         this.id = id;
@@ -103,5 +105,11 @@ public class User {
         this.password = password;
     }
 
+    public String getDeviceId() {
+        return deviceId;
+    }
 
+    public void setDeviceId(String deviceId) {
+        this.deviceId = deviceId;
+    }
 }

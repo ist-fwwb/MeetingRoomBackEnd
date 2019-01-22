@@ -13,7 +13,7 @@ public interface UserService {
     public User showOne(String id);
     public User register(String enterpriseId, String phone, String password, String faceFile, String featureFile, String name);
     public User modify(User user);
-    public User login(String phone, String password);
+    public User login(String phone, String password, String deviceId);
     public List<Meeting> findMeetingsByIdAndDate(String id, String date);
     public List<Meeting> findMeetingsById(String id);
     public List<User> findByIds(String[] ids, List<User> users);
