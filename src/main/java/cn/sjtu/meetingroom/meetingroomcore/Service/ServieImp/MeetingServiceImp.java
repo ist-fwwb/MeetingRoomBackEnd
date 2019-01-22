@@ -69,6 +69,14 @@ public class MeetingServiceImp implements MeetingService {
         return res;
     }
 
+    public List<Meeting> findByStatus(Status status, List<Meeting> meetings){
+        List<Meeting> res = new ArrayList<>();
+        for (Meeting meeting : meetings){
+            if (meeting.getStatus().equals(status)) res.add(meeting);
+        }
+        return res;
+    }
+
     public Meeting add(Meeting meeting){
         //TODO add the case that there is not enough space the meeting
         try {
