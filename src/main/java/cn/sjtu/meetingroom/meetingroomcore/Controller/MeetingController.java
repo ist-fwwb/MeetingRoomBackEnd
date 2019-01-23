@@ -72,8 +72,8 @@ public class MeetingController {
 
     @PutMapping("/{id}")
     @ApiOperation("modify the status of the meeting")
-    public Meeting modify(@RequestBody Meeting meeting){
-        Meeting res = meetingService.save(meeting);
+    public Meeting modify(@RequestBody Meeting meeting, @PathVariable(name="id") String id){
+        Meeting res = meetingService.modify(meeting, id);
         return res;
     }
 

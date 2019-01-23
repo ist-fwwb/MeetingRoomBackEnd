@@ -162,7 +162,12 @@ public class MeetingServiceImp implements MeetingService {
     }
 
     @Transactional
-    public Meeting save(Meeting meeting){
+    public Meeting modify(Meeting meeting, String id){
+        if (meeting == null) return null;
+        Meeting origin = meetingReposiroty.findMeetingById(id);
+        Map<String, String> tmp = new HashMap<>();
+        tmp.putAll(meeting.getAttendants()); tmp.putAll(origin.getAttendants());
+        meeting.setAttendants(tmp);
         return meetingReposiroty.save(meeting);
     }
 

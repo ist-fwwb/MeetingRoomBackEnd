@@ -74,7 +74,7 @@ public class UserServiceImp implements UserService {
     private List<Meeting> filterAttendantsById(List<Meeting> tmp, String id){
         List<Meeting> res = new ArrayList<>();
         for (Meeting meeting : tmp){
-            if (meeting.getAttendants().containsKey(id)) res.add(meeting);
+            if (meeting.getAttendants() != null && meeting.getAttendants().containsKey(id)) res.add(meeting);
         }
         return res;
     }
