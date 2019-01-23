@@ -79,7 +79,7 @@ public class MeetingController {
 
     @PutMapping("/{id}/status/{status}")
     @ApiOperation("change a meeting's status")
-    public String delete(@PathVariable(name="id") String id, @PathVariable(name="status") Status status){
+    public String modifyStatus(@PathVariable(name="id") String id, @PathVariable(name="status") Status status){
         switch (status){
             case Cancelled:
                 meetingService.cancelMeeting(id);
@@ -87,6 +87,14 @@ public class MeetingController {
         }
         return "ok";
     }
+
+    @DeleteMapping("/{id}")
+    @ApiOperation("delete a meeting")
+    public String delete(@PathVariable(name="id") String id){
+        meetingService.cancelMeeting(id);
+        return "ok";
+    }
+
 
     @DeleteMapping("/{id}/attendants/{userId}")
     @ApiOperation("exit from a meeting")
