@@ -26,7 +26,10 @@ public class CancelScheduler {
         Date date = new Date();
         List<Meeting> meetings = meetingReposiroty.findMeeingsByDateAndStatus(sdf.format(date), Status.Pending);
         for (Meeting meeting : meetings){
-            if (isTimeOut(meeting.getStartTime(), meeting.getEndTime())) meetingService.cancelMeeting(meeting.getId());
+            if (isTimeOut(meeting.getStartTime(), meeting.getEndTime())) {
+                System.out.println("At time" + date + " Cancel the meeting " + meeting.getId());
+                meetingService.cancelMeeting(meeting.getId());
+            }
         }
     }
 

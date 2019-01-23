@@ -104,7 +104,7 @@ public class MeetingServiceImp implements MeetingService {
 
     @Transactional
     public Meeting attend(String attendantNum, String userId){
-        //TODO
+        //TODO Awake the host to know it
         Meeting meeting = null;
         if (isAttendantNum(attendantNum)) meeting = meetingReposiroty.findMeetingByAttendantNumLikeAndStatusLike(attendantNum, Status.Pending);
         else meeting = meetingReposiroty.findMeetingById(attendantNum);
@@ -163,11 +163,12 @@ public class MeetingServiceImp implements MeetingService {
 
     @Transactional
     public Meeting modify(Meeting meeting, String id){
-        if (meeting == null) return null;
         Meeting origin = meetingReposiroty.findMeetingById(id);
+        if (meeting == null || origin == null) return null;
         Map<String, String> tmp = new HashMap<>();
         tmp.putAll(meeting.getAttendants()); tmp.putAll(origin.getAttendants());
         meeting.setAttendants(tmp);
+        //TODO MODIFY THE TIME
         return meetingReposiroty.save(meeting);
     }
 
