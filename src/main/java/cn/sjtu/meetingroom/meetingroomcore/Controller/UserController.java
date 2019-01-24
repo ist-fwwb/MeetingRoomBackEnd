@@ -35,7 +35,7 @@ public class UserController {
         List<User> users = userService.showAll();
         if (ids != null) users = userService.findByIds(ids, users);
         if (type != null) users = userService.findByType(type, users);
-        if (phone != null) users = userService.findByPhone(String phone);
+        if (phone != null) users = userService.findByPhone(phone, users);
         return users;
     }
 
