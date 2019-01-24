@@ -30,10 +30,12 @@ public class UserController {
     @ApiOperation(value="get all of the user's detail information")
 
     public List<User> showAll(@RequestParam(name="type", required = false) Type type,
-                              @RequestParam(name="ids", required = false) String[] ids){
+                              @RequestParam(name="ids", required = false) String[] ids,
+                              @RequestParam(name="phone", required = false) String phone){
         List<User> users = userService.showAll();
         if (ids != null) users = userService.findByIds(ids, users);
         if (type != null) users = userService.findByType(type, users);
+        if (phone != null) users = userService.findByPhone(String phone);
         return users;
     }
 

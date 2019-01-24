@@ -78,4 +78,13 @@ public class UserServiceImp implements UserService {
         }
         return res;
     }
+
+    @Override
+    public List<User> findByPhone(String phone, List<User> users) {
+        List<User> res = new ArrayList<>();
+        for (User user : users){
+            if (user.getPhone().equals(phone))  res.add(user);
+        }
+        return res;
+    }
 }
