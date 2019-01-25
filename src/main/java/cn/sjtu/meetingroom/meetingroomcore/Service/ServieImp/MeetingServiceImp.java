@@ -166,7 +166,8 @@ public class MeetingServiceImp implements MeetingService {
         Meeting origin = meetingReposiroty.findMeetingById(id);
         if (meeting == null || origin == null) return null;
         Map<String, String> tmp = new HashMap<>();
-        tmp.putAll(meeting.getAttendants()); tmp.putAll(origin.getAttendants());
+        tmp.putAll(origin.getAttendants());
+        tmp.putAll(meeting.getAttendants());
         meeting.setAttendants(tmp);
         //TODO MODIFY THE TIME
         return meetingReposiroty.save(meeting);
