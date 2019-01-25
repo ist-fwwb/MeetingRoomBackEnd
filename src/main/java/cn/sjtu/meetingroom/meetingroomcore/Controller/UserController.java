@@ -31,11 +31,11 @@ public class UserController {
 
     public List<User> showAll(@RequestParam(name="type", required = false) Type type,
                               @RequestParam(name="ids", required = false) String[] ids,
-                              @RequestParam(name="phone", required = false) String phone){
+                              @RequestParam(name="featureFileName", required = false) String featureFileName){
         List<User> users = userService.showAll();
         if (ids != null) users = userService.findByIds(ids, users);
         if (type != null) users = userService.findByType(type, users);
-        if (phone != null) users = userService.findByPhone(phone, users);
+        if (featureFileName != null) users = userService.findByFeatureFileName(featureFileName, users);
         return users;
     }
 

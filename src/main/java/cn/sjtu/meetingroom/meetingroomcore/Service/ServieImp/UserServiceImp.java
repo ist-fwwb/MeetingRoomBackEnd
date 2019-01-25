@@ -80,11 +80,12 @@ public class UserServiceImp implements UserService {
     }
 
     @Override
-    public List<User> findByPhone(String phone, List<User> users) {
+    public List<User> findByFeatureFileName(String featureFileName, List<User> users) {
         List<User> res = new ArrayList<>();
         for (User user : users){
-            if (user.getPhone().equals(phone))  res.add(user);
+            if (user.getFeatureFile().equals(featureFileName)) res.add(user);
         }
         return res;
+
     }
 }
