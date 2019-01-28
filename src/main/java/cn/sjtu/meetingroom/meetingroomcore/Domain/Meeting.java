@@ -42,7 +42,7 @@ public class Meeting {
     @ApiModelProperty(required = false)
     MeetingType type;
     @ApiModelProperty(required = false)
-    Set<String> utils;
+    Set<String> tags;
 
     public Set<String> getTags(){
         return tags;
