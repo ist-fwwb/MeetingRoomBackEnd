@@ -7,6 +7,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Map;
+import java.util.Set;
 
 @Document
 public class Meeting {
@@ -41,13 +42,13 @@ public class Meeting {
     @ApiModelProperty(required = false)
     MeetingType type;
     @ApiModelProperty(required = false)
-    List<String> tags;
+    Set<String> utils;
 
-    public List<String> getTags(){
+    public Set<String> getTags(){
         return tags;
     }
 
-    public void setTags(List<String> tags){
+    public void setTags(Set<String> tags){
         this.tags = tags;
     }
 
