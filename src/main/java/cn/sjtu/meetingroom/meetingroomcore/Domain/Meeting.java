@@ -40,6 +40,16 @@ public class Meeting {
     Status status;
     @ApiModelProperty(required = false)
     MeetingType type;
+    @ApiModelProperty(required = false)
+    List<String> tags;
+
+    public List<String> getTags(){
+        return tags;
+    }
+
+    public void setTags(List<String> tags){
+        this.tags = tags;
+    }
 
     public String getRoomId() {
         return roomId;
