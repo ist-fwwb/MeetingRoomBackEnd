@@ -16,5 +16,6 @@ public interface MeetingRoomService {
     public List<MeetingRoom> findByUtils(List<MeetingRoomUtils> utils, List<MeetingRoom> meetingRooms);
     public List<MeetingRoom> findBySize(Size size, List<MeetingRoom> meetingRooms);
     public List<MeetingRoom> findByStartTimeAndEndTime(Integer startTime, Integer endTime, String date, List<MeetingRoom> meetingRooms);
+    public List<MeetingRoom> findByLocation(String location, List<MeetingRoom> meetingRooms);
     public MeetingRoom findById(String id);
 }

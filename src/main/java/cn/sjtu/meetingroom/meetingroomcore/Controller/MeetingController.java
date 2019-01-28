@@ -30,12 +30,14 @@ public class MeetingController {
                                     @RequestParam(name="date", required = false) String date,
                                     @RequestParam(name="roomId", required = false) String roomId,
                                      @RequestParam(name="time", required = false) Integer time,
-                                    @RequestParam(name="status", required = false) Status status){
+                                    @RequestParam(name="status", required = false) Status status,
+                                    @RequestParam(name="location", required = false) String location){
         List<Meeting> meetings = meetingService.showAll();
         if (date != null) meetings = meetingService.findByDate(date, meetings);
         if (roomId != null) meetings = meetingService.findByRoomId(roomId, meetings);
         if (time != null) meetings = meetingService.findByTime(time, meetings);
         if (status != null) meetings = meetingService.findByStatus(status, meetings);
+        if (location != null) meetings = meetingService.findByLocation(location, meetings);
         return meetings;
     }
 

@@ -78,6 +78,15 @@ public class MeetingServiceImp implements MeetingService {
         return res;
     }
 
+    @Override
+    public List<Meeting> findByLocation(String location, List<Meeting> meetings) {
+        List<Meeting> res = new ArrayList<>();
+        for (Meeting meeting : meetings){
+            if (Util.compare(meeting.getLocation(), location)) res.add(meeting);
+        }
+        return res;
+    }
+
     @Transactional
     public Meeting add(Meeting meeting){
         //TODO add the case that there is not enough space the meeting
