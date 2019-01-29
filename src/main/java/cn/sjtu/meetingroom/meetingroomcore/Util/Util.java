@@ -36,18 +36,12 @@ public class Util {
 
     public static boolean compare(String origin, String s){
         if (s.length() > origin.length()) return false;
-        boolean dp[][] = new boolean[s.length()+1][origin.length()+1];
-        for (int i=0; i<=s.length(); ++i){
-            for (int j=0; j<=origin.length(); ++j) dp[i][j] = true;
+        if (s.length() == 0) return true;
+        int index = 0;
+        for (int i=0; i<origin.length(); ++i){
+            if (origin.charAt(i) == s.charAt(index)) index++;
+            if (index == s.length()) return true;
         }
-        for (int i=1; i<=s.length(); ++i) dp[i][0] = false;
-        for (int i=1; i<=s.length(); ++i) {
-            char c = s.charAt(i-1);
-            for (int j=i; j<=origin.length(); ++j){
-                if (origin.charAt(j-1) == c && dp[i-1][j-1] ) break;
-                else dp[i][j] = false;
-            }
-        }
-        return dp[s.length()][origin.length()];
+        return false;
     }
 }
