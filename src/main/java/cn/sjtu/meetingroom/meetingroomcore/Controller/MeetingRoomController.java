@@ -27,11 +27,13 @@ public class MeetingRoomController {
                                   @RequestParam(name="size", required = false) Size size,
                                   @RequestParam(name="startTime", required = false) Integer startTime,
                                   @RequestParam(name="endTime", required = false) Integer endTime,
-                                  @RequestParam(name="date", required = false) String date){
+                                  @RequestParam(name="date", required = false) String date,
+                                  @RequestParam(name="location", required = false) String location){
         List<MeetingRoom> meetingRooms = meetingRoomService.showAll();
         if (utils != null) meetingRooms = meetingRoomService.findByUtils(Arrays.asList(utils), meetingRooms);
         if (size != null) meetingRooms = meetingRoomService.findBySize(size, meetingRooms);
         if (startTime != null && endTime != null && date != null) meetingRooms = meetingRoomService.findByStartTimeAndEndTime(startTime, endTime, date, meetingRooms);
+        if (location != null) meetingRooms = meetingRoomService.findByLocation(location, meetingRooms);
         return meetingRooms;
     }
 

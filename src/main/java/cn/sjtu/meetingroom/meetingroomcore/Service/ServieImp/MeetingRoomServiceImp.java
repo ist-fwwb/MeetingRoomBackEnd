@@ -2,16 +2,15 @@ package cn.sjtu.meetingroom.meetingroomcore.Service.ServieImp;
 
 import cn.sjtu.meetingroom.meetingroomcore.Dao.MeetingRoomRepository;
 import cn.sjtu.meetingroom.meetingroomcore.Dao.TimeSliceRepository;
-import cn.sjtu.meetingroom.meetingroomcore.Domain.Meeting;
 import cn.sjtu.meetingroom.meetingroomcore.Domain.MeetingRoom;
 import cn.sjtu.meetingroom.meetingroomcore.Domain.TimeSlice;
 import cn.sjtu.meetingroom.meetingroomcore.Service.MeetingRoomService;
 import cn.sjtu.meetingroom.meetingroomcore.Util.MeetingRoomFactory;
 import cn.sjtu.meetingroom.meetingroomcore.Util.MeetingRoomUtils;
 import cn.sjtu.meetingroom.meetingroomcore.Util.Size;
+import cn.sjtu.meetingroom.meetingroomcore.Util.Util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
@@ -65,6 +64,17 @@ public class MeetingRoomServiceImp implements MeetingRoomService {
         }
         return res;
     }
+
+    @Override
+    public List<MeetingRoom> findByLocation(String location, List<MeetingRoom> meetingRooms) {
+        List<MeetingRoom> res = new ArrayList<>();
+        for (MeetingRoom meetingRoom : meetingRooms){
+            if (Util.compare(meetingRoom.getLocation(), location)) res.add(meetingRoom);
+        }
+        return res;
+
+    }
+
     private boolean isUtilsSatisfy(List<MeetingRoomUtils> utils, MeetingRoom meetingRoom){
         Set<MeetingRoomUtils> existUtils = meetingRoom.getUtils();
         return existUtils.containsAll(utils);

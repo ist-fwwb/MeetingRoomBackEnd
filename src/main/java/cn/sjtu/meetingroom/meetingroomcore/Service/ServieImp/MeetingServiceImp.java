@@ -14,6 +14,7 @@ import cn.sjtu.meetingroom.meetingroomcore.Util.Util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -77,6 +78,16 @@ public class MeetingServiceImp implements MeetingService {
         return res;
     }
 
+    @Override
+    public List<Meeting> findByLocation(String location, List<Meeting> meetings) {
+        List<Meeting> res = new ArrayList<>();
+        for (Meeting meeting : meetings){
+            if (Util.compare(meeting.getLocation(), location)) res.add(meeting);
+        }
+        return res;
+    }
+
+    @Transactional
     public Meeting add(Meeting meeting){
         //TODO add the case that there is not enough space the meeting
         try {
@@ -99,15 +110,17 @@ public class MeetingServiceImp implements MeetingService {
             return null;
         }
     }
+
+    @Transactional
     public Meeting attend(String attendantNum, String userId){
-        //TODO
+        //TODO Awake the host to know it
         Meeting meeting = null;
         if (isAttendantNum(attendantNum)) meeting = meetingReposiroty.findMeetingByAttendantNumLikeAndStatusLike(attendantNum, Status.Pending);
         else meeting = meetingReposiroty.findMeetingById(attendantNum);
         if (meeting != null) {
             Map<String, String> attendants = meeting.getAttendants();
             if (!attendants.containsKey(userId) && userId != null){
-                attendants.put(userId, null);
+                attendants.put(userId, "");
                 meetingReposiroty.save(meeting);
             }
         }
@@ -141,7 +154,6 @@ public class MeetingServiceImp implements MeetingService {
         //TODO Awake the user waiting for the meeting
     }
 
-    @Override
     public List<User> findAttendants(String id) {
         Meeting meeting = meetingReposiroty.findMeetingById(id);
         List<User> users = new ArrayList<>();
@@ -151,13 +163,22 @@ public class MeetingServiceImp implements MeetingService {
         return users;
     }
 
+    @Transactional
     public void exitFromMeeting(String id, String userId){
         Meeting meeting = meetingReposiroty.findMeetingById(id);
         meeting.getAttendants().remove(userId);
         meetingReposiroty.save(meeting);
     }
 
-    public Meeting save(Meeting meeting){
+    @Transactional
+    public Meeting modify(Meeting meeting, String id){
+        Meeting origin = meetingReposiroty.findMeetingById(id);
+        if (meeting == null || origin == null) return null;
+        Map<String, String> tmp = new HashMap<>();
+        tmp.putAll(origin.getAttendants());
+        tmp.putAll(meeting.getAttendants());
+        meeting.setAttendants(tmp);
+        //TODO MODIFY THE TIME
         return meetingReposiroty.save(meeting);
     }
 
@@ -169,7 +190,7 @@ public class MeetingServiceImp implements MeetingService {
     private void setAttendents(Meeting meeting, Map<String, String> attendants){
         String hostId = meeting.getHostId();
         if (attendants == null) attendants = new HashMap<>();
-        if (attendants.isEmpty()) attendants.put(hostId, null);
+        if (attendants.isEmpty()) attendants.put(hostId, "");
         meeting.setAttendants(attendants);
     }
 

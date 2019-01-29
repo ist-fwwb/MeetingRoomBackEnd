@@ -30,10 +30,12 @@ public class UserController {
     @ApiOperation(value="get all of the user's detail information")
 
     public List<User> showAll(@RequestParam(name="type", required = false) Type type,
-                              @RequestParam(name="ids", required = false) String[] ids){
+                              @RequestParam(name="ids", required = false) String[] ids,
+                              @RequestParam(name="featureFileName", required = false) String featureFileName){
         List<User> users = userService.showAll();
         if (ids != null) users = userService.findByIds(ids, users);
         if (type != null) users = userService.findByType(type, users);
+        if (featureFileName != null) users = userService.findByFeatureFileName(featureFileName, users);
         return users;
     }
 

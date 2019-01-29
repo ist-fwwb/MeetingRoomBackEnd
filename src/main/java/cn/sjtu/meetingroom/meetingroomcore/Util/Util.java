@@ -33,4 +33,15 @@ public class Util {
         sb.append(time % 2 == 0 ? "00" : "30");
         return sb.toString();
     }
+
+    public static boolean compare(String origin, String s){
+        if (s.length() > origin.length()) return false;
+        if (s.length() == 0) return true;
+        int index = 0;
+        for (int i=0; i<origin.length(); ++i){
+            if (origin.charAt(i) == s.charAt(index)) index++;
+            if (index == s.length()) return true;
+        }
+        return false;
+    }
 }

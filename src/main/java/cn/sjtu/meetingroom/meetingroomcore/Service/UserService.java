@@ -18,5 +18,6 @@ public interface UserService {
     public List<Meeting> findMeetingsById(String id);
     public List<User> findByIds(String[] ids, List<User> users);
     public List<User> findByType(Type type, List<User> users);
+    public List<User> findByFeatureFileName(String featureFileName, List<User> users);
     public List<User> showAll();
 }
