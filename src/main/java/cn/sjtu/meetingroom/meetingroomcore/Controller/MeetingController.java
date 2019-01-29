@@ -48,7 +48,7 @@ public class MeetingController {
         List<MeetingWrapper> meetingWrappers = new ArrayList<>();
         for (Meeting meeting : meetings) {
             MeetingWrapper meetingWrapper = new MeetingWrapper(meeting);
-            meetingWrapper.setHost(userService.showOne(meeting.getId()));
+            meetingWrapper.setHost(userService.showOne(meeting.getHostId()));
             meetingWrappers.add(meetingWrapper);
         }
 
