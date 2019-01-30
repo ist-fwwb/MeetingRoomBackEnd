@@ -2,8 +2,10 @@ package cn.sjtu.meetingroom.meetingroomcore.Controller;
 
 
 import cn.sjtu.meetingroom.meetingroomcore.Domain.Meeting;
+import cn.sjtu.meetingroom.meetingroomcore.Domain.MeetingWrapper;
 import cn.sjtu.meetingroom.meetingroomcore.Domain.User;
 import cn.sjtu.meetingroom.meetingroomcore.Service.MeetingService;
+import cn.sjtu.meetingroom.meetingroomcore.Service.UserService;
 import cn.sjtu.meetingroom.meetingroomcore.Util.Status;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -14,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Validated
@@ -24,9 +27,12 @@ public class MeetingController {
     @Autowired
     MeetingService meetingService;
 
+    @Autowired
+    UserService userService;
+
     @GetMapping("")
     @ApiOperation("get all of the meeting through condition, if the condition contains time then by default return the List<Meeting> with a Running status or Pending status")
-    public List<Meeting> getMeetings(
+    public List<MeetingWrapper> getMeetings(
                                     @RequestParam(name="date", required = false) String date,
                                     @RequestParam(name="roomId", required = false) String roomId,
                                      @RequestParam(name="time", required = false) Integer time,
@@ -38,7 +44,15 @@ public class MeetingController {
         if (time != null) meetings = meetingService.findByTime(time, meetings);
         if (status != null) meetings = meetingService.findByStatus(status, meetings);
         if (location != null) meetings = meetingService.findByLocation(location, meetings);
-        return meetings;
+
+        List<MeetingWrapper> meetingWrappers = new ArrayList<>();
+        for (Meeting meeting : meetings) {
+            MeetingWrapper meetingWrapper = new MeetingWrapper(meeting);
+            meetingWrapper.setHost(userService.showOne(meeting.getHostId()));
+            meetingWrappers.add(meetingWrapper);
+        }
+
+        return meetingWrappers;
     }
 
     @GetMapping("/{id}")
