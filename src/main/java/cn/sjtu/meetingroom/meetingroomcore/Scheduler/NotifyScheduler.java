@@ -1,6 +1,6 @@
 package cn.sjtu.meetingroom.meetingroomcore.Scheduler;
 
-import cn.sjtu.meetingroom.meetingroomcore.Dao.MeetingReposiroty;
+import cn.sjtu.meetingroom.meetingroomcore.Dao.MeetingRepository;
 import cn.sjtu.meetingroom.meetingroomcore.Dao.UserRepository;
 import cn.sjtu.meetingroom.meetingroomcore.Domain.Meeting;
 import cn.sjtu.meetingroom.meetingroomcore.Domain.User;
@@ -21,7 +21,7 @@ import java.util.Map;
 @Component
 public class NotifyScheduler {
     @Autowired
-    MeetingReposiroty meetingReposiroty;
+    MeetingRepository meetingRepository;
     @Autowired
     MeetingService meetingService;
     @Autowired
@@ -31,7 +31,7 @@ public class NotifyScheduler {
 
     @Scheduled(cron = "0 50/20 * * * *")
     public void notifyMeetingStart(){
-        List<Meeting> meetings = meetingReposiroty.findMeetingsByStatus(Status.Pending);
+        List<Meeting> meetings = meetingRepository.findMeetingsByStatus(Status.Pending);
         meetings = meetingService.findByDate(sdf.format(new Date()), meetings);
         for (Meeting meeting : meetings){
             if (isComing(meeting.getStartTime())){
@@ -48,7 +48,7 @@ public class NotifyScheduler {
 
     @Scheduled(cron = "0 50/20 * * * *")
     public void notifyMeetingEnd(){
-        List<Meeting> meetings = meetingReposiroty.findMeetingsByStatus(Status.Pending);
+        List<Meeting> meetings = meetingRepository.findMeetingsByStatus(Status.Pending);
         meetings = meetingService.findByDate(sdf.format(new Date()), meetings);
         for (Meeting meeting : meetings){
             if (isComing(meeting.getEndTime())){

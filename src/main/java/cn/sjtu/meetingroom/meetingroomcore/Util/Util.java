@@ -4,6 +4,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
@@ -43,5 +44,9 @@ public class Util {
             if (index == s.length()) return true;
         }
         return false;
+    }
+
+    public static long getTimeStamp(){
+        return new Date().getTime();
     }
 }

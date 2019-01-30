@@ -88,8 +88,12 @@ public class MeetingController {
 
     @PutMapping("/{id}")
     @ApiOperation("modify the meeting")
-    public Meeting modify(@RequestBody Meeting meeting, @PathVariable(name="id") String id){
-        Meeting res = meetingService.modify(meeting, id);
+    public MeetingWrapper modify(@RequestBody Meeting meeting, @PathVariable(name="id") String id){
+        boolean isValidate = meetingService.modify(meeting, id);
+        MeetingWrapper res = new MeetingWrapper(meetingService.findById(id));
+        res.setHost(userService.showOne(meetingService.findById(id).getHostId()));
+        if (isValidate) res.setErrorNum("200");
+        else res.setErrorNum("400");
         return res;
     }
 

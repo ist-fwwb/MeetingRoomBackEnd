@@ -1,6 +1,6 @@
 package cn.sjtu.meetingroom.meetingroomcore.Util;
 
-import cn.sjtu.meetingroom.meetingroomcore.Dao.MeetingReposiroty;
+import cn.sjtu.meetingroom.meetingroomcore.Dao.MeetingRepository;
 import cn.sjtu.meetingroom.meetingroomcore.Domain.Meeting;
 import cn.sjtu.meetingroom.meetingroomcore.Domain.TimeSlice;
 import cn.sjtu.meetingroom.meetingroomcore.Domain.TimeSliceWrapper;
@@ -13,7 +13,7 @@ import java.util.Map;
 @Component
 public class TimeSliceWrapperFactory {
     @Autowired
-    MeetingReposiroty meetingReposiroty;
+    MeetingRepository meetingRepository;
 
     public TimeSliceWrapper create(TimeSlice timeSlice){
         TimeSliceWrapper timeSliceWrapper = new TimeSliceWrapper(timeSlice);
@@ -21,7 +21,7 @@ public class TimeSliceWrapperFactory {
         Map<String, String> meetingNames = timeSliceWrapper.getMeetingNames();
         for (String meetingId : timeSlices){
             if (meetingId != null && !meetingNames.containsKey(meetingId)){
-                Meeting meeting = meetingReposiroty.findMeetingById(meetingId);
+                Meeting meeting = meetingRepository.findMeetingById(meetingId);
                 if (meeting != null) meetingNames.put(meetingId, meeting.getHeading());
             }
         }

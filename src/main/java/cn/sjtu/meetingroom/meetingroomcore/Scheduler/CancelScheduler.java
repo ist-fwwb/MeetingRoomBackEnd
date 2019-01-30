@@ -1,6 +1,6 @@
 package cn.sjtu.meetingroom.meetingroomcore.Scheduler;
 
-import cn.sjtu.meetingroom.meetingroomcore.Dao.MeetingReposiroty;
+import cn.sjtu.meetingroom.meetingroomcore.Dao.MeetingRepository;
 import cn.sjtu.meetingroom.meetingroomcore.Domain.Meeting;
 import cn.sjtu.meetingroom.meetingroomcore.Service.MeetingService;
 import cn.sjtu.meetingroom.meetingroomcore.Util.Status;
@@ -16,7 +16,7 @@ import java.util.List;
 @Component
 public class CancelScheduler {
     @Autowired
-    MeetingReposiroty meetingReposiroty;
+    MeetingRepository meetingRepository;
     @Autowired
     MeetingService meetingService;
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -24,7 +24,7 @@ public class CancelScheduler {
     @Scheduled(cron = "0 10/40 * * * *")
     public void cancelTimeOutMeeting(){
         Date date = new Date();
-        List<Meeting> meetings = meetingReposiroty.findMeeingsByDateAndStatus(sdf.format(date), Status.Pending);
+        List<Meeting> meetings = meetingRepository.findMeeingsByDateAndStatus(sdf.format(date), Status.Pending);
         for (Meeting meeting : meetings){
             if (isTimeOut(meeting.getStartTime(), meeting.getEndTime())) {
                 System.out.println("At time" + date + " Cancel the meeting " + meeting.getId());

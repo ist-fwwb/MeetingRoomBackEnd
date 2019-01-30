@@ -44,9 +44,20 @@ public class Meeting {
     @ApiModelProperty(required = false)
     Set<String> tags;
 
+    public long getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(long timestamp) {
+        this.timestamp = timestamp;
+    }
+
+    @ApiModelProperty(required = false)
+    long timestamp;
+
     public Meeting(String id, String heading, String description, String roomId, String date, String location,
                    int startTime, int endTime, String hostId, Map<String, String> attendants, boolean needSignIn,
-                   String attendantNum, Status status, MeetingType type, Set<String> tags) {
+                   String attendantNum, Status status, MeetingType type, Set<String> tags, long timestamp) {
         this.id = id;
         this.heading = heading;
         this.description = description;
@@ -62,6 +73,7 @@ public class Meeting {
         this.status = status;
         this.type = type;
         this.tags = tags;
+        this.timestamp = timestamp;
     }
 
     public Set<String> getTags(){

@@ -1,6 +1,6 @@
 package cn.sjtu.meetingroom.meetingroomcore.Service.ServieImp;
 
-import cn.sjtu.meetingroom.meetingroomcore.Dao.MeetingReposiroty;
+import cn.sjtu.meetingroom.meetingroomcore.Dao.MeetingRepository;
 import cn.sjtu.meetingroom.meetingroomcore.Dao.UserRepository;
 import cn.sjtu.meetingroom.meetingroomcore.Domain.Meeting;
 import cn.sjtu.meetingroom.meetingroomcore.Domain.User;
@@ -24,7 +24,7 @@ public class UserServiceImp implements UserService {
     @Autowired
     UserFactory userFactory;
     @Autowired
-    MeetingReposiroty meetingReposiroty;
+    MeetingRepository meetingRepository;
 
     public Page<User> showAll(PageRequest pageRequest){
         return userRepository.findAll(pageRequest);
@@ -47,11 +47,11 @@ public class UserServiceImp implements UserService {
         return user;
     }
     public List<Meeting> findMeetingsByIdAndDate(String id, String date){
-        List<Meeting> tmp = meetingReposiroty.findMeeingsByDate(date);
+        List<Meeting> tmp = meetingRepository.findMeeingsByDate(date);
         return filterAttendantsById(tmp, id);
     }
     public List<Meeting> findMeetingsById(String id){
-        List<Meeting> tmp = meetingReposiroty.findAll();
+        List<Meeting> tmp = meetingRepository.findAll();
         return filterAttendantsById(tmp, id);
     }
     public List<User> findByType(Type type, List<User> users){

@@ -19,5 +19,5 @@ public interface MeetingService {
     public void exitFromMeeting(String id, String userId);
     public void cancelMeeting(String id);
     public List<User> findAttendants(String id);
-    public Meeting modify(Meeting meeting, String id);
+    public boolean modify(Meeting meeting, String id);
 }

@@ -1,6 +1,6 @@
 package cn.sjtu.meetingroom.meetingroomcore.Service.ServieImp;
 
-import cn.sjtu.meetingroom.meetingroomcore.Dao.MeetingReposiroty;
+import cn.sjtu.meetingroom.meetingroomcore.Dao.MeetingRepository;
 import cn.sjtu.meetingroom.meetingroomcore.Dao.MeetingRoomRepository;
 import cn.sjtu.meetingroom.meetingroomcore.Dao.TimeSliceRepository;
 import cn.sjtu.meetingroom.meetingroomcore.Dao.UserRepository;
@@ -16,15 +16,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class MeetingServiceImp implements MeetingService {
     @Autowired
-    MeetingReposiroty meetingReposiroty;
+    MeetingRepository meetingRepository;
     @Autowired
     MeetingRoomRepository meetingRoomRepository;
     @Autowired
@@ -36,7 +33,7 @@ public class MeetingServiceImp implements MeetingService {
     int RandomNumberSize;
 
     public List<Meeting> showAll(){
-        return meetingReposiroty.findAll();
+        return meetingRepository.findAll();
     }
     public List<Meeting> findByDate(String date, List<Meeting> meetings){
         List<Meeting> res = new ArrayList<>();
@@ -91,7 +88,7 @@ public class MeetingServiceImp implements MeetingService {
     public Meeting add(Meeting meeting){
         //TODO add the case that there is not enough space the meeting
         try {
-            meetingReposiroty.save(meeting);
+            meetingRepository.save(meeting);
             String id = meeting.getId();
             String roomId = meeting.getRoomId();
             String date = meeting.getDate();
@@ -103,10 +100,11 @@ public class MeetingServiceImp implements MeetingService {
             setAttendants(meeting, attendants);
             meeting.setAttendantNum(Util.generateAttendantNum(RandomNumberSize));
             meeting.setStatus(Status.Pending);
-            return meetingReposiroty.save(meeting);
+            meeting.setTimestamp(Util.getTimeStamp());
+            return meetingRepository.save(meeting);
         }
         catch (Exception e) {
-            meetingReposiroty.delete(meeting);
+            meetingRepository.delete(meeting);
             return null;
         }
     }
@@ -115,13 +113,14 @@ public class MeetingServiceImp implements MeetingService {
     public Meeting attend(String attendantNum, String userId){
         //TODO Awake the host to know it
         Meeting meeting = null;
-        if (isAttendantNum(attendantNum)) meeting = meetingReposiroty.findMeetingByAttendantNumLikeAndStatusLike(attendantNum, Status.Pending);
-        else meeting = meetingReposiroty.findMeetingById(attendantNum);
+        if (isAttendantNum(attendantNum)) meeting = meetingRepository.findMeetingByAttendantNumLikeAndStatusLike(attendantNum, Status.Pending);
+        else meeting = meetingRepository.findMeetingById(attendantNum);
         if (meeting != null) {
             Map<String, String> attendants = meeting.getAttendants();
             if (!attendants.containsKey(userId) && userId != null){
                 attendants.put(userId, "");
-                meetingReposiroty.save(meeting);
+                meeting.setTimestamp(Util.getTimeStamp());
+                meetingRepository.save(meeting);
             }
         }
         return meeting;
@@ -138,13 +137,13 @@ public class MeetingServiceImp implements MeetingService {
     }
 
     public Meeting findById(String id){
-        return meetingReposiroty.findMeetingById(id);
+        return meetingRepository.findMeetingById(id);
     }
 
     public void cancelMeeting(String id){
-        Meeting meeting = meetingReposiroty.findMeetingById(id);
+        Meeting meeting = meetingRepository.findMeetingById(id);
         meeting.setStatus(Status.Cancelled);
-        meetingReposiroty.save(meeting);
+        meetingRepository.save(meeting);
         TimeSlice timeSlice = timeSliceRepository.findTimeSliceByDateLikeAndRoomIdLike(meeting.getDate(), meeting.getRoomId());
         List<String> timeSclices = timeSlice.getTimeSlice();
         for (int i=meeting.getStartTime(); i<meeting.getEndTime(); ++i) {
@@ -155,7 +154,7 @@ public class MeetingServiceImp implements MeetingService {
     }
 
     public List<User> findAttendants(String id) {
-        Meeting meeting = meetingReposiroty.findMeetingById(id);
+        Meeting meeting = meetingRepository.findMeetingById(id);
         List<User> users = new ArrayList<>();
         for (String uid : meeting.getAttendants().keySet()) {
             users.add(userRepository.findUserById(uid));
@@ -165,21 +164,20 @@ public class MeetingServiceImp implements MeetingService {
 
     @Transactional
     public void exitFromMeeting(String id, String userId){
-        Meeting meeting = meetingReposiroty.findMeetingById(id);
+        Meeting meeting = meetingRepository.findMeetingById(id);
         meeting.getAttendants().remove(userId);
-        meetingReposiroty.save(meeting);
+        meeting.setTimestamp(Util.getTimeStamp());
+        meetingRepository.save(meeting);
     }
 
     @Transactional
-    public Meeting modify(Meeting meeting, String id){
-        Meeting origin = meetingReposiroty.findMeetingById(id);
-        if (meeting == null || origin == null) return null;
-        Map<String, String> tmp = new HashMap<>();
-        tmp.putAll(origin.getAttendants());
-        tmp.putAll(meeting.getAttendants());
-        meeting.setAttendants(tmp);
+    public boolean modify(Meeting meeting, String id){
+        Meeting origin = meetingRepository.findMeetingById(id);
+        if (meeting == null || origin == null || meeting.getTimestamp() < origin.getTimestamp()) return false;
+        meeting.setTimestamp(Util.getTimeStamp());
         //TODO MODIFY THE TIME
-        return meetingReposiroty.save(meeting);
+        meetingRepository.save(meeting);
+        return true;
     }
 
     private void setLocation(Meeting meeting, String roomId){
