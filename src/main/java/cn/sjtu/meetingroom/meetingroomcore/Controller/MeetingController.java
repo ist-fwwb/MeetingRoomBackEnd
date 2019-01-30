@@ -10,9 +10,6 @@ import cn.sjtu.meetingroom.meetingroomcore.Util.Status;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -68,22 +65,16 @@ public class MeetingController {
     }
 
     @PostMapping("")
-    @ApiOperation("registor a meeting, StatusNum: { '200' : 'success', '400' : 'fail' }")
-    public ResponseEntity<Meeting> addMeeting(@RequestBody Meeting meeting){
-        Meeting res = meetingService.add(meeting);
-        HttpHeaders responseHeaders = new HttpHeaders();
-        responseHeaders.set("StatusNum", "200");
-        return new ResponseEntity<Meeting>(res, responseHeaders, HttpStatus.OK);
+    @ApiOperation("register a meeting")
+    public Meeting addMeeting(@RequestBody Meeting meeting){
+        return meetingService.add(meeting);
     }
 
     @PostMapping("/{attendantNum}/attendants")
-    @ApiOperation("attendent to the meeting By attendantNum or meetingId , StatusNum: { '200' : 'success', '400' : 'fail' }")
-    public ResponseEntity<Meeting> attend(@PathVariable(name = "attendantNum") String attendantNum,
+    @ApiOperation("attend to the meeting By attendantNum or meetingId")
+    public Meeting attend(@PathVariable(name = "attendantNum") String attendantNum,
                                           @RequestParam(name="userId") String userId){
-        Meeting res = meetingService.attend(attendantNum, userId);
-        HttpHeaders responseHeaders = new HttpHeaders();
-        responseHeaders.set("StatusNum", "200");
-        return new ResponseEntity<Meeting>(res, responseHeaders, HttpStatus.OK);
+        return meetingService.attend(attendantNum, userId);
     }
 
     @PutMapping("/{id}")

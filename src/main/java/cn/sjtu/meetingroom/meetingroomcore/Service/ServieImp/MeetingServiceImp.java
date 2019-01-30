@@ -5,7 +5,6 @@ import cn.sjtu.meetingroom.meetingroomcore.Dao.MeetingRoomRepository;
 import cn.sjtu.meetingroom.meetingroomcore.Dao.TimeSliceRepository;
 import cn.sjtu.meetingroom.meetingroomcore.Dao.UserRepository;
 import cn.sjtu.meetingroom.meetingroomcore.Domain.Meeting;
-import cn.sjtu.meetingroom.meetingroomcore.Domain.MeetingRoom;
 import cn.sjtu.meetingroom.meetingroomcore.Domain.TimeSlice;
 import cn.sjtu.meetingroom.meetingroomcore.Domain.User;
 import cn.sjtu.meetingroom.meetingroomcore.Service.MeetingService;
@@ -16,7 +15,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 public class MeetingServiceImp implements MeetingService {
@@ -35,6 +37,11 @@ public class MeetingServiceImp implements MeetingService {
     public List<Meeting> showAll(){
         return meetingRepository.findAll();
     }
+
+    public Meeting findById(String id){
+        return meetingRepository.findMeetingById(id);
+    }
+
     public List<Meeting> findByDate(String date, List<Meeting> meetings){
         List<Meeting> res = new ArrayList<>();
         for (Meeting meeting : meetings) {
@@ -75,7 +82,6 @@ public class MeetingServiceImp implements MeetingService {
         return res;
     }
 
-    @Override
     public List<Meeting> findByLocation(String location, List<Meeting> meetings) {
         List<Meeting> res = new ArrayList<>();
         for (Meeting meeting : meetings){
@@ -89,18 +95,8 @@ public class MeetingServiceImp implements MeetingService {
         //TODO add the case that there is not enough space the meeting
         try {
             meetingRepository.save(meeting);
-            String id = meeting.getId();
-            String roomId = meeting.getRoomId();
-            String date = meeting.getDate();
-            int startTime = meeting.getStartTime();
-            int endTime = meeting.getEndTime();
-            Map<String, String> attendants = meeting.getAttendants();
-            modifyTimeSlice(date, roomId, startTime, endTime, id);
-            setLocation(meeting, roomId);
-            setAttendants(meeting, attendants);
-            meeting.setAttendantNum(Util.generateAttendantNum(RandomNumberSize));
-            meeting.setStatus(Status.Pending);
-            meeting.setTimestamp(Util.getTimeStamp());
+            modifyTimeSlice(meeting, meeting.getId());
+            completeMeetingAttributes(meeting);
             return meetingRepository.save(meeting);
         }
         catch (Exception e) {
@@ -109,12 +105,11 @@ public class MeetingServiceImp implements MeetingService {
         }
     }
 
+
     @Transactional
     public Meeting attend(String attendantNum, String userId){
         //TODO Awake the host to know it
-        Meeting meeting = null;
-        if (isAttendantNum(attendantNum)) meeting = meetingRepository.findMeetingByAttendantNumLikeAndStatusLike(attendantNum, Status.Pending);
-        else meeting = meetingRepository.findMeetingById(attendantNum);
+        Meeting meeting = getMeetingByAttendantNumOrId(attendantNum);
         if (meeting != null) {
             Map<String, String> attendants = meeting.getAttendants();
             if (!attendants.containsKey(userId) && userId != null){
@@ -126,30 +121,15 @@ public class MeetingServiceImp implements MeetingService {
         return meeting;
     }
 
-    private void modifyTimeSlice(String date, String roomId, int startTime, int endTime, String id) throws Exception{
-        TimeSlice timeSlice = timeSliceRepository.findTimeSliceByDateLikeAndRoomIdLike(date, roomId);
-        List<String> timeSlices = timeSlice.getTimeSlice();
-        for (int i=startTime; i<endTime; ++i) {
-            if (timeSlices.get(i) != null) throw new Exception();
-        }
-        for (int i=startTime; i<endTime; ++i) timeSlices.set(i, id);
-        timeSliceRepository.save(timeSlice);
-    }
-
-    public Meeting findById(String id){
-        return meetingRepository.findMeetingById(id);
-    }
-
     public void cancelMeeting(String id){
         Meeting meeting = meetingRepository.findMeetingById(id);
         meeting.setStatus(Status.Cancelled);
         meetingRepository.save(meeting);
-        TimeSlice timeSlice = timeSliceRepository.findTimeSliceByDateLikeAndRoomIdLike(meeting.getDate(), meeting.getRoomId());
-        List<String> timeSclices = timeSlice.getTimeSlice();
-        for (int i=meeting.getStartTime(); i<meeting.getEndTime(); ++i) {
-            timeSclices.set(i, null);
+        try {
+            modifyTimeSlice(meeting, null);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        timeSliceRepository.save(timeSlice);
         //TODO Awake the user waiting for the meeting
     }
 
@@ -175,25 +155,61 @@ public class MeetingServiceImp implements MeetingService {
         Meeting origin = meetingRepository.findMeetingById(id);
         if (meeting == null || origin == null || meeting.getTimestamp() < origin.getTimestamp()) return false;
         meeting.setTimestamp(Util.getTimeStamp());
-        //TODO MODIFY THE TIME
+        //MODIFY THE TIME
+        if (isTimeModified(meeting, origin)){
+            try {
+                modifyTimeSlice(meeting, meeting.getId());
+                modifyTimeSlice(origin, null);
+            } catch (Exception e) {
+                return false;
+            }
+        }
         meetingRepository.save(meeting);
         return true;
     }
 
-    private void setLocation(Meeting meeting, String roomId){
-        MeetingRoom meetingRoom = meetingRoomRepository.findMeetingRoomById(roomId);
-        meeting.setLocation(meetingRoom.getLocation());
+    private void completeMeetingAttributes(Meeting meeting) {
+        meeting.setLocation(meetingRoomRepository.findMeetingRoomById(meeting.getRoomId()).getLocation());
+        meeting.setAttendants(generateAttendants(meeting.getHostId()));
+        meeting.setAttendantNum(Util.generateAttendantNum(RandomNumberSize));
+        meeting.setStatus(Status.Pending);
+        meeting.setTimestamp(Util.getTimeStamp());
     }
 
-    private void setAttendants(Meeting meeting, Map<String, String> attendants){
-        String hostId = meeting.getHostId();
-        if (attendants == null) attendants = new HashMap<>();
-        if (attendants.isEmpty()) attendants.put(hostId, "");
-        meeting.setAttendants(attendants);
+    private Map<String, String> generateAttendants(String hostId){
+        Map<String, String> res = new HashMap<>();
+        res.put(hostId, "");
+        return res;
+    }
+
+    private Meeting getMeetingByAttendantNumOrId(String attendantNum) {
+        return isAttendantNum(attendantNum) ? meetingRepository.findMeetingByAttendantNumLikeAndStatusLike(attendantNum, Status.Pending)
+                : meetingRepository.findMeetingById(attendantNum);
     }
 
     private boolean isAttendantNum(String attendantNum){
         return attendantNum.length() == RandomNumberSize;
     }
 
+    private boolean isTimeModified(Meeting meeting, Meeting origin){
+        return !(meeting.getDate().equals(origin.getDate()) && meeting.getStartTime() == origin.getStartTime() && meeting.getEndTime() == origin.getEndTime());
+    }
+
+    private void modifyTimeSlice(Meeting meeting, String id) throws Exception{
+        TimeSlice timeSlice = timeSliceRepository.findTimeSliceByDateLikeAndRoomIdLike(meeting.getDate(), meeting.getRoomId());
+        checkTimeSlice(meeting.getStartTime(), meeting.getEndTime(), timeSlice.getTimeSlice(), id);
+        putTimeSlice(meeting.getStartTime(), meeting.getEndTime(), id, timeSlice.getTimeSlice());
+        timeSliceRepository.save(timeSlice);
+    }
+
+    private void putTimeSlice(int startTime, int endTime, String id, List<String> timeSlices) {
+        for (int i=startTime; i<endTime; ++i) timeSlices.set(i, id);
+    }
+
+    private void checkTimeSlice(int startTime, int endTime, List<String> timeSlices, String id) throws Exception {
+        for (int i=startTime; i<endTime; ++i) {
+            if (timeSlices.get(i) != null && id != null) throw new Exception();
+            if (timeSlices.get(i) == null && id == null) throw new Exception();
+        }
+    }
 }
