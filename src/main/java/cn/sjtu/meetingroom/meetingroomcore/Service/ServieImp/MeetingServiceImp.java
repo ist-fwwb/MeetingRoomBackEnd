@@ -100,7 +100,7 @@ public class MeetingServiceImp implements MeetingService {
             Map<String, String> attendants = meeting.getAttendants();
             modifyTimeSlice(date, roomId, startTime, endTime, id);
             setLocation(meeting, roomId);
-            setAttendents(meeting, attendants);
+            setAttendants(meeting, attendants);
             meeting.setAttendantNum(Util.generateAttendantNum(RandomNumberSize));
             meeting.setStatus(Status.Pending);
             return meetingReposiroty.save(meeting);
@@ -187,7 +187,7 @@ public class MeetingServiceImp implements MeetingService {
         meeting.setLocation(meetingRoom.getLocation());
     }
 
-    private void setAttendents(Meeting meeting, Map<String, String> attendants){
+    private void setAttendants(Meeting meeting, Map<String, String> attendants){
         String hostId = meeting.getHostId();
         if (attendants == null) attendants = new HashMap<>();
         if (attendants.isEmpty()) attendants.put(hostId, "");
