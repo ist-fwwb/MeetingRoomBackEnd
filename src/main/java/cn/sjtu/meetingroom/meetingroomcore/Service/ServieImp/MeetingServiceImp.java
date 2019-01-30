@@ -20,6 +20,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static cn.sjtu.meetingroom.meetingroomcore.Util.Util.generateAttendantNum;
+
 @Service
 public class MeetingServiceImp implements MeetingService {
     @Autowired
@@ -125,11 +127,7 @@ public class MeetingServiceImp implements MeetingService {
         Meeting meeting = meetingRepository.findMeetingById(id);
         meeting.setStatus(Status.Cancelled);
         meetingRepository.save(meeting);
-        try {
-            modifyTimeSlice(meeting, null);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        modifyTimeSlice(meeting, null);
         //TODO Awake the user waiting for the meeting
     }
 
@@ -151,16 +149,15 @@ public class MeetingServiceImp implements MeetingService {
     }
 
     @Transactional
-    public boolean modify(Meeting meeting, String id){
+    public boolean modify(Meeting meeting, String id) {
         Meeting origin = meetingRepository.findMeetingById(id);
         if (meeting == null || origin == null || meeting.getTimestamp() < origin.getTimestamp()) return false;
         meeting.setTimestamp(Util.getTimeStamp());
         //MODIFY THE TIME
         if (isTimeModified(meeting, origin)){
-            try {
-                modifyTimeSlice(meeting, meeting.getId());
-                modifyTimeSlice(origin, null);
-            } catch (Exception e) {
+            modifyTimeSlice(origin, null);
+            if (!modifyTimeSlice(meeting, meeting.getId())) {
+                modifyTimeSlice(origin, origin.getId());
                 return false;
             }
         }
@@ -171,7 +168,7 @@ public class MeetingServiceImp implements MeetingService {
     private void completeMeetingAttributes(Meeting meeting) {
         meeting.setLocation(meetingRoomRepository.findMeetingRoomById(meeting.getRoomId()).getLocation());
         meeting.setAttendants(generateAttendants(meeting.getHostId()));
-        meeting.setAttendantNum(Util.generateAttendantNum(RandomNumberSize));
+        meeting.setAttendantNum(generateAttendantNum(RandomNumberSize));
         meeting.setStatus(Status.Pending);
         meeting.setTimestamp(Util.getTimeStamp());
     }
@@ -195,21 +192,23 @@ public class MeetingServiceImp implements MeetingService {
         return !(meeting.getDate().equals(origin.getDate()) && meeting.getStartTime() == origin.getStartTime() && meeting.getEndTime() == origin.getEndTime());
     }
 
-    private void modifyTimeSlice(Meeting meeting, String id) throws Exception{
+    private boolean modifyTimeSlice(Meeting meeting, String id) {
         TimeSlice timeSlice = timeSliceRepository.findTimeSliceByDateLikeAndRoomIdLike(meeting.getDate(), meeting.getRoomId());
-        checkTimeSlice(meeting.getStartTime(), meeting.getEndTime(), timeSlice.getTimeSlice(), id);
+        if (!checkTimeSlice(meeting.getStartTime(), meeting.getEndTime(), timeSlice.getTimeSlice(), id)) return false;
         putTimeSlice(meeting.getStartTime(), meeting.getEndTime(), id, timeSlice.getTimeSlice());
         timeSliceRepository.save(timeSlice);
+        return true;
     }
 
     private void putTimeSlice(int startTime, int endTime, String id, List<String> timeSlices) {
         for (int i=startTime; i<endTime; ++i) timeSlices.set(i, id);
     }
 
-    private void checkTimeSlice(int startTime, int endTime, List<String> timeSlices, String id) throws Exception {
+    private boolean checkTimeSlice(int startTime, int endTime, List<String> timeSlices, String id) {
         for (int i=startTime; i<endTime; ++i) {
-            if (timeSlices.get(i) != null && id != null) throw new Exception();
-            if (timeSlices.get(i) == null && id == null) throw new Exception();
+            if (timeSlices.get(i) != null && id != null) return false;
+            if (timeSlices.get(i) == null && id == null) return false;
         }
+        return true;
     }
 }

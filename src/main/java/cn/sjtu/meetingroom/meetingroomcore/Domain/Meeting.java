@@ -76,6 +76,9 @@ public class Meeting {
         this.timestamp = timestamp;
     }
 
+    public Meeting() {
+    }
+
     public Set<String> getTags(){
         return tags;
     }
