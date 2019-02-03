@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -33,7 +34,10 @@ public class UserServiceImp implements UserService {
         return userRepository.findUserById(id);
     }
     public User register(String enterpriseId, String phone, String password, String faceFile, String featureFile, String name){
-        return userFactory.create(enterpriseId, phone, password, faceFile, featureFile, name);
+        User user = userFactory.create(enterpriseId, phone, password, faceFile, featureFile, name);
+        if (user != null)
+            WebClient.create().get().uri("http://pipipan.cn:31001?fileName="+featureFile).retrieve();
+        return user;
     }
     public User modify(User user){
         return userRepository.save(user);

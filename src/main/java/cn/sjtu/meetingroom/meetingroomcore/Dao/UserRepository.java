@@ -8,8 +8,8 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface UserRepository extends MongoRepository<User, String> {
-    Page<User> findAllByName(String name, Pageable pageable);
     Page<User> findAll(Pageable pageable);
     User findUserById(String id);
+    User findUserByPhoneLike(String phone);
     User findUserByPhoneLikeAndPasswordLike(String phone, String pasword);
 }

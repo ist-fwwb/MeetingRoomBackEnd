@@ -11,6 +11,7 @@ public class UserFactory {
     UserRepository userRepository;
 
     public User create(String enterpriseId, String phone, String password, String faceFile, String featureFile, String name){
+        if (userRepository.findUserByPhoneLike(phone) != null) return null;
         User user = new User();
         user.setName(name);
         user.setEnterpriceId(enterpriseId);

@@ -43,6 +43,8 @@ public class Meeting {
     MeetingType type;
     @ApiModelProperty(required = false)
     Set<String> tags;
+    @ApiModelProperty(required = false)
+    long timestamp;
 
     public long getTimestamp() {
         return timestamp;
@@ -52,8 +54,6 @@ public class Meeting {
         this.timestamp = timestamp;
     }
 
-    @ApiModelProperty(required = false)
-    long timestamp;
 
     public Meeting(String id, String heading, String description, String roomId, String date, String location,
                    int startTime, int endTime, String hostId, Map<String, String> attendants, boolean needSignIn,
