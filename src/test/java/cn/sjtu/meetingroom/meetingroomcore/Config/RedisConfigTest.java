@@ -1,6 +1,7 @@
 package cn.sjtu.meetingroom.meetingroomcore.Config;
 
 import cn.sjtu.meetingroom.meetingroomcore.Domain.User;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,11 +12,12 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.util.ArrayList;
 import java.util.List;
 
-@RunWith(SpringRunner.class)
 @SpringBootTest
+@RunWith(SpringRunner.class)
 public class RedisConfigTest {
     @Autowired
     RedisTemplate<Object, Object> template;
+
     @Test
     public void whenCreateAndStoreTheObjectIntoRedisThenGetObject(){
         template.opsForValue().set("123", new User());
@@ -29,6 +31,13 @@ public class RedisConfigTest {
         test = (List<User>)template.opsForValue().get("123");
         System.out.println(test.get(0).toString());
         System.out.println(test.get(1).toString());
+    }
+    @Test
+    public void whenGetANotExitedKeyThenReturnNull(){
+        Assert.assertNull(template.opsForValue().get("1"));
+    }
+    @Test
+    public void whenGetExpireTimeThenReturnNegativeNumber(){
     }
 
 }

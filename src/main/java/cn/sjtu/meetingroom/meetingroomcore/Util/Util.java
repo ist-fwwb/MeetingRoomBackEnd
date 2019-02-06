@@ -3,10 +3,7 @@ package cn.sjtu.meetingroom.meetingroomcore.Util;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 public class Util {
     public static List<String> parseList(String s){
@@ -48,5 +45,15 @@ public class Util {
 
     public static long getTimeStamp(){
         return new Date().getTime();
+    }
+    public static Date getNextDay(){
+        Calendar calendar = Calendar. getInstance();
+        calendar.setTime( new Date());
+        calendar.set(Calendar. HOUR_OF_DAY, 0);
+        calendar.set(Calendar. MINUTE, 0);
+        calendar.set(Calendar. SECOND, 0);
+        calendar.set(Calendar. MILLISECOND, 0);
+        calendar.add(Calendar. DAY_OF_MONTH, 1);
+        return calendar.getTime();
     }
 }
