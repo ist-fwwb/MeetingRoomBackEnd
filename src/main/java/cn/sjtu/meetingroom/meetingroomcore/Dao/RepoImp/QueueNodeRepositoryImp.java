@@ -8,7 +8,6 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Set;
 
 @Repository
 public class QueueNodeRepositoryImp implements QueueNodeRepository {
@@ -32,7 +31,5 @@ public class QueueNodeRepositoryImp implements QueueNodeRepository {
 
     @Override
     public void dump() {
-        Set<Object> keys = template.keys("*");
-        for (Object key : keys) template.dump(key);
     }
 }

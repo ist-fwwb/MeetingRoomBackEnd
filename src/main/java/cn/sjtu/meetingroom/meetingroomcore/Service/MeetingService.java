@@ -1,6 +1,7 @@
 package cn.sjtu.meetingroom.meetingroomcore.Service;
 
 import cn.sjtu.meetingroom.meetingroomcore.Domain.Meeting;
+import cn.sjtu.meetingroom.meetingroomcore.Domain.MeetingRoom;
 import cn.sjtu.meetingroom.meetingroomcore.Domain.User;
 import cn.sjtu.meetingroom.meetingroomcore.Util.Status;
 
@@ -16,6 +17,7 @@ public interface MeetingService {
     public Meeting findById(String id);
     public Meeting add(Meeting meeting);
     public Meeting attend(String attendantNum, String userId);
+    public Meeting intelligentlyFindMeeting(Meeting origin, List<MeetingRoom> meetingRooms);
     public void exitFromMeeting(String id, String userId);
     public void cancelMeeting(String id);
     public List<User> findAttendants(String id);

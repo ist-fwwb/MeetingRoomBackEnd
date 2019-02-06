@@ -2,10 +2,13 @@ package cn.sjtu.meetingroom.meetingroomcore.Controller;
 
 
 import cn.sjtu.meetingroom.meetingroomcore.Domain.Meeting;
+import cn.sjtu.meetingroom.meetingroomcore.Domain.MeetingRoom;
 import cn.sjtu.meetingroom.meetingroomcore.Domain.MeetingWrapper;
 import cn.sjtu.meetingroom.meetingroomcore.Domain.User;
+import cn.sjtu.meetingroom.meetingroomcore.Service.MeetingRoomService;
 import cn.sjtu.meetingroom.meetingroomcore.Service.MeetingService;
 import cn.sjtu.meetingroom.meetingroomcore.Service.UserService;
+import cn.sjtu.meetingroom.meetingroomcore.Util.MeetingRoomUtils;
 import cn.sjtu.meetingroom.meetingroomcore.Util.Status;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -26,6 +29,9 @@ public class MeetingController {
 
     @Autowired
     UserService userService;
+
+    @Autowired
+    MeetingRoomService meetingRoomService;
 
     @GetMapping("")
     @ApiOperation("get all of the meeting through condition, if the condition contains time then by default return the List<Meeting> with a Running status or Pending status")
@@ -62,6 +68,17 @@ public class MeetingController {
     @ApiOperation("get user information of all attendants")
     public List<User> getMeetingAttendants(@PathVariable(name="id") String id){
         return meetingService.findAttendants(id);
+    }
+
+    @PostMapping("/intelligent")
+    @ApiOperation("intelligently register a meeting")
+    public Meeting intelligentlyAddMeeting(@RequestBody Meeting origin,
+                                           @RequestParam(name="utils") List<MeetingRoomUtils> utils){
+        List<MeetingRoom> meetingRooms = meetingRoomService.showAll();
+        meetingRooms = meetingRoomService.findByUtils(utils, meetingRooms);
+        meetingRooms = meetingRoomService.findByStartTimeAndEndTime(origin.getStartTime(), origin.getEndTime(), origin.getDate(), meetingRooms);
+        Meeting meeting = meetingService.intelligentlyFindMeeting(origin, meetingRooms);
+        return meeting == null ? null : meetingService.add(meeting);
     }
 
     @PostMapping("")

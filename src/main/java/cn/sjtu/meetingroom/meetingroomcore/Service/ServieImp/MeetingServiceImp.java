@@ -5,8 +5,10 @@ import cn.sjtu.meetingroom.meetingroomcore.Dao.MeetingRoomRepository;
 import cn.sjtu.meetingroom.meetingroomcore.Dao.TimeSliceRepository;
 import cn.sjtu.meetingroom.meetingroomcore.Dao.UserRepository;
 import cn.sjtu.meetingroom.meetingroomcore.Domain.Meeting;
+import cn.sjtu.meetingroom.meetingroomcore.Domain.MeetingRoom;
 import cn.sjtu.meetingroom.meetingroomcore.Domain.TimeSlice;
 import cn.sjtu.meetingroom.meetingroomcore.Domain.User;
+import cn.sjtu.meetingroom.meetingroomcore.Service.MeetingRoomService;
 import cn.sjtu.meetingroom.meetingroomcore.Service.MeetingService;
 import cn.sjtu.meetingroom.meetingroomcore.Util.Status;
 import cn.sjtu.meetingroom.meetingroomcore.Util.Util;
@@ -32,6 +34,8 @@ public class MeetingServiceImp implements MeetingService {
     TimeSliceRepository timeSliceRepository;
     @Autowired
     UserRepository userRepository;
+    @Autowired
+    MeetingRoomService meetingRoomService;
 
     @Value("${meeting.attendantNum.size}")
     int RandomNumberSize;
@@ -163,6 +167,27 @@ public class MeetingServiceImp implements MeetingService {
         }
         meetingRepository.save(meeting);
         return true;
+    }
+
+    @Override
+    public Meeting intelligentlyFindMeeting(Meeting origin, List<MeetingRoom> meetingRooms) {
+        if (meetingRooms.isEmpty()) return null;
+        meetingRooms.sort((x, y)->{
+            TimeSlice a = timeSliceRepository.findTimeSliceByDateLikeAndRoomIdLike(origin.getDate(), x.getId());
+            TimeSlice b = timeSliceRepository.findTimeSliceByDateLikeAndRoomIdLike(origin.getDate(), x.getId());
+            return countTimeSlices(b) - countTimeSlices(b);
+        });
+        origin.setRoomId(meetingRooms.get(0).getId());
+        return origin;
+    }
+
+    private int countTimeSlices(TimeSlice timeSlice) {
+        List<String> timeSlices = timeSlice.getTimeSlice();
+        int count = 0;
+        for (String s : timeSlices) {
+            if (s == null || s.isEmpty()) count++;
+        }
+        return count;
     }
 
     private void completeMeetingAttributes(Meeting meeting) {
