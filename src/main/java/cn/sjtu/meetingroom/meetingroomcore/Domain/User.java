@@ -5,8 +5,10 @@ import io.swagger.annotations.ApiModelProperty;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.io.Serializable;
+
 @Document
-public class User {
+public class User implements Serializable {
     @Id
     @ApiModelProperty(required = false)
     String id;
@@ -111,5 +113,20 @@ public class User {
 
     public void setDeviceId(String deviceId) {
         this.deviceId = deviceId;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id='" + id + '\'' +
+                ", enterpriceId='" + enterpriceId + '\'' +
+                ", phone='" + phone + '\'' +
+                ", password='" + password + '\'' +
+                ", name='" + name + '\'' +
+                ", type=" + type +
+                ", faceFile='" + faceFile + '\'' +
+                ", featureFile='" + featureFile + '\'' +
+                ", deviceId='" + deviceId + '\'' +
+                '}';
     }
 }
