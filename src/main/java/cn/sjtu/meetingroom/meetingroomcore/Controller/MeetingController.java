@@ -50,8 +50,7 @@ public class MeetingController {
 
         List<MeetingWrapper> meetingWrappers = new ArrayList<>();
         for (Meeting meeting : meetings) {
-            MeetingWrapper meetingWrapper = new MeetingWrapper(meeting);
-            meetingWrapper.setHost(userService.showOne(meeting.getHostId()));
+            MeetingWrapper meetingWrapper = MeetingWrapper.create(meeting, userService, getErrorNum(true));
             meetingWrappers.add(meetingWrapper);
         }
 
@@ -59,7 +58,7 @@ public class MeetingController {
     }
 
     @GetMapping("/{id}")
-    @ApiOperation("get the detail information of a specified meeting room")
+    @ApiOperation("get the detail information of a specified meeting")
     public Meeting getMeeting(@PathVariable(name="id") String id){
         return meetingService.findById(id);
     }
@@ -98,11 +97,11 @@ public class MeetingController {
     @ApiOperation("modify the meeting")
     public MeetingWrapper modify(@RequestBody Meeting meeting, @PathVariable(name="id") String id){
         boolean isValidate = meetingService.modify(meeting, id);
-        MeetingWrapper res = new MeetingWrapper(meetingService.findById(id));
-        res.setHost(userService.showOne(meetingService.findById(id).getHostId()));
-        if (isValidate) res.setErrorNum("200");
-        else res.setErrorNum("400");
-        return res;
+        return MeetingWrapper.create(meetingService.findById(id), userService, getErrorNum(isValidate));
+    }
+
+    private String  getErrorNum(boolean isValidate) {
+        return isValidate ? "200" : "400";
     }
 
     @PutMapping("/{id}/status/{status}")
