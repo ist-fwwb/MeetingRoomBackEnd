@@ -3,6 +3,9 @@ package cn.sjtu.meetingroom.meetingroomcore.Domain;
 import cn.sjtu.meetingroom.meetingroomcore.Service.UserService;
 import io.swagger.annotations.ApiModelProperty;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class MeetingWrapper extends Meeting {
 
     public static MeetingWrapper create(Meeting meeting, UserService userService, String errorNum){
@@ -10,6 +13,16 @@ public class MeetingWrapper extends Meeting {
         res.setHost(userService.showOne(meeting.getHostId()));
         res.setErrorNum(errorNum);
         return res;
+    }
+
+    public static List<MeetingWrapper> create(List<Meeting> meetings, UserService userService, String errorNum){
+        List<MeetingWrapper> meetingWrappers = new ArrayList<>();
+        for (Meeting meeting : meetings) {
+            MeetingWrapper meetingWrapper = MeetingWrapper.create(meeting, userService, errorNum);
+            meetingWrappers.add(meetingWrapper);
+        }
+
+        return meetingWrappers;
     }
 
     private User host;

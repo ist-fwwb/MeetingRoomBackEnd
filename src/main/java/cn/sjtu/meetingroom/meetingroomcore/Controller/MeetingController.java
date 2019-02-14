@@ -16,7 +16,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Validated
@@ -47,14 +46,7 @@ public class MeetingController {
         if (time != null) meetings = meetingService.findByTime(time, meetings);
         if (status != null) meetings = meetingService.findByStatus(status, meetings);
         if (location != null) meetings = meetingService.findByLocation(location, meetings);
-
-        List<MeetingWrapper> meetingWrappers = new ArrayList<>();
-        for (Meeting meeting : meetings) {
-            MeetingWrapper meetingWrapper = MeetingWrapper.create(meeting, userService, getErrorNum(true));
-            meetingWrappers.add(meetingWrapper);
-        }
-
-        return meetingWrappers;
+        return MeetingWrapper.create(meetings, userService, getErrorNum(true));
     }
 
     @GetMapping("/{id}")
