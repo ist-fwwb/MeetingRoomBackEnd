@@ -3,6 +3,7 @@ package cn.sjtu.meetingroom.meetingroomcore.Controller;
 import cn.sjtu.meetingroom.meetingroomcore.Domain.Meeting;
 import cn.sjtu.meetingroom.meetingroomcore.Domain.User;
 import cn.sjtu.meetingroom.meetingroomcore.Service.MeetingService;
+import cn.sjtu.meetingroom.meetingroomcore.Domain.MeetingWrapper;
 import cn.sjtu.meetingroom.meetingroomcore.Service.UserService;
 import cn.sjtu.meetingroom.meetingroomcore.Util.Status;
 import cn.sjtu.meetingroom.meetingroomcore.Util.Type;
@@ -47,12 +48,12 @@ public class UserController {
 
     @GetMapping("/{id}/meeting")
     @ApiOperation(value = "get user's all of the meeting by status")
-    public List<Meeting> getAllMeeting(@PathVariable(name="id") String id, @RequestParam(name="status", required = false) Status status,
+    public List<MeetingWrapper> getAllMeeting(@PathVariable(name="id") String id, @RequestParam(name="status", required = false) Status status,
                                        @RequestParam(name="date", required = false) String date){
         List<Meeting> res = userService.findMeetingsById(id);
         if (status != null) res = meetingService.findByStatus(status, res);
         if (date != null) res = meetingService.findByDate(date, res);
-        return res;
+        return MeetingWrapper.create(res, userService, "200");
     }
 
     @PostMapping("")
