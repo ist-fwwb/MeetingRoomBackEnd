@@ -9,6 +9,7 @@ import cn.sjtu.meetingroom.meetingroomcore.Service.MeetingRoomService;
 import cn.sjtu.meetingroom.meetingroomcore.Service.MeetingService;
 import cn.sjtu.meetingroom.meetingroomcore.Service.UserService;
 import cn.sjtu.meetingroom.meetingroomcore.Util.MeetingRoomUtils;
+import cn.sjtu.meetingroom.meetingroomcore.Util.Size;
 import cn.sjtu.meetingroom.meetingroomcore.Util.Status;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -64,10 +65,12 @@ public class MeetingController {
     @PostMapping("/intelligent")
     @ApiOperation("intelligently register a meeting")
     public Meeting intelligentlyAddMeeting(@RequestBody Meeting origin,
-                                           @RequestParam(name="utils") List<MeetingRoomUtils> utils){
+                                           @RequestParam(name="utils", required = false) List<MeetingRoomUtils> utils,
+                                           @RequestParam(name="size", required = false) Size size){
         List<MeetingRoom> meetingRooms = meetingRoomService.showAll();
-        meetingRooms = meetingRoomService.findByUtils(utils, meetingRooms);
         meetingRooms = meetingRoomService.findByStartTimeAndEndTime(origin.getStartTime(), origin.getEndTime(), origin.getDate(), meetingRooms);
+        if (size != null) meetingRooms = meetingRoomService.findBySize(size, meetingRooms);
+        if (utils != null) meetingRooms = meetingRoomService.findByUtils(utils, meetingRooms);
         Meeting meeting = meetingService.intelligentlyFindMeeting(origin, meetingRooms);
         return meeting == null ? null : meetingService.add(meeting);
     }

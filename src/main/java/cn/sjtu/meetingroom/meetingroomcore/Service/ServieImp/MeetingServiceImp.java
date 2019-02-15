@@ -101,8 +101,8 @@ public class MeetingServiceImp implements MeetingService {
         //TODO add the case that there is not enough space the meeting
         try {
             meetingRepository.save(meeting);
-            modifyTimeSlice(meeting, meeting.getId());
             completeMeetingAttributes(meeting);
+            if (!modifyTimeSlice(meeting, meeting.getId())) throw new Exception();
             return meetingRepository.save(meeting);
         }
         catch (Exception e) {
@@ -159,14 +159,19 @@ public class MeetingServiceImp implements MeetingService {
         meeting.setTimestamp(Util.getTimeStamp());
         //MODIFY THE TIME
         if (isTimeModified(meeting, origin)){
-            modifyTimeSlice(origin, null);
-            if (!modifyTimeSlice(meeting, meeting.getId())) {
-                modifyTimeSlice(origin, origin.getId());
-                return false;
-            }
+            modifyMeetingTime(meeting, origin);
         }
         meetingRepository.save(meeting);
         return true;
+    }
+
+    private boolean modifyMeetingTime(Meeting meeting, Meeting origin) {
+        modifyTimeSlice(origin, null);
+        if (!modifyTimeSlice(meeting, meeting.getId())) {
+            modifyTimeSlice(origin, origin.getId());
+            return true;
+        }
+        return false;
     }
 
     @Override
@@ -175,7 +180,7 @@ public class MeetingServiceImp implements MeetingService {
         meetingRooms.sort((x, y)->{
             TimeSlice a = timeSliceRepository.findTimeSliceByDateLikeAndRoomIdLike(origin.getDate(), x.getId());
             TimeSlice b = timeSliceRepository.findTimeSliceByDateLikeAndRoomIdLike(origin.getDate(), x.getId());
-            return countTimeSlices(b) - countTimeSlices(b);
+            return countTimeSlices(b) - countTimeSlices(a);
         });
         origin.setRoomId(meetingRooms.get(0).getId());
         return origin;
