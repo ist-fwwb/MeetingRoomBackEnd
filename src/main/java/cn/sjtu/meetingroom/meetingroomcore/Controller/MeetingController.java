@@ -72,7 +72,7 @@ public class MeetingController {
         if (size != null) meetingRooms = meetingRoomService.findBySize(size, meetingRooms);
         if (utils != null) meetingRooms = meetingRoomService.findByUtils(utils, meetingRooms);
         Meeting meeting = meetingService.intelligentlyFindMeeting(origin, meetingRooms);
-        return meeting == null ? null : meetingService.add(meeting);
+        return meeting == null ? new Meeting() : meetingService.add(meeting);
     }
 
     @PostMapping("")
