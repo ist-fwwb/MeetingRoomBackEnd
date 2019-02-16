@@ -16,13 +16,8 @@ public class QueueNodeRepositoryImp implements QueueNodeRepository {
     RedisTemplate<Object, Object> template;
     @Override
     public List<QueueNode> findByRoomId(String roomId) {
-        Object tmp = template.opsForValue().get(roomId);
-        if (tmp == null) return new ArrayList<>();
-        else {
-            List<QueueNode> res = new ArrayList<>();
-            for (QueueNode queueNode : (List<QueueNode>) tmp) res.add(queueNode);
-            return res;
-        }
+        List<QueueNode> tmp = (List<QueueNode>)template.opsForValue().get(roomId);
+        return tmp == null ? new ArrayList<>() : tmp;
     }
 
     @Override
@@ -35,6 +30,7 @@ public class QueueNodeRepositoryImp implements QueueNodeRepository {
     public void delete(String id, String roomId) {
         List<QueueNode> queueNodes = (List<QueueNode>) template.opsForValue().get(roomId);
         queueNodes.removeIf((node) -> node.getId().equals(id));
+        save(roomId, queueNodes);
     }
 
 
