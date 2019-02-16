@@ -12,4 +12,5 @@ public interface QueueNodeService {
     public List<QueueNode> findByRoomId(String roomId, List<QueueNode> queueNodes);
     public QueueNode add(QueueNode queueNode);
     public void delete(String id, String roomId);
+    //TODO 当会议提前解散或者被取消时通知排队的用户
 }

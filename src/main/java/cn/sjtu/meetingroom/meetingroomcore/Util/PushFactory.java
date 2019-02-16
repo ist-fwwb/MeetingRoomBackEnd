@@ -24,6 +24,8 @@ public class PushFactory {
         // 推送配置: Android
         pushRequest.setTitle(title);
         pushRequest.setBody(body);
+        pushRequest.setAndroidPopupTitle(title);
+        pushRequest.setAndroidPopupBody(body);
         pushRequest.setAndroidNotifyType("BOTH");//通知的提醒方式 "VIBRATE" : 震动 "SOUND" : 声音 "BOTH" : 声音和震动 NONE : 静音
         pushRequest.setAndroidNotificationBarType(1);//通知栏自定义样式0-100
         pushRequest.setAndroidNotificationBarPriority(1);//通知栏自定义样式0-100
