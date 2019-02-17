@@ -2,7 +2,6 @@ package cn.sjtu.meetingroom.meetingroomcore.Dao.RepoImp;
 
 import cn.sjtu.meetingroom.meetingroomcore.Dao.QueueNodeRepository;
 import cn.sjtu.meetingroom.meetingroomcore.Domain.QueueNode;
-import cn.sjtu.meetingroom.meetingroomcore.Util.Util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Repository;
@@ -22,7 +21,6 @@ public class QueueNodeRepositoryImp implements QueueNodeRepository {
 
     @Override
     public void save(String roomId, List<QueueNode> queueNodes) {
-        if (template.getExpire(roomId) < 0) template.expireAt(roomId, Util.getNextDay());
         template.opsForValue().set(roomId, queueNodes);
     }
 
@@ -36,7 +34,7 @@ public class QueueNodeRepositoryImp implements QueueNodeRepository {
 
 
     @Override
-    public void dump() {
-
+    public void dump(String roomId) {
+        save(roomId, null);
     }
 }

@@ -2,6 +2,7 @@ package cn.sjtu.meetingroom.meetingroomcore.Controller;
 
 import cn.sjtu.meetingroom.meetingroomcore.Domain.QueueNode;
 import cn.sjtu.meetingroom.meetingroomcore.Service.QueueNodeService;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,6 +24,7 @@ public class QueueNodeController {
     }
 
     @PostMapping("")
+    @ApiOperation("如果是任意会议室则用‘1’来代替")
     public QueueNode add(@RequestBody QueueNode queueNode){
         return queueNodeService.add(queueNode);
     }

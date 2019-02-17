@@ -20,6 +20,8 @@ public interface MeetingService {
     public Meeting intelligentlyFindMeeting(Meeting origin, List<MeetingRoom> meetingRooms);
     public void exitFromMeeting(String id, String userId);
     public void cancelMeeting(String id);
+    public void startMeeting(String id);
+    public void stopMeeting(String id);
     public List<User> findAttendants(String id);
     public boolean modify(Meeting meeting, String id);
 }

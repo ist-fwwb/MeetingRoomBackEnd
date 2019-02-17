@@ -25,7 +25,14 @@ public class QueueNodeServiceImp implements QueueNodeService {
         for (MeetingRoom meetingRoom : meetingRooms){
             res.addAll(queueNodeRepository.findByRoomId(meetingRoom.getId()));
         }
+        //TODO 将magic number改掉
+        res.addAll(queueNodeRepository.findByRoomId("1"));
         return res;
+    }
+
+    @Override
+    public List<QueueNode> findByRoomId(String roomId) {
+        return queueNodeRepository.findByRoomId(roomId);
     }
 
     @Override
@@ -52,5 +59,15 @@ public class QueueNodeServiceImp implements QueueNodeService {
     @Override
     public void delete(String id, String roomId) {
         queueNodeRepository.delete(id, roomId);
+    }
+
+    @Override
+    public void deleteAll() {
+        List<MeetingRoom> meetingRooms = meetingRoomRepository.findAll();
+        for (MeetingRoom meetingRoom : meetingRooms){
+            queueNodeRepository.dump(meetingRoom.getId());
+        }
+        //TODO 将magic number改掉
+        queueNodeRepository.dump("1");
     }
 }

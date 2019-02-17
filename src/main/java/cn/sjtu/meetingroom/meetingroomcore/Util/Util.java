@@ -3,6 +3,7 @@ package cn.sjtu.meetingroom.meetingroomcore.Util;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class Util {
@@ -55,5 +56,9 @@ public class Util {
         calendar.set(Calendar. MILLISECOND, 0);
         calendar.add(Calendar. DAY_OF_MONTH, 1);
         return calendar.getTime();
+    }
+    public static String getDate(){
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        return sdf.format(new Date());
     }
 }

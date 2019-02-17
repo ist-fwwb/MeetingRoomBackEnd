@@ -12,6 +12,7 @@ import cn.sjtu.meetingroom.meetingroomcore.Service.MeetingRoomService;
 import cn.sjtu.meetingroom.meetingroomcore.Service.MeetingService;
 import cn.sjtu.meetingroom.meetingroomcore.Util.Status;
 import cn.sjtu.meetingroom.meetingroomcore.Util.Util;
+import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -36,6 +37,8 @@ public class MeetingServiceImp implements MeetingService {
     UserRepository userRepository;
     @Autowired
     MeetingRoomService meetingRoomService;
+    @Autowired
+    AmqpTemplate amqpTemplate;
 
     @Value("${meeting.attendantNum.size}")
     int RandomNumberSize;
@@ -128,11 +131,26 @@ public class MeetingServiceImp implements MeetingService {
     }
 
     public void cancelMeeting(String id){
-        Meeting meeting = meetingRepository.findMeetingById(id);
-        meeting.setStatus(Status.Cancelled);
-        meetingRepository.save(meeting);
+        Meeting meeting = changeMeetingStatus(id, Status.Cancelled);
         modifyTimeSlice(meeting, null);
-        //TODO Awake the user waiting for the meeting
+        sendMessage(meeting.getRoomId());
+    }
+
+    @Override
+    public void startMeeting(String id) {
+        changeMeetingStatus(id, Status.Running);
+    }
+
+    @Override
+    public void stopMeeting(String id) {
+        changeMeetingStatus(id, Status.Stopped);
+        sendMessage(id);
+    }
+
+    private Meeting changeMeetingStatus(String id, Status status){
+        Meeting meeting = meetingRepository.findMeetingById(id);
+        meeting.setStatus(status);
+        return meetingRepository.save(meeting);
     }
 
     public List<User> findAttendants(String id) {
@@ -161,6 +179,7 @@ public class MeetingServiceImp implements MeetingService {
         if (isTimeModified(meeting, origin)){
             modifyMeetingTime(meeting, origin);
         }
+        if (meeting.getStatus().equals(Status.Cancelled) || meeting.getStatus().equals(Status.Stopped)) sendMessage(meeting.getRoomId());
         meetingRepository.save(meeting);
         return true;
     }
@@ -240,5 +259,9 @@ public class MeetingServiceImp implements MeetingService {
             if (timeSlices.get(i) == null && id == null) return false;
         }
         return true;
+    }
+
+    private void sendMessage(String roomId){
+        amqpTemplate.convertAndSend("node", roomId);
     }
 }

@@ -37,4 +37,5 @@ public class TimeRange implements Serializable {
                 ", end=" + end +
                 '}';
     }
+
 }

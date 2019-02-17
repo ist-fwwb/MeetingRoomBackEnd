@@ -106,6 +106,12 @@ public class MeetingController {
             case Cancelled:
                 meetingService.cancelMeeting(id);
                 break;
+            case Stopped:
+                meetingService.stopMeeting(id);
+                break;
+            case Running:
+                meetingService.startMeeting(id);
+                break;
         }
         return "ok";
     }
