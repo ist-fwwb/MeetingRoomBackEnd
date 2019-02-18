@@ -7,6 +7,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class Util {
+    public static String ROOMID = "1";
     public static List<String> parseList(String s){
         String[] utils = (s.substring(1, s.length() - 1)).split(",");
         return Arrays.asList(utils);

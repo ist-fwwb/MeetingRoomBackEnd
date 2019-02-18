@@ -16,10 +16,12 @@ public class QueueNodeController {
 
     @GetMapping("")
     public List<QueueNode> find(@RequestParam(name="userId", required = false) String userId,
-                                @RequestParam(name="roomId", required = false) String roomId){
+                                @RequestParam(name="roomId", required = false) String roomId,
+                                @RequestParam(name="date", required = false) String date){
         List<QueueNode> res = queueNodeService.findAll();
         if (userId != null) res = queueNodeService.findByUserId(userId, res);
         if (roomId != null) res = queueNodeService.findByRoomId(roomId, res);
+        if (date != null) res = queueNodeService.findByDate(date, res);
         return res;
     }
 

@@ -11,7 +11,9 @@ public interface QueueNodeService {
     public List<QueueNode> findByRoomId(String roomId);
     public List<QueueNode> findByUserId(String userId, List<QueueNode> queueNodes);
     public List<QueueNode> findByRoomId(String roomId, List<QueueNode> queueNodes);
+    public List<QueueNode> findByDate(String date, List<QueueNode> queueNodes);
     public QueueNode add(QueueNode queueNode);
     public void delete(String id, String roomId);
+    public void deleteByDate(String date);
     public void deleteAll();
 }

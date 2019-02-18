@@ -5,6 +5,7 @@ import cn.sjtu.meetingroom.meetingroomcore.Dao.QueueNodeRepository;
 import cn.sjtu.meetingroom.meetingroomcore.Domain.MeetingRoom;
 import cn.sjtu.meetingroom.meetingroomcore.Domain.QueueNode;
 import cn.sjtu.meetingroom.meetingroomcore.Service.QueueNodeService;
+import cn.sjtu.meetingroom.meetingroomcore.Util.Util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,8 +26,7 @@ public class QueueNodeServiceImp implements QueueNodeService {
         for (MeetingRoom meetingRoom : meetingRooms){
             res.addAll(queueNodeRepository.findByRoomId(meetingRoom.getId()));
         }
-        //TODO 将magic number改掉
-        res.addAll(queueNodeRepository.findByRoomId("1"));
+        res.addAll(queueNodeRepository.findByRoomId(Util.ROOMID));
         return res;
     }
 
@@ -44,6 +44,12 @@ public class QueueNodeServiceImp implements QueueNodeService {
     @Override
     public List<QueueNode> findByRoomId(String roomId, List<QueueNode> queueNodes) {
         queueNodes.removeIf((queueNode -> !queueNode.getRoomId().equals(roomId)));
+        return queueNodes;
+    }
+
+    @Override
+    public List<QueueNode> findByDate(String date, List<QueueNode> queueNodes) {
+        queueNodes.removeIf((queueNode -> !queueNode.getDate().equals(date)));
         return queueNodes;
     }
 
@@ -67,7 +73,15 @@ public class QueueNodeServiceImp implements QueueNodeService {
         for (MeetingRoom meetingRoom : meetingRooms){
             queueNodeRepository.dump(meetingRoom.getId());
         }
-        //TODO 将magic number改掉
-        queueNodeRepository.dump("1");
+        queueNodeRepository.dump(Util.ROOMID);
+    }
+
+    @Override
+    public void deleteByDate(String date) {
+        List<MeetingRoom> meetingRooms = meetingRoomRepository.findAll();
+        for (MeetingRoom meetingRoom : meetingRooms){
+            queueNodeRepository.deleteByDate(date, meetingRoom.getId());
+        }
+        queueNodeRepository.deleteByDate(date, Util.ROOMID);
     }
 }

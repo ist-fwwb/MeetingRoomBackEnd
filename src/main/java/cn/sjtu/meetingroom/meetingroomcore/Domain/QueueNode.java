@@ -1,21 +1,21 @@
 package cn.sjtu.meetingroom.meetingroomcore.Domain;
 
+import cn.sjtu.meetingroom.meetingroomcore.Util.MeetingRoomUtils;
+import cn.sjtu.meetingroom.meetingroomcore.Util.Size;
+
 import java.io.Serializable;
+import java.util.List;
 
 public class QueueNode implements Serializable {
     String id;
     String userId;
     String roomId;
     TimeRange timeRange;
+    String date;
+    Size size;
+    List<MeetingRoomUtils> meetingRoomUtilsList;
 
     public QueueNode() {
-    }
-
-    public QueueNode(String id, String userId, String roomId, TimeRange timeRange) {
-        this.id = id;
-        this.userId = userId;
-        this.roomId = roomId;
-        this.timeRange = timeRange;
     }
 
     public String getId() {
@@ -48,6 +48,30 @@ public class QueueNode implements Serializable {
 
     public void setTimeRange(TimeRange timeRange) {
         this.timeRange = timeRange;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+    public Size getSize() {
+        return size;
+    }
+
+    public void setSize(Size size) {
+        this.size = size;
+    }
+
+    public List<MeetingRoomUtils> getMeetingRoomUtilsList() {
+        return meetingRoomUtilsList;
+    }
+
+    public void setMeetingRoomUtilsList(List<MeetingRoomUtils> meetingRoomUtilsList) {
+        this.meetingRoomUtilsList = meetingRoomUtilsList;
     }
 
     @Override

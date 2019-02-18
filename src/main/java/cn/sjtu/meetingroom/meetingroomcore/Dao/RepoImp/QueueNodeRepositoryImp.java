@@ -37,4 +37,11 @@ public class QueueNodeRepositoryImp implements QueueNodeRepository {
     public void dump(String roomId) {
         save(roomId, null);
     }
+
+    @Override
+    public void deleteByDate(String date, String roomId) {
+        List<QueueNode> queueNodes = (List<QueueNode>) template.opsForValue().get(roomId);
+        queueNodes.removeIf((node) -> node.getDate().equals(date));
+        save(roomId, queueNodes);
+    }
 }
