@@ -7,9 +7,9 @@ import java.util.List;
 
 @Repository
 public interface QueueNodeRepository {
+    public QueueNode findById(String id);
     public List<QueueNode> findByRoomId(String roomId);
-    public void save(String roomId, List<QueueNode> queueNodes);
-    public void delete(String id, String roomId);
-    public void dump(String roomId);
+    public void save(QueueNode queueNode);
+    public void delete(String id);
     public void deleteByDate(String date, String roomId);
 }

@@ -25,6 +25,11 @@ public class QueueNodeController {
         return res;
     }
 
+    @GetMapping("/{id}")
+    public void findById(@PathVariable(name="id") String id){
+        queueNodeService.findById(id);
+    }
+
     @PostMapping("")
     @ApiOperation("如果是任意会议室则用‘1’来代替")
     public QueueNode add(@RequestBody QueueNode queueNode){
@@ -32,8 +37,7 @@ public class QueueNodeController {
     }
 
     @DeleteMapping("/{id}")
-    public void remove(@RequestParam(name="roomId") String roomId,
-                       @PathVariable(name="id") String id){
-        queueNodeService.delete(id, roomId);
+    public void remove(@PathVariable(name="id") String id){
+        queueNodeService.delete(id);
     }
 }

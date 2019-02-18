@@ -13,9 +13,36 @@ public class QueueNode implements Serializable {
     TimeRange timeRange;
     String date;
     Size size;
+    Boolean needSignIn;
+    String heading;
+    String description;
     Set<MeetingRoomUtils> meetingRoomUtilsList;
 
     public QueueNode() {
+    }
+
+    public Boolean getNeedSignIn() {
+        return needSignIn;
+    }
+
+    public void setNeedSignIn(Boolean needSignIn) {
+        this.needSignIn = needSignIn;
+    }
+
+    public String getHeading() {
+        return heading;
+    }
+
+    public void setHeading(String heading) {
+        this.heading = heading;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public String getId() {
@@ -72,15 +99,5 @@ public class QueueNode implements Serializable {
 
     public void setMeetingRoomUtilsList(Set<MeetingRoomUtils> meetingRoomUtilsList) {
         this.meetingRoomUtilsList = meetingRoomUtilsList;
-    }
-
-    @Override
-    public String toString() {
-        return "QueueNode{" +
-                "id='" + id + '\'' +
-                ", userId='" + userId + '\'' +
-                ", roomId='" + roomId + '\'' +
-                ", timeRange=" + timeRange +
-                '}';
     }
 }

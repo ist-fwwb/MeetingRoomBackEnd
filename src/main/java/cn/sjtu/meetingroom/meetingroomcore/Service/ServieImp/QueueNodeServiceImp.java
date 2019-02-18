@@ -8,6 +8,7 @@ import cn.sjtu.meetingroom.meetingroomcore.Service.QueueNodeService;
 import cn.sjtu.meetingroom.meetingroomcore.Util.Util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +19,11 @@ public class QueueNodeServiceImp implements QueueNodeService {
     QueueNodeRepository queueNodeRepository;
     @Autowired
     MeetingRoomRepository meetingRoomRepository;
+
+    @Override
+    public QueueNode findById(String id) {
+        return queueNodeRepository.findById(id);
+    }
 
     @Override
     public List<QueueNode> findAll() {
@@ -54,26 +60,17 @@ public class QueueNodeServiceImp implements QueueNodeService {
     }
 
     @Override
+    @Transactional
     public QueueNode add(QueueNode queueNode) {
-        List<QueueNode> queueNodes = queueNodeRepository.findByRoomId(queueNode.getRoomId());
-        queueNode.setId(String.valueOf(System.currentTimeMillis()));
-        queueNodes.add(queueNode);
-        queueNodeRepository.save(queueNode.getRoomId(), queueNodes);
+        queueNode.setId(String.valueOf(System.currentTimeMillis()) + queueNode.getUserId());
+        queueNodeRepository.save(queueNode);
         return queueNode;
     }
 
     @Override
-    public void delete(String id, String roomId) {
-        queueNodeRepository.delete(id, roomId);
-    }
-
-    @Override
-    public void deleteAll() {
-        List<MeetingRoom> meetingRooms = meetingRoomRepository.findAll();
-        for (MeetingRoom meetingRoom : meetingRooms){
-            queueNodeRepository.dump(meetingRoom.getId());
-        }
-        queueNodeRepository.dump(Util.ROOMID);
+    @Transactional
+    public void delete(String id) {
+        queueNodeRepository.delete(id);
     }
 
     @Override

@@ -38,11 +38,11 @@ public class NodeMessageReceiver {
             QueueNode queueNode = findSatisfiedQueueNode(cancelledMeeting.getRoomId(), cancelledMeeting);
             if (isSatisfiedQueueNodeNotExisted(queueNode)) queueNode = findSatisfiedQueueNode(Util.ROOMID, cancelledMeeting);
             if (!isSatisfiedQueueNodeNotExisted(queueNode)) {
-                //System.out.println("find queuenode");
+                //System.out.println("find queueNode");
                 Meeting meeting = transformQueueNode2Meeting(queueNode, cancelledMeeting);
                 meeting = meetingService.add(meeting);
                 if (isMeetingAddedSuccessfully(meeting)) {
-                    queueNodeService.delete(queueNode.getId(), queueNode.getRoomId());
+                    queueNodeService.delete(queueNode.getId());
                     notifyUser(queueNode, meeting);
                 }
             }
@@ -73,7 +73,9 @@ public class NodeMessageReceiver {
         meeting.setHostId(queueNode.getUserId());
         meeting.setDate(cancelledMeeting.getDate());
         meeting.setType(MeetingType.COMMON);
-        meeting.setNeedSignIn(false);
+        meeting.setNeedSignIn(queueNode.getNeedSignIn());
+        meeting.setHeading(queueNode.getHeading());
+        meeting.setDescription(queueNode.getDescription());
         return meeting;
     }
 

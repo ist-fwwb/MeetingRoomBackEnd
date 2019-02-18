@@ -13,35 +13,45 @@ import java.util.List;
 public class QueueNodeRepositoryImp implements QueueNodeRepository {
     @Autowired
     RedisTemplate<Object, Object> template;
+
+    @Override
+    public QueueNode findById(String id) {
+        return (QueueNode) template.opsForValue().get(id);
+    }
+
     @Override
     public List<QueueNode> findByRoomId(String roomId) {
         List<QueueNode> tmp = (List<QueueNode>)template.opsForValue().get(roomId);
         return tmp == null ? new ArrayList<>() : tmp;
     }
 
-    @Override
-    public void save(String roomId, List<QueueNode> queueNodes) {
+    private void save(String roomId, List<QueueNode> queueNodes) {
         template.opsForValue().set(roomId, queueNodes);
     }
 
     @Override
-    public void delete(String id, String roomId) {
+    public void save(QueueNode queueNode) {
+        template.opsForValue().set(queueNode.getId(), queueNode);
+        List<QueueNode> queueNodes = findByRoomId(queueNode.getRoomId());
+        queueNodes.add(queueNode);
+        save(queueNode.getRoomId(), queueNodes);
+    }
+
+    @Override
+    public void delete(String id) {
+        QueueNode queueNode = (QueueNode) template.opsForValue().get(id);
+        if (queueNode == null) return;
+        String roomId = queueNode.getRoomId();
         List<QueueNode> queueNodes = (List<QueueNode>) template.opsForValue().get(roomId);
         queueNodes.removeIf((node) -> node.getId().equals(id));
         save(roomId, queueNodes);
-    }
-
-
-
-    @Override
-    public void dump(String roomId) {
-        save(roomId, null);
+        template.opsForValue().set(id, null);
     }
 
     @Override
     public void deleteByDate(String date, String roomId) {
         List<QueueNode> queueNodes = (List<QueueNode>) template.opsForValue().get(roomId);
-        queueNodes.removeIf((node) -> node.getDate().equals(date));
-        save(roomId, queueNodes);
+        queueNodes.removeIf((node) -> !node.getDate().equals(date));
+        for (QueueNode queueNode : queueNodes) delete(queueNode.getId());
     }
 }
