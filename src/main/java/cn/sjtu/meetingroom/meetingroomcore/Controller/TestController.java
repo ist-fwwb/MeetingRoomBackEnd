@@ -1,5 +1,6 @@
 package cn.sjtu.meetingroom.meetingroomcore.Controller;
 
+import cn.sjtu.meetingroom.meetingroomcore.Dao.MeetingRepository;
 import cn.sjtu.meetingroom.meetingroomcore.Util.Util;
 import io.swagger.annotations.Api;
 import org.springframework.amqp.core.AmqpTemplate;
@@ -17,13 +18,15 @@ import org.springframework.web.bind.annotation.RestController;
 public class TestController {
     @Autowired
     AmqpTemplate amqpTemplate;
+    @Autowired
+    MeetingRepository meetingRepository;
     @GetMapping("/testCompre")
     public boolean testCompare(@RequestParam(name="origin") String origin,
                                @RequestParam(name="s") String s){
         return Util.compare(origin , s);
     }
     @GetMapping("/rabbitmq")
-    public void testRabbitMQ(@RequestParam(name="roomId") String id){
-        amqpTemplate.convertAndSend("node", id);
+    public void testRabbitMQ(@RequestParam(name="meetingId") String id){
+        amqpTemplate.convertAndSend("node", meetingRepository.findMeetingById(id));
     }
 }

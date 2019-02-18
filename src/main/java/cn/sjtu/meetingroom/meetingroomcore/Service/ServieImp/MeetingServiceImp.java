@@ -109,6 +109,7 @@ public class MeetingServiceImp implements MeetingService {
             return meetingRepository.save(meeting);
         }
         catch (Exception e) {
+            e.printStackTrace();
             meetingRepository.delete(meeting);
             return null;
         }
@@ -133,7 +134,7 @@ public class MeetingServiceImp implements MeetingService {
     public void cancelMeeting(String id){
         Meeting meeting = changeMeetingStatus(id, Status.Cancelled);
         modifyTimeSlice(meeting, null);
-        sendMessage(meeting.getRoomId());
+        sendMessage(meeting);
     }
 
     @Override
@@ -143,8 +144,8 @@ public class MeetingServiceImp implements MeetingService {
 
     @Override
     public void stopMeeting(String id) {
-        changeMeetingStatus(id, Status.Stopped);
-        sendMessage(id);
+        Meeting meeting = changeMeetingStatus(id, Status.Stopped);
+        sendMessage(meeting);
     }
 
     private Meeting changeMeetingStatus(String id, Status status){
@@ -179,7 +180,7 @@ public class MeetingServiceImp implements MeetingService {
         if (isTimeModified(meeting, origin)){
             modifyMeetingTime(meeting, origin);
         }
-        if (meeting.getStatus().equals(Status.Cancelled) || meeting.getStatus().equals(Status.Stopped)) sendMessage(meeting.getRoomId());
+        if (meeting.getStatus().equals(Status.Cancelled) || meeting.getStatus().equals(Status.Stopped)) sendMessage(meeting);
         meetingRepository.save(meeting);
         return true;
     }
@@ -261,7 +262,7 @@ public class MeetingServiceImp implements MeetingService {
         return true;
     }
 
-    private void sendMessage(String roomId){
-        amqpTemplate.convertAndSend("node", roomId);
+    private void sendMessage(Meeting meeting){
+        amqpTemplate.convertAndSend("node", meeting);
     }
 }

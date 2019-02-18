@@ -4,7 +4,7 @@ import cn.sjtu.meetingroom.meetingroomcore.Util.MeetingRoomUtils;
 import cn.sjtu.meetingroom.meetingroomcore.Util.Size;
 
 import java.io.Serializable;
-import java.util.List;
+import java.util.Set;
 
 public class QueueNode implements Serializable {
     String id;
@@ -13,7 +13,7 @@ public class QueueNode implements Serializable {
     TimeRange timeRange;
     String date;
     Size size;
-    List<MeetingRoomUtils> meetingRoomUtilsList;
+    Set<MeetingRoomUtils> meetingRoomUtilsList;
 
     public QueueNode() {
     }
@@ -66,11 +66,11 @@ public class QueueNode implements Serializable {
         this.size = size;
     }
 
-    public List<MeetingRoomUtils> getMeetingRoomUtilsList() {
+    public Set<MeetingRoomUtils> getMeetingRoomUtilsList() {
         return meetingRoomUtilsList;
     }
 
-    public void setMeetingRoomUtilsList(List<MeetingRoomUtils> meetingRoomUtilsList) {
+    public void setMeetingRoomUtilsList(Set<MeetingRoomUtils> meetingRoomUtilsList) {
         this.meetingRoomUtilsList = meetingRoomUtilsList;
     }
 

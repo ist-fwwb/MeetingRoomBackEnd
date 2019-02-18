@@ -6,11 +6,12 @@ import io.swagger.annotations.ApiModelProperty;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.io.Serializable;
 import java.util.Map;
 import java.util.Set;
 
 @Document
-public class Meeting {
+public class Meeting implements Serializable {
     @Id
     @ApiModelProperty(required = false)
     String id;

@@ -1,5 +1,6 @@
 package cn.sjtu.meetingroom.meetingroomcore.Receiver;
 
+import cn.sjtu.meetingroom.meetingroomcore.Dao.MeetingRoomRepository;
 import cn.sjtu.meetingroom.meetingroomcore.Dao.TimeSliceRepository;
 import cn.sjtu.meetingroom.meetingroomcore.Dao.UserRepository;
 import cn.sjtu.meetingroom.meetingroomcore.Domain.*;
@@ -27,19 +28,23 @@ public class NodeMessageReceiver {
     TimeSliceRepository timeSliceRepository;
     @Autowired
     UserRepository userRepository;
+    @Autowired
+    MeetingRoomRepository meetingRoomRepository;
 
     @RabbitHandler
-    public void process(String roomId){
+    public void process(Meeting cancelledMeeting){
         try{
-            TimeSlice timeSlice = timeSliceRepository.findTimeSliceByDateLikeAndRoomIdLike(Util.getDate(), roomId);
-            QueueNode queueNode = findSatisfiedQueueNode(roomId, timeSlice);
-            if (!isSatisfiedQueueNodeExisted(queueNode)) queueNode = findSatisfiedQueueNode("1", timeSlice);
-            if (!isSatisfiedQueueNodeExisted(queueNode)) return;
-            Meeting meeting = transformQueueNode2Meeting(queueNode, roomId);
-            meeting = meetingService.add(meeting);
-            if (idMeetingAddedSuccessfully(meeting)) {
-                queueNodeService.delete(queueNode.getId(), queueNode.getRoomId());
-                notifyUser(queueNode, meeting);
+            //System.out.println("get message");
+            QueueNode queueNode = findSatisfiedQueueNode(cancelledMeeting.getRoomId(), cancelledMeeting);
+            if (isSatisfiedQueueNodeNotExisted(queueNode)) queueNode = findSatisfiedQueueNode(Util.ROOMID, cancelledMeeting);
+            if (!isSatisfiedQueueNodeNotExisted(queueNode)) {
+                //System.out.println("find queuenode");
+                Meeting meeting = transformQueueNode2Meeting(queueNode, cancelledMeeting);
+                meeting = meetingService.add(meeting);
+                if (isMeetingAddedSuccessfully(meeting)) {
+                    queueNodeService.delete(queueNode.getId(), queueNode.getRoomId());
+                    notifyUser(queueNode, meeting);
+                }
             }
         }
         catch (Exception e){
@@ -48,22 +53,25 @@ public class NodeMessageReceiver {
         }
     }
 
-    private QueueNode findSatisfiedQueueNode(String roomId, TimeSlice timeSlice){
-        //TODO 找到合适的QueueNode
-        List<QueueNode> queueNodes = queueNodeService.findByRoomId(roomId);
+    private QueueNode findSatisfiedQueueNode(String redisRoomId, Meeting cancelledMeeting){
+        TimeSlice timeSlice = timeSliceRepository.findTimeSliceByDateLikeAndRoomIdLike(cancelledMeeting.getDate(), cancelledMeeting.getRoomId());
+        MeetingRoom meetingRoom = meetingRoomRepository.findMeetingRoomById(cancelledMeeting.getRoomId());
+        List<QueueNode> queueNodes = queueNodeService.findByRoomId(redisRoomId);
         for (QueueNode queueNode : queueNodes){
-            if (between(queueNode.getTimeRange(), timeSlice.getTimeSlice())) return queueNode;
+            if (between(queueNode.getTimeRange(), timeSlice.getTimeSlice()) &&
+                    (queueNode.getSize() == null || queueNode.getSize().equals(meetingRoom.getSize())) &
+                    meetingRoom.getUtils().containsAll(queueNode.getMeetingRoomUtilsList())) return queueNode;
         }
         return null;
     }
 
-    private Meeting transformQueueNode2Meeting(QueueNode queueNode, String roomId){
+    private Meeting transformQueueNode2Meeting(QueueNode queueNode, Meeting cancelledMeeting){
         Meeting meeting = new Meeting();
-        meeting.setRoomId(roomId);
+        meeting.setRoomId(cancelledMeeting.getRoomId());
         meeting.setStartTime(queueNode.getTimeRange().getStart());
         meeting.setEndTime(queueNode.getTimeRange().getEnd());
         meeting.setHostId(queueNode.getUserId());
-        meeting.setDate(Util.getDate());
+        meeting.setDate(cancelledMeeting.getDate());
         meeting.setType(MeetingType.COMMON);
         meeting.setNeedSignIn(false);
         return meeting;
@@ -80,15 +88,15 @@ public class NodeMessageReceiver {
         return user.getDeviceId() != null;
     }
 
-    private boolean isSatisfiedQueueNodeExisted(QueueNode queueNode) {
-        return queueNode != null;
+    private boolean isSatisfiedQueueNodeNotExisted(QueueNode queueNode) {
+        return queueNode == null;
     }
 
-    private boolean idMeetingAddedSuccessfully(Meeting meeting){
+    private boolean isMeetingAddedSuccessfully(Meeting meeting){
         return meeting != null;
     }
 
-    public boolean between(TimeRange timeRange, List<String> timeSlices){
+    private boolean between(TimeRange timeRange, List<String> timeSlices){
         for (int i=timeRange.getStart(); i<timeRange.getEnd(); ++i) {
             if (timeSlices.get(i) != null) return false;
         }
