@@ -1,5 +1,6 @@
 package cn.sjtu.meetingroom.meetingroomcore.Service;
 
+import cn.sjtu.meetingroom.meetingroomcore.Domain.ForeignGuest;
 import cn.sjtu.meetingroom.meetingroomcore.Domain.Meeting;
 import cn.sjtu.meetingroom.meetingroomcore.Domain.MeetingRoom;
 import cn.sjtu.meetingroom.meetingroomcore.Domain.User;
@@ -24,4 +25,5 @@ public interface MeetingService {
     public void stopMeeting(String id);
     public List<User> findAttendants(String id);
     public boolean modify(Meeting meeting, String id);
+    public Meeting addForeignGuest(String id, List<ForeignGuest> foreignGuests);
 }

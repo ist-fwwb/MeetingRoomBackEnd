@@ -7,6 +7,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -46,6 +47,8 @@ public class Meeting implements Serializable {
     Set<String> tags;
     @ApiModelProperty(required = false)
     long timestamp;
+    @ApiModelProperty(required = false)
+    List<ForeignGuest> foreignGuestList;
 
     public long getTimestamp() {
         return timestamp;
@@ -75,6 +78,26 @@ public class Meeting implements Serializable {
         this.type = type;
         this.tags = tags;
         this.timestamp = timestamp;
+    }
+
+    public Meeting(String id, String heading, String description, String roomId, String date, String location, int startTime, int endTime, String hostId, Map<String, String> attendants, boolean needSignIn, String attendantNum, Status status, MeetingType type, Set<String> tags, long timestamp, List<ForeignGuest> foreignGuestList) {
+        this.id = id;
+        this.heading = heading;
+        this.description = description;
+        this.roomId = roomId;
+        this.date = date;
+        this.location = location;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.hostId = hostId;
+        this.attendants = attendants;
+        this.needSignIn = needSignIn;
+        this.attendantNum = attendantNum;
+        this.status = status;
+        this.type = type;
+        this.tags = tags;
+        this.timestamp = timestamp;
+        this.foreignGuestList = foreignGuestList;
     }
 
     public Meeting() {
@@ -193,6 +216,14 @@ public class Meeting implements Serializable {
     }
     public String getDate() {
         return date;
+    }
+
+    public List<ForeignGuest> getForeignGuestList() {
+        return foreignGuestList;
+    }
+
+    public void setForeignGuestList(List<ForeignGuest> foreignGuestList) {
+        this.foreignGuestList = foreignGuestList;
     }
 
     public void setDate(String date) {

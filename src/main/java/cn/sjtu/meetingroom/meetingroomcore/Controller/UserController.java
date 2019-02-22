@@ -2,6 +2,7 @@ package cn.sjtu.meetingroom.meetingroomcore.Controller;
 
 import cn.sjtu.meetingroom.meetingroomcore.Domain.Meeting;
 import cn.sjtu.meetingroom.meetingroomcore.Domain.User;
+import cn.sjtu.meetingroom.meetingroomcore.Service.MeetingRoomService;
 import cn.sjtu.meetingroom.meetingroomcore.Service.MeetingService;
 import cn.sjtu.meetingroom.meetingroomcore.Domain.MeetingWrapper;
 import cn.sjtu.meetingroom.meetingroomcore.Service.UserService;
@@ -26,6 +27,8 @@ public class UserController {
     UserService userService;
     @Autowired
     MeetingService meetingService;
+    @Autowired
+    MeetingRoomService meetingRoomService;
 
     @GetMapping("")
     @ApiOperation(value="get all of the user's detail information")
@@ -53,7 +56,7 @@ public class UserController {
         List<Meeting> res = userService.findMeetingsById(id);
         if (status != null) res = meetingService.findByStatus(status, res);
         if (date != null) res = meetingService.findByDate(date, res);
-        return MeetingWrapper.create(res, userService, "200");
+        return MeetingWrapper.create(res, userService, meetingRoomService, "200");
     }
 
     @PostMapping("")

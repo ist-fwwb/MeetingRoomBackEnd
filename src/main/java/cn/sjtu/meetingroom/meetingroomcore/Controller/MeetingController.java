@@ -1,10 +1,7 @@
 package cn.sjtu.meetingroom.meetingroomcore.Controller;
 
 
-import cn.sjtu.meetingroom.meetingroomcore.Domain.Meeting;
-import cn.sjtu.meetingroom.meetingroomcore.Domain.MeetingRoom;
-import cn.sjtu.meetingroom.meetingroomcore.Domain.MeetingWrapper;
-import cn.sjtu.meetingroom.meetingroomcore.Domain.User;
+import cn.sjtu.meetingroom.meetingroomcore.Domain.*;
 import cn.sjtu.meetingroom.meetingroomcore.Service.MeetingRoomService;
 import cn.sjtu.meetingroom.meetingroomcore.Service.MeetingService;
 import cn.sjtu.meetingroom.meetingroomcore.Service.UserService;
@@ -47,7 +44,7 @@ public class MeetingController {
         if (time != null) meetings = meetingService.findByTime(time, meetings);
         if (status != null) meetings = meetingService.findByStatus(status, meetings);
         if (location != null) meetings = meetingService.findByLocation(location, meetings);
-        return MeetingWrapper.create(meetings, userService, getErrorNum(true));
+        return MeetingWrapper.create(meetings, userService, meetingRoomService, getErrorNum(true));
     }
 
     @GetMapping("/{id}")
@@ -75,6 +72,12 @@ public class MeetingController {
         return meeting == null ? new Meeting() : meetingService.add(meeting);
     }
 
+    @PostMapping("/{id}/foreignGuest")
+    public MeetingWrapper addForeignGuest(@RequestBody List<ForeignGuest> foreignGuests,
+                                   @PathVariable(name="id") String id){
+        return MeetingWrapper.create(meetingService.addForeignGuest(id, foreignGuests), userService, meetingRoomService, getErrorNum(true));
+    }
+
     @PostMapping("")
     @ApiOperation("register a meeting")
     public Meeting addMeeting(@RequestBody Meeting meeting){
@@ -92,7 +95,7 @@ public class MeetingController {
     @ApiOperation("modify the meeting")
     public MeetingWrapper modify(@RequestBody Meeting meeting, @PathVariable(name="id") String id){
         boolean isValidate = meetingService.modify(meeting, id);
-        return MeetingWrapper.create(meetingService.findById(id), userService, getErrorNum(isValidate));
+        return MeetingWrapper.create(meetingService.findById(id), userService, meetingRoomService, getErrorNum(isValidate));
     }
 
     private String  getErrorNum(boolean isValidate) {

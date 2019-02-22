@@ -4,10 +4,7 @@ import cn.sjtu.meetingroom.meetingroomcore.Dao.MeetingRepository;
 import cn.sjtu.meetingroom.meetingroomcore.Dao.MeetingRoomRepository;
 import cn.sjtu.meetingroom.meetingroomcore.Dao.TimeSliceRepository;
 import cn.sjtu.meetingroom.meetingroomcore.Dao.UserRepository;
-import cn.sjtu.meetingroom.meetingroomcore.Domain.Meeting;
-import cn.sjtu.meetingroom.meetingroomcore.Domain.MeetingRoom;
-import cn.sjtu.meetingroom.meetingroomcore.Domain.TimeSlice;
-import cn.sjtu.meetingroom.meetingroomcore.Domain.User;
+import cn.sjtu.meetingroom.meetingroomcore.Domain.*;
 import cn.sjtu.meetingroom.meetingroomcore.Service.MeetingRoomService;
 import cn.sjtu.meetingroom.meetingroomcore.Service.MeetingService;
 import cn.sjtu.meetingroom.meetingroomcore.Util.Status;
@@ -18,10 +15,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static cn.sjtu.meetingroom.meetingroomcore.Util.Util.generateAttendantNum;
 
@@ -185,6 +179,24 @@ public class MeetingServiceImp implements MeetingService {
         return true;
     }
 
+    @Override
+    @Transactional
+    public Meeting addForeignGuest(String id, List<ForeignGuest> foreignGuests) {
+        Meeting origin = meetingRepository.findMeetingById(id);
+        origin.getForeignGuestList().addAll(completeForeignGuests(foreignGuests));
+        origin.setTimestamp(Util.getTimeStamp());
+        return meetingRepository.save(origin);
+    }
+
+    private List<ForeignGuest> completeForeignGuests(List<ForeignGuest> foreignGuests) {
+        Iterator<ForeignGuest> iterator = foreignGuests.iterator();
+        while(iterator.hasNext()){
+            ForeignGuest foreignGuest = iterator.next();
+            foreignGuest.setUUID(Util.generateAttendantNum(RandomNumberSize));
+        }
+        return foreignGuests;
+    }
+
     private boolean modifyMeetingTime(Meeting meeting, Meeting origin) {
         modifyTimeSlice(origin, null);
         if (!modifyTimeSlice(meeting, meeting.getId())) {
@@ -216,11 +228,17 @@ public class MeetingServiceImp implements MeetingService {
     }
 
     private void completeMeetingAttributes(Meeting meeting) {
+        //TODO 将这个转到MeetingWrapper中
         meeting.setLocation(meetingRoomRepository.findMeetingRoomById(meeting.getRoomId()).getLocation());
         meeting.setAttendants(generateAttendants(meeting.getHostId()));
         meeting.setAttendantNum(generateAttendantNum(RandomNumberSize));
         meeting.setStatus(Status.Pending);
         meeting.setTimestamp(Util.getTimeStamp());
+        meeting.setForeignGuestList(generateForeignGuestList(meeting));
+    }
+
+    private List<ForeignGuest> generateForeignGuestList(Meeting meeting) {
+        return meeting.getForeignGuestList() == null ?  new ArrayList<>() : completeForeignGuests(meeting.getForeignGuestList());
     }
 
     private Map<String, String> generateAttendants(String hostId){
