@@ -62,7 +62,6 @@ public class QueueNodeServiceImp implements QueueNodeService {
     @Override
     @Transactional
     public QueueNode add(QueueNode queueNode) {
-        queueNode.setId(String.valueOf(System.currentTimeMillis()) + queueNode.getUserId());
         queueNodeRepository.save(queueNode);
         return queueNode;
     }

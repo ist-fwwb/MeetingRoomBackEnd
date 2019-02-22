@@ -100,4 +100,20 @@ public class QueueNode implements Serializable {
     public void setMeetingRoomUtilsList(Set<MeetingRoomUtils> meetingRoomUtilsList) {
         this.meetingRoomUtilsList = meetingRoomUtilsList;
     }
+
+    @Override
+    public String toString() {
+        return "QueueNode{" +
+                "id='" + id + '\'' +
+                ", userId='" + userId + '\'' +
+                ", roomId='" + roomId + '\'' +
+                ", timeRange=" + timeRange +
+                ", date='" + date + '\'' +
+                ", size=" + size +
+                ", needSignIn=" + needSignIn +
+                ", heading='" + heading + '\'' +
+                ", description='" + description + '\'' +
+                ", meetingRoomUtilsList=" + meetingRoomUtilsList +
+                '}';
+    }
 }

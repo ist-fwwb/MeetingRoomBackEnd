@@ -31,7 +31,9 @@ public class QueueNodeRepositoryImp implements QueueNodeRepository {
 
     @Override
     public void save(QueueNode queueNode) {
+        if (queueNode.getId() == null || queueNode.getId().isEmpty()) queueNode.setId(String.valueOf(System.currentTimeMillis()) + queueNode.getUserId());
         template.opsForValue().set(queueNode.getId(), queueNode);
+        //System.out.println(template.opsForValue().get(queueNode.getId()).toString());
         List<QueueNode> queueNodes = findByRoomId(queueNode.getRoomId());
         queueNodes.add(queueNode);
         save(queueNode.getRoomId(), queueNodes);

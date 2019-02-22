@@ -26,8 +26,8 @@ public class QueueNodeController {
     }
 
     @GetMapping("/{id}")
-    public void findById(@PathVariable(name="id") String id){
-        queueNodeService.findById(id);
+    public QueueNode findById(@PathVariable(name="id") String id){
+        return queueNodeService.findById(id);
     }
 
     @PostMapping("")
