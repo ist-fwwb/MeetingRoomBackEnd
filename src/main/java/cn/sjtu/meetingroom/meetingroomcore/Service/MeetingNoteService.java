@@ -10,5 +10,7 @@ public interface MeetingNoteService {
     MeetingNote collect(String meetingNoteId, String userId);
     MeetingNote deleteCollect(String meetingNoteId, String userId);
     List<MeetingNote> showAll();
+    List<MeetingNote> findByMeetingId(String meetingId, List<MeetingNote> meetingNotes);
+    List<MeetingNote> findByOwnerId(String ownerId, List<MeetingNote> meetingNotes);
     MeetingNote showOne(String id);
 }

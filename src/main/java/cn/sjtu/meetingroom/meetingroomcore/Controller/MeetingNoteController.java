@@ -15,8 +15,12 @@ public class MeetingNoteController {
     MeetingNoteService meetingNoteService;
 
     @GetMapping("")
-    public List<MeetingNoteWrapper> show(@RequestParam(name = "userId") String userId){
+    public List<MeetingNoteWrapper> show(@RequestParam(name = "userId") String userId,
+                                         @RequestParam(name = "meetingId", required = false) String meetingId,
+                                         @RequestParam(name = "ownerId", required = false) String ownerId){
         List<MeetingNote> res = meetingNoteService.showAll();
+        if (meetingId != null) res = meetingNoteService.findByMeetingId(meetingId, res);
+        if (ownerId != null) res = meetingNoteService.findByOwnerId(ownerId, res);
         return MeetingNoteWrapper.create(res, userId);
     }
 

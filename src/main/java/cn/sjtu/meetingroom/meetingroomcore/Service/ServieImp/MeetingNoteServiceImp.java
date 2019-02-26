@@ -60,6 +60,22 @@ public class MeetingNoteServiceImp implements MeetingNoteService {
     }
 
     @Override
+    public List<MeetingNote> findByMeetingId(String meetingId, List<MeetingNote> meetingNotes) {
+        meetingNotes.removeIf((meetingNote -> {
+            return !meetingNote.getMeetingId().equals(meetingId);
+        }));
+        return meetingNotes;
+    }
+
+    @Override
+    public List<MeetingNote> findByOwnerId(String ownerId, List<MeetingNote> meetingNotes) {
+        meetingNotes.removeIf((meetingNote -> {
+            return !meetingNote.getOwnerId().equals(ownerId);
+        }));
+        return meetingNotes;
+    }
+
+    @Override
     public MeetingNote showOne(String id) {
         return meetingNoteRepository.findMeetingNoteById(id);
     }
