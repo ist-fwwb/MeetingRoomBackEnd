@@ -8,6 +8,8 @@ import java.util.*;
 
 public class Util {
     public static String ROOMID = "1";
+    public static String VoiceTransformURL = "http://localhost:8080";
+    public static String UserRegistryURL = "http://pipipan.cn:31001";
     public static List<String> parseList(String s){
         String[] utils = (s.substring(1, s.length() - 1)).split(",");
         return Arrays.asList(utils);

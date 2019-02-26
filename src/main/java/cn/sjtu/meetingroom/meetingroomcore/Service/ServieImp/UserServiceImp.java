@@ -7,6 +7,7 @@ import cn.sjtu.meetingroom.meetingroomcore.Domain.User;
 import cn.sjtu.meetingroom.meetingroomcore.Service.UserService;
 import cn.sjtu.meetingroom.meetingroomcore.Util.Type;
 import cn.sjtu.meetingroom.meetingroomcore.Util.UserFactory;
+import cn.sjtu.meetingroom.meetingroomcore.Util.Util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -36,7 +37,7 @@ public class UserServiceImp implements UserService {
     public User register(String enterpriseId, String phone, String password, String faceFile, String featureFile, String name){
         User user = userFactory.create(enterpriseId, phone, password, faceFile, featureFile, name);
         if (user != null)
-            WebClient.create().get().uri("http://pipipan.cn:31001?fileName="+featureFile).retrieve();
+            WebClient.create().get().uri(Util.UserRegistryURL+"?fileName="+featureFile).retrieve();
         return user;
     }
     public User modify(User user){

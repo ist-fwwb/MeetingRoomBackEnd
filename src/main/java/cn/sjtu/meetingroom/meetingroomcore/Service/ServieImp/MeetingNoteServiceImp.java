@@ -3,8 +3,10 @@ package cn.sjtu.meetingroom.meetingroomcore.Service.ServieImp;
 import cn.sjtu.meetingroom.meetingroomcore.Dao.MeetingNoteRepository;
 import cn.sjtu.meetingroom.meetingroomcore.Domain.MeetingNote;
 import cn.sjtu.meetingroom.meetingroomcore.Service.MeetingNoteService;
+import cn.sjtu.meetingroom.meetingroomcore.Util.Util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.List;
 
@@ -21,7 +23,9 @@ public class MeetingNoteServiceImp implements MeetingNoteService {
 
     @Override
     public MeetingNote saveVOICEType(MeetingNote meetingNote) {
+        //TODO 完成和语音转文字的对接
         meetingNoteRepository.save(meetingNote);
+        WebClient.create().get().uri(Util.VoiceTransformURL + "?meetingNoteId=" + meetingNote.getId()).retrieve();
         return meetingNote;
     }
 
