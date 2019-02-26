@@ -1,5 +1,6 @@
 package cn.sjtu.meetingroom.meetingroomcore.Domain;
 
+import cn.sjtu.meetingroom.meetingroomcore.Util.MeetingNoteType;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -9,10 +10,29 @@ import java.util.Set;
 public class MeetingNote {
     @Id
     String id;
+    MeetingNoteType meetingNoteType;
+    String voiceFileName;
+    String title;
     String note;
     String meetingId;
     String ownerId;
     Set<String> collectorIds;
+
+    public String getVoiceFileName() {
+        return voiceFileName;
+    }
+
+    public void setVoiceFileName(String voiceFileName) {
+        this.voiceFileName = voiceFileName;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
     public String getId() {
         return id;
@@ -52,5 +72,13 @@ public class MeetingNote {
 
     public void setCollectorIds(Set<String> collectorIds) {
         this.collectorIds = collectorIds;
+    }
+
+    public MeetingNoteType getMeetingNoteType() {
+        return meetingNoteType;
+    }
+
+    public void setMeetingNoteType(MeetingNoteType meetingNoteType) {
+        this.meetingNoteType = meetingNoteType;
     }
 }
