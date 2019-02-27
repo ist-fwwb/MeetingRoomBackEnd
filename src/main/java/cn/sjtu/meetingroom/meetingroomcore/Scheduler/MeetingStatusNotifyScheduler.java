@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Map;
 
 @Component
-public class NotifyScheduler {
+public class MeetingStatusNotifyScheduler {
     @Autowired
     MeetingRepository meetingRepository;
     @Autowired
@@ -46,9 +46,9 @@ public class NotifyScheduler {
         }
     }
 
-    @Scheduled(cron = "0 50/20 * * * *")
+    @Scheduled(cron = "0 55/25 * * * *")
     public void notifyMeetingEnd(){
-        List<Meeting> meetings = meetingRepository.findMeetingsByStatus(Status.Pending);
+        List<Meeting> meetings = meetingRepository.findMeetingsByStatus(Status.Running);
         meetings = meetingService.findByDate(sdf.format(new Date()), meetings);
         for (Meeting meeting : meetings){
             if (isComing(meeting.getEndTime())){
@@ -58,6 +58,12 @@ public class NotifyScheduler {
                 }
             }
         }
+    }
+
+    @Scheduled(cron = "0 0/30 * * *")
+    public void timeout(){
+        List<Meeting> meetings = meetingRepository.findMeetingsByStatus(Status.Running);
+        meetings = meetingService.findByDate(sdf.format(new Date()), meetings);
     }
 
     public boolean isComing(int comingTime){
