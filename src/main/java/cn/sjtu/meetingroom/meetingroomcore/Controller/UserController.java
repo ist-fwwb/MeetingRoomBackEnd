@@ -2,6 +2,7 @@ package cn.sjtu.meetingroom.meetingroomcore.Controller;
 
 import cn.sjtu.meetingroom.meetingroomcore.Domain.Meeting;
 import cn.sjtu.meetingroom.meetingroomcore.Domain.User;
+import cn.sjtu.meetingroom.meetingroomcore.Domain.UserWrapper;
 import cn.sjtu.meetingroom.meetingroomcore.Service.MeetingRoomService;
 import cn.sjtu.meetingroom.meetingroomcore.Service.MeetingService;
 import cn.sjtu.meetingroom.meetingroomcore.Domain.MeetingWrapper;
@@ -47,6 +48,13 @@ public class UserController {
     @ApiOperation(value="get a specified user's detail informatipon")
     public User showOne(@PathVariable(name="id")String id){
         return userService.showOne(id);
+    }
+
+    @GetMapping("/Wrapper")
+    @ApiOperation(value = "show that if the user has another meeting in the same timeslice")
+    public List<UserWrapper> getWrapperUser(@RequestParam(name = "meetingId") String meetingId){
+        List<User> users = userService.showAll();
+        return UserWrapper.create(users, userService, meetingId);
     }
 
     @GetMapping("/{id}/meeting")

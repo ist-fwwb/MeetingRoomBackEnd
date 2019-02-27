@@ -20,4 +20,6 @@ public interface UserService {
     public List<User> findByType(Type type, List<User> users);
     public List<User> findByFeatureFileName(String featureFileName, List<User> users);
     public List<User> showAll();
+    public boolean isSatisfied(User user, String meetingId);
+    public boolean isSatisfied(User user, Meeting meeting);
 }

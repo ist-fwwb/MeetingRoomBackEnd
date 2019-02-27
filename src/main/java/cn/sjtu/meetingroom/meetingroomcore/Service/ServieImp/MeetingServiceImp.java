@@ -7,6 +7,7 @@ import cn.sjtu.meetingroom.meetingroomcore.Dao.UserRepository;
 import cn.sjtu.meetingroom.meetingroomcore.Domain.*;
 import cn.sjtu.meetingroom.meetingroomcore.Service.MeetingRoomService;
 import cn.sjtu.meetingroom.meetingroomcore.Service.MeetingService;
+import cn.sjtu.meetingroom.meetingroomcore.Service.UserService;
 import cn.sjtu.meetingroom.meetingroomcore.Util.Status;
 import cn.sjtu.meetingroom.meetingroomcore.Util.Util;
 import org.springframework.amqp.core.AmqpTemplate;
@@ -31,6 +32,8 @@ public class MeetingServiceImp implements MeetingService {
     UserRepository userRepository;
     @Autowired
     MeetingRoomService meetingRoomService;
+    @Autowired
+    UserService userService;
     @Autowired
     AmqpTemplate amqpTemplate;
 
@@ -99,6 +102,7 @@ public class MeetingServiceImp implements MeetingService {
         try {
             meetingRepository.save(meeting);
             completeMeetingAttributes(meeting);
+            if (!userService.isSatisfied(userRepository.findUserById(meeting.getHostId()), meeting)) throw new Exception();
             if (!modifyTimeSlice(meeting, meeting.getId())) throw new Exception();
             return meetingRepository.save(meeting);
         }

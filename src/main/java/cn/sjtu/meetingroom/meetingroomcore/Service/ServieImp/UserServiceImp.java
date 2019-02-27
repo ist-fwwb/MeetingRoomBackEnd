@@ -5,6 +5,7 @@ import cn.sjtu.meetingroom.meetingroomcore.Dao.UserRepository;
 import cn.sjtu.meetingroom.meetingroomcore.Domain.Meeting;
 import cn.sjtu.meetingroom.meetingroomcore.Domain.User;
 import cn.sjtu.meetingroom.meetingroomcore.Service.UserService;
+import cn.sjtu.meetingroom.meetingroomcore.Util.Status;
 import cn.sjtu.meetingroom.meetingroomcore.Util.Type;
 import cn.sjtu.meetingroom.meetingroomcore.Util.UserFactory;
 import cn.sjtu.meetingroom.meetingroomcore.Util.Util;
@@ -34,6 +35,16 @@ public class UserServiceImp implements UserService {
     public User showOne(String id){
         return userRepository.findUserById(id);
     }
+
+    @Override
+    public boolean isSatisfied(User user, Meeting meeting) {
+        List<Meeting> meetings = meetingRepository.findMeeingsByDateAndStatus(meeting.getDate(), Status.Pending);
+        for (Meeting m : meetings){
+            if (m.getAttendants().containsKey(user.getId()) && meeting.isOverLapped(m)) return false;
+        }
+        return true;
+    }
+
     public User register(String enterpriseId, String phone, String password, String faceFile, String featureFile, String name){
         User user = userFactory.create(enterpriseId, phone, password, faceFile, featureFile, name);
         if (user != null)
@@ -76,6 +87,12 @@ public class UserServiceImp implements UserService {
     public List<User> showAll(){
         return userRepository.findAll();
     }
+
+    @Override
+    public boolean isSatisfied(User user, String meetingId) {
+        return isSatisfied(user, meetingRepository.findMeetingById(meetingId));
+    }
+
     private List<Meeting> filterAttendantsById(List<Meeting> tmp, String id){
         List<Meeting> res = new ArrayList<>();
         for (Meeting meeting : tmp){

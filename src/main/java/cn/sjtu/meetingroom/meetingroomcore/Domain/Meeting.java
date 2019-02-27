@@ -229,4 +229,8 @@ public class Meeting implements Serializable {
     public void setDate(String date) {
         this.date = date;
     }
+
+    public boolean isOverLapped(Meeting other){
+        return (startTime <= other.startTime && endTime > other.startTime) || (startTime < other.endTime && endTime >= other.startTime);
+    }
 }
