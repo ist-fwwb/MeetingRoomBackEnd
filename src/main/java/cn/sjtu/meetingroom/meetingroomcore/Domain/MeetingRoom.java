@@ -19,6 +19,7 @@ public class MeetingRoom {
     Size size;
     @ApiModelProperty(required = true)
     String location;
+    String deviceId;
 
     public MeetingRoom() {
     }
@@ -28,6 +29,14 @@ public class MeetingRoom {
         this.utils = utils;
         this.size = size;
         this.location = location;
+    }
+
+    public String getDeviceId() {
+        return deviceId;
+    }
+
+    public void setDeviceId(String deviceId) {
+        this.deviceId = deviceId;
     }
 
     public String getId() {
