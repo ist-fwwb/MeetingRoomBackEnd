@@ -4,14 +4,37 @@ import cn.sjtu.meetingroom.meetingroomcore.Enum.MessageStatus;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.Date;
+
 @Document
 public class Message {
     @Id
     String id;
     String userId;
+    String meetingId;
     MessageStatus messageStatus;
     String title;
     String content;
+    String time;
+
+    public static Message create(String userId, String meetingId, String title, String content){
+        Message res = new Message();
+        res.setUserId(userId);
+        res.setMeetingId(meetingId);
+        res.setTitle(title);
+        res.setContent(content);
+        res.setTime(new Date().toString());
+        res.setMessageStatus(MessageStatus.NEW);
+        return res;
+    }
+
+    public String getMeetingId() {
+        return meetingId;
+    }
+
+    public void setMeetingId(String meetingId) {
+        this.meetingId = meetingId;
+    }
 
     public String getId() {
         return id;
@@ -51,5 +74,13 @@ public class Message {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
     }
 }

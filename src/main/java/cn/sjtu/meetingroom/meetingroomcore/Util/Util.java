@@ -50,6 +50,7 @@ public class Util {
     public static long getTimeStamp(){
         return new Date().getTime();
     }
+
     public static Date getNextDay(){
         Calendar calendar = Calendar. getInstance();
         calendar.setTime( new Date());

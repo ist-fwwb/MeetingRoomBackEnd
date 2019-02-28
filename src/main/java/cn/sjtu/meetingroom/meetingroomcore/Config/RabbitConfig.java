@@ -12,4 +12,9 @@ public class RabbitConfig {
         return new Queue("node");
     }
 
+    @Bean
+    public Queue messageQueue(){
+        return new Queue("message");
+    }
+
 }

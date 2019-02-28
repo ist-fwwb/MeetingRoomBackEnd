@@ -73,11 +73,13 @@ public class QueueNodeServiceImp implements QueueNodeService {
     }
 
     @Override
-    public void deleteByDate(String date) {
+    public List<QueueNode> deleteByDate(String date) {
         List<MeetingRoom> meetingRooms = meetingRoomRepository.findAll();
+        List<QueueNode> res = new ArrayList<>();
         for (MeetingRoom meetingRoom : meetingRooms){
-            queueNodeRepository.deleteByDate(date, meetingRoom.getId());
+            res.addAll(queueNodeRepository.deleteByDate(date, meetingRoom.getId()));
         }
-        queueNodeRepository.deleteByDate(date, Util.ROOMID);
+        res.addAll(queueNodeRepository.deleteByDate(date, Util.ROOMID));
+        return res;
     }
 }

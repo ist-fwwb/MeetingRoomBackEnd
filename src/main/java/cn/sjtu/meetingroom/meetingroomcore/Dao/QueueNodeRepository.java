@@ -11,5 +11,5 @@ public interface QueueNodeRepository {
     public List<QueueNode> findByRoomId(String roomId);
     public void save(QueueNode queueNode);
     public void delete(String id);
-    public void deleteByDate(String date, String roomId);
+    public List<QueueNode> deleteByDate(String date, String roomId);
 }

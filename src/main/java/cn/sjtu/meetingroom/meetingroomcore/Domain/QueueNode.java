@@ -108,7 +108,7 @@ public class QueueNode implements Serializable {
                 ", userId='" + userId + '\'' +
                 ", roomId='" + roomId + '\'' +
                 ", timeRange=" + timeRange +
-                ", date='" + date + '\'' +
+                ", time='" + date + '\'' +
                 ", size=" + size +
                 ", needSignIn=" + needSignIn +
                 ", heading='" + heading + '\'' +

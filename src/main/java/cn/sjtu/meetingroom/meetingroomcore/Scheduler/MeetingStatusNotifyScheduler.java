@@ -3,11 +3,10 @@ package cn.sjtu.meetingroom.meetingroomcore.Scheduler;
 import cn.sjtu.meetingroom.meetingroomcore.Dao.MeetingRepository;
 import cn.sjtu.meetingroom.meetingroomcore.Dao.UserRepository;
 import cn.sjtu.meetingroom.meetingroomcore.Domain.Meeting;
-import cn.sjtu.meetingroom.meetingroomcore.Domain.User;
-import cn.sjtu.meetingroom.meetingroomcore.Service.MeetingService;
-import cn.sjtu.meetingroom.meetingroomcore.Util.MessageFactory;
-import cn.sjtu.meetingroom.meetingroomcore.Util.PushFactory;
 import cn.sjtu.meetingroom.meetingroomcore.Enum.Status;
+import cn.sjtu.meetingroom.meetingroomcore.Service.MeetingService;
+import cn.sjtu.meetingroom.meetingroomcore.Service.MessageService;
+import cn.sjtu.meetingroom.meetingroomcore.Util.MessageFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -26,6 +25,8 @@ public class MeetingStatusNotifyScheduler {
     MeetingService meetingService;
     @Autowired
     UserRepository userRepository;
+    @Autowired
+    MessageService messageService;
 
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
@@ -37,10 +38,7 @@ public class MeetingStatusNotifyScheduler {
             if (isComing(meeting.getStartTime())){
                 Map<String, String> attendants = meeting.getAttendants();
                 for (String id : attendants.keySet()) {
-                    User user = userRepository.findUserById(id);
-                    if (user != null && user.getDeviceId() != null) {
-                        PushFactory.push(user.getDeviceId(), MessageFactory.getMeetingStartTitleMessage(), MessageFactory.getMeetingStartBodyMessage(meeting));
-                    }
+                    messageService.create(id, meeting.getId(), MessageFactory.getMeetingStartTitleMessage(), MessageFactory.getMeetingStartBodyMessage(meeting));
                 }
             }
         }
@@ -53,22 +51,14 @@ public class MeetingStatusNotifyScheduler {
         for (Meeting meeting : meetings){
             if (isComing(meeting.getEndTime())){
                 meeting.setEndTime(meeting.getEndTime() + 1);
-                boolean meetingModifiedResult = meetingService.modifyMeetingTime(meeting, meetingRepository.findMeetingById(meeting.getId()));
-                User host = userRepository.findUserById(meeting.getHostId());
-                if (meetingModifiedResult){
+                if (meetingService.modifyMeetingTime(meeting, meetingRepository.findMeetingById(meeting.getId()))){
                     //TODO 延时成功
-                    if (host != null && host.getDeviceId() != null) {
-                        PushFactory.push(host.getDeviceId(), MessageFactory.getMeetingEndTitleMessage(), MessageFactory.getMeetingEndBodyMessage(meeting));
-                    }
+                    messageService.create(meeting.getHostId(), meeting.getId(), MessageFactory.getMeetingEndTitleMessage(), MessageFactory.getMeetingEndBodyMessage(meeting));
                 }
                 else {
                     //TODO 延时失败，强行关闭
-                    meeting.setEndTime(meeting.getEndTime() - 1);
-                    meeting.setStatus(Status.Stopped);
-                    meetingService.modify(meeting, meeting.getId());
-                    if (host != null && host.getDeviceId() != null) {
-                        PushFactory.push(host.getDeviceId(), MessageFactory.getMeetingEndTitleMessage(), MessageFactory.getMeetingEndBodyMessage(meeting));
-                    }
+                    meetingService.stopMeeting(meeting.getId());
+                    messageService.create(meeting.getHostId(), meeting.getId(), MessageFactory.getMeetingEndTitleMessage(), MessageFactory.getMeetingEndBodyMessage(meeting));
                 }
             }
         }

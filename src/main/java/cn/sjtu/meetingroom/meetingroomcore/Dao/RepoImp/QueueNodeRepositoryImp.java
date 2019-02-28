@@ -25,18 +25,22 @@ public class QueueNodeRepositoryImp implements QueueNodeRepository {
         return tmp == null ? new ArrayList<>() : tmp;
     }
 
-    private void save(String roomId, List<QueueNode> queueNodes) {
-        template.opsForValue().set(roomId, queueNodes);
-    }
 
     @Override
     public void save(QueueNode queueNode) {
         if (queueNode.getId() == null || queueNode.getId().isEmpty()) queueNode.setId(String.valueOf(System.currentTimeMillis()) + queueNode.getUserId());
+        saveById(queueNode);
+        saveByRoomId(queueNode);
+    }
+
+    private void saveById(QueueNode queueNode) {
         template.opsForValue().set(queueNode.getId(), queueNode);
-        //System.out.println(template.opsForValue().get(queueNode.getId()).toString());
+    }
+
+    private void saveByRoomId(QueueNode queueNode) {
         List<QueueNode> queueNodes = findByRoomId(queueNode.getRoomId());
         queueNodes.add(queueNode);
-        save(queueNode.getRoomId(), queueNodes);
+        template.opsForValue().set(queueNode.getRoomId(), queueNodes);
     }
 
     @Override
@@ -46,14 +50,15 @@ public class QueueNodeRepositoryImp implements QueueNodeRepository {
         String roomId = queueNode.getRoomId();
         List<QueueNode> queueNodes = (List<QueueNode>) template.opsForValue().get(roomId);
         queueNodes.removeIf((node) -> node.getId().equals(id));
-        save(roomId, queueNodes);
+        template.opsForValue().set(roomId, queueNodes);
         template.opsForValue().set(id, null);
     }
 
     @Override
-    public void deleteByDate(String date, String roomId) {
+    public List<QueueNode> deleteByDate(String date, String roomId) {
         List<QueueNode> queueNodes = (List<QueueNode>) template.opsForValue().get(roomId);
         queueNodes.removeIf((node) -> !node.getDate().equals(date));
         for (QueueNode queueNode : queueNodes) delete(queueNode.getId());
+        return queueNodes;
     }
 }

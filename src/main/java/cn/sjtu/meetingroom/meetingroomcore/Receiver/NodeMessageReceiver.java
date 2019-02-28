@@ -4,11 +4,11 @@ import cn.sjtu.meetingroom.meetingroomcore.Dao.MeetingRoomRepository;
 import cn.sjtu.meetingroom.meetingroomcore.Dao.TimeSliceRepository;
 import cn.sjtu.meetingroom.meetingroomcore.Dao.UserRepository;
 import cn.sjtu.meetingroom.meetingroomcore.Domain.*;
-import cn.sjtu.meetingroom.meetingroomcore.Service.MeetingService;
-import cn.sjtu.meetingroom.meetingroomcore.Service.QueueNodeService;
 import cn.sjtu.meetingroom.meetingroomcore.Enum.MeetingType;
+import cn.sjtu.meetingroom.meetingroomcore.Service.MeetingService;
+import cn.sjtu.meetingroom.meetingroomcore.Service.MessageService;
+import cn.sjtu.meetingroom.meetingroomcore.Service.QueueNodeService;
 import cn.sjtu.meetingroom.meetingroomcore.Util.MessageFactory;
-import cn.sjtu.meetingroom.meetingroomcore.Util.PushFactory;
 import cn.sjtu.meetingroom.meetingroomcore.Util.Util;
 import org.springframework.amqp.rabbit.annotation.RabbitHandler;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
@@ -30,6 +30,8 @@ public class NodeMessageReceiver {
     UserRepository userRepository;
     @Autowired
     MeetingRoomRepository meetingRoomRepository;
+    @Autowired
+    MessageService messageService;
 
     @RabbitHandler
     public void process(Meeting cancelledMeeting){
@@ -80,14 +82,7 @@ public class NodeMessageReceiver {
     }
 
     private void notifyUser(QueueNode queueNode, Meeting meeting){
-        User user = userRepository.findUserById(queueNode.getUserId());
-        if (haveDeviceId(user)) {
-            PushFactory.push(user.getDeviceId(), "恭喜你成功预定会议", MessageFactory.getMeetingStartBodyMessage(meeting));
-        }
-    }
-
-    private boolean haveDeviceId(User user){
-        return user.getDeviceId() != null;
+        messageService.create(queueNode.getUserId(), meeting.getId(), MessageFactory.createQueueSuccessTitle(), MessageFactory.createQueueSuccessMessage(meeting));
     }
 
     private boolean isSatisfiedQueueNodeNotExisted(QueueNode queueNode) {

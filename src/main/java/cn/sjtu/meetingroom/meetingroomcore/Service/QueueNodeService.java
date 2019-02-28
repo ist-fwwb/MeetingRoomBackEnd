@@ -15,5 +15,5 @@ public interface QueueNodeService {
     public List<QueueNode> findByDate(String date, List<QueueNode> queueNodes);
     public QueueNode add(QueueNode queueNode);
     public void delete(String id);
-    public void deleteByDate(String date);
+    public List<QueueNode> deleteByDate(String date);
 }
