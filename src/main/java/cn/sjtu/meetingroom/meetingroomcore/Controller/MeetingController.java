@@ -53,7 +53,7 @@ public class MeetingController {
         return meetingService.findById(id);
     }
 
-    @GetMapping("/{id}/attendants")
+    @GetMapping("/{id}/attendant")
     @ApiOperation("get user information of all attendants")
     public List<User> getMeetingAttendants(@PathVariable(name="id") String id){
         return meetingService.findAttendants(id);
