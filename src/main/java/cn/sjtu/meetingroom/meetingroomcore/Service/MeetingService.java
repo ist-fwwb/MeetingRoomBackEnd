@@ -27,4 +27,6 @@ public interface MeetingService {
     public boolean modify(Meeting meeting, String id);
     public boolean modifyMeetingTime(Meeting meeting, Meeting origin);
     public Meeting addForeignGuest(String id, List<ForeignGuest> foreignGuests);
+    public void addAttendantBatch(String meetingId, List<String> userIds);
+    public void deleteAttendantBatch(String meetingId, List<String> userIds);
 }

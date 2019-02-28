@@ -102,7 +102,6 @@ public class MeetingServiceImp implements MeetingService {
 
     @Transactional
     public Meeting add(Meeting meeting){
-        //TODO add the case that there is not enough space the meeting
         try {
             meetingRepository.save(meeting);
             completeMeetingAttributes(meeting);
@@ -120,15 +119,10 @@ public class MeetingServiceImp implements MeetingService {
 
     @Transactional
     public Meeting attend(String attendantNum, String userId){
-        //TODO Awake the host to know it
         Meeting meeting = getMeetingByAttendantNumOrId(attendantNum);
         if (meeting != null) {
-            Map<String, String> attendants = meeting.getAttendants();
-            if (!attendants.containsKey(userId) && userId != null){
-                attendants.put(userId, "");
-                meeting.setTimestamp(Util.getTimeStamp());
-                meetingRepository.save(meeting);
-            }
+            addAttendant(meeting, userId);
+            meetingRepository.save(meeting);
         }
         return meeting;
     }
@@ -171,13 +165,15 @@ public class MeetingServiceImp implements MeetingService {
     @Transactional
     public void exitFromMeeting(String id, String userId){
         Meeting meeting = meetingRepository.findMeetingById(id);
-        meeting.getAttendants().remove(userId);
-        meeting.setTimestamp(Util.getTimeStamp());
+        if (meeting != null) {
+            deleteAttendant(meeting, userId);
+        }
         meetingRepository.save(meeting);
     }
 
     @Transactional
     public boolean modify(Meeting meeting, String id) {
+        //TODO 告知所有人会议信息被修改
         Meeting origin = meetingRepository.findMeetingById(id);
         if (meeting == null || origin == null || meeting.getTimestamp() < origin.getTimestamp()) return false;
         //MODIFY THE TIME
@@ -185,6 +181,10 @@ public class MeetingServiceImp implements MeetingService {
         if (meeting.getStatus().equals(Status.Cancelled) || meeting.getStatus().equals(Status.Stopped)) sendMessageToInvokeQueueNode(meeting);
         meeting.setTimestamp(Util.getTimeStamp());
         meetingRepository.save(meeting);
+        for (String userId : meeting.getAttendants().keySet()){
+            if (userId.equals(meeting.getHostId())) continue;
+            messageService.create(userId, meeting.getId(), MessageFactory.createMeetingModifedTitle(), MessageFactory.createMeetingModifiedBody(meeting));
+        }
         return true;
     }
 
@@ -195,6 +195,48 @@ public class MeetingServiceImp implements MeetingService {
         origin.getForeignGuestList().addAll(completeForeignGuests(foreignGuests));
         origin.setTimestamp(Util.getTimeStamp());
         return meetingRepository.save(origin);
+    }
+
+    @Override
+    public void addAttendantBatch(String meetingId, List<String> userIds) {
+        Meeting meeting = meetingRepository.findMeetingById(meetingId);
+        if (meeting != null){
+            for (String userId : userIds) addAttendant(meeting, userId);
+            meetingRepository.save(meeting);
+        }
+    }
+
+    @Override
+    public void deleteAttendantBatch(String meetingId, List<String> userIds) {
+        Meeting meeting = meetingRepository.findMeetingById(meetingId);
+        if (meeting != null){
+            for (String userId : userIds) deleteAttendant(meeting, userId);
+            meetingRepository.save(meeting);
+        }
+    }
+
+    private void addAttendant(Meeting meeting, String userId){
+        //TODO 发送信息让会议举办者知道有人加入了会议室，并告知加入者加入了会议
+        Map<String, String> attendants = meeting.getAttendants();
+        if (!attendants.containsKey(userId) && userId != null){
+            attendants.put(userId, "");
+            meeting.setTimestamp(Util.getTimeStamp());
+            User user = userRepository.findUserById(userId);
+            messageService.create(userId, meeting.getId(), MessageFactory.createAttendMeetingTitle(), MessageFactory.createAttendMeetingBody(meeting));
+            messageService.create(meeting.getHostId(), meeting.getId(), MessageFactory.createAttendMeetingTitleHost(), MessageFactory.createAttendMeetingBodyHost(meeting, user));
+        }
+    }
+
+    private void deleteAttendant(Meeting meeting, String userId){
+        //TODO 发送信息让会议举办者知道有人退出了会议室，并告知退出者退出了会议
+        Map<String, String> attendants = meeting.getAttendants();
+        if (attendants.containsKey(userId) && userId != null){
+            attendants.remove(userId);
+            meeting.setTimestamp(Util.getTimeStamp());
+            User user = userRepository.findUserById(userId);
+            messageService.create(userId, meeting.getId(), MessageFactory.createExitMeetingTitle(), MessageFactory.createExitMeetingBody(meeting));
+            messageService.create(meeting.getHostId(), meeting.getId(), MessageFactory.createExitMeetingTitleHost(), MessageFactory.createExitMeetingBodyHost(meeting, user));
+        }
     }
 
     private List<ForeignGuest> completeForeignGuests(List<ForeignGuest> foreignGuests) {

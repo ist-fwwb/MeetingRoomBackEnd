@@ -84,6 +84,11 @@ public class MeetingController {
         return meetingService.add(meeting);
     }
 
+    @PostMapping("/{id}/attendants")
+    public Meeting addMeetingAttendant(@PathVariable(name = "id") String id, @RequestBody List<String> userIds){
+        return null;
+    }
+
     @PostMapping("/{attendantNum}/attendants")
     @ApiOperation("attend to the meeting By attendantNum or meetingId")
     public Meeting attend(@PathVariable(name = "attendantNum") String attendantNum,
@@ -132,5 +137,10 @@ public class MeetingController {
     public String exitFromMeeting(@PathVariable(name="id") String id, @PathVariable(name="userId") String userId){
         meetingService.exitFromMeeting(id, userId);
         return "ok";
+    }
+
+    @DeleteMapping("/{id}/attendants")
+    public Meeting removeMeetingAttendant(@PathVariable(name = "id") String id, @RequestBody List<String> userIds){
+        return null;
     }
 }
