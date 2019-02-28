@@ -6,6 +6,7 @@ import io.swagger.annotations.ApiModelProperty;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.List;
 import java.util.Set;
 
 @Document
@@ -13,13 +14,22 @@ public class MeetingRoom {
     @Id
     @ApiModelProperty(required = false)
     String id;
-    @ApiModelProperty(notes = "AIRCONDITIONER, BLOCAKBOARD, TABLE, PROJECTOR, POWERSUPPLY",required = true)
+    @ApiModelProperty(notes = "AIRCONDITIONAR, BLACKBOARD, TABLE, PROJECTOR, POWERSUPPLY",required = true)
     Set<MeetingRoomUtils> utils;
     @ApiModelProperty(required = true)
     Size size;
     @ApiModelProperty(required = true)
     String location;
     String deviceId;
+    List<String> images;
+
+    public List<String> getImages() {
+        return images;
+    }
+
+    public void setImages(List<String> images) {
+        this.images = images;
+    }
 
     public MeetingRoom() {
     }
