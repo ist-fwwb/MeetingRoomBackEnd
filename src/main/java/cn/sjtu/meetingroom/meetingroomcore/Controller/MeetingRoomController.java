@@ -54,4 +54,6 @@ public class MeetingRoomController {
     public MeetingRoom modify(@RequestBody MeetingRoom meetingRoom){
         return meetingRoomService.modify(meetingRoom);
     }
+
+    //TODO 注册会议室的deviceId
 }

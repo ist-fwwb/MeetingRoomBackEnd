@@ -46,8 +46,10 @@ public class MeetingNoteServiceImp implements MeetingNoteService {
     private void notifyAttendants(MeetingNote meetingNote) {
         Meeting meeting = meetingRepository.findMeetingById(meetingNote.getMeetingId());
         User user = userRepository.findUserById(meetingNote.getOwnerId());
-        for (String userId : meeting.getAttendants().keySet())
+        for (String userId : meeting.getAttendants().keySet()){
+            if (userId.equals(meetingNote.getOwnerId())) continue;
             messageService.create(userId, meeting.getId(), MessageFactory.createMeetingNoteAddTitle(), MessageFactory.createMeetingNotedAddBody(meeting, meetingNote, user));
+        }
     }
 
 
