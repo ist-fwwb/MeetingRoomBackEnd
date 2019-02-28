@@ -20,7 +20,7 @@ public class MessageController {
     }
 
     @GetMapping("/{id}")
-    public Message getMessage(@RequestParam(name = "id") String id){
+    public Message getMessage(@PathVariable(name = "id") String id){
         return messageService.findById(id);
     }
 

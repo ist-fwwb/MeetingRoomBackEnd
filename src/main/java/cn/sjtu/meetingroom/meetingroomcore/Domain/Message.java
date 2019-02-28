@@ -5,6 +5,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @Document
@@ -24,7 +25,8 @@ public class Message implements Serializable {
         res.setMeetingId(meetingId);
         res.setTitle(title);
         res.setContent(content);
-        res.setTime(new Date().toString());
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        res.setTime(sdf.format(new Date()));
         res.setMessageStatus(MessageStatus.NEW);
         return res;
     }
