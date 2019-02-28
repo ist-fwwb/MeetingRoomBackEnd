@@ -198,25 +198,26 @@ public class MeetingServiceImp implements MeetingService {
     }
 
     @Override
-    public void addAttendantBatch(String meetingId, List<String> userIds) {
+    public Meeting addAttendantBatch(String meetingId, List<String> userIds) {
         Meeting meeting = meetingRepository.findMeetingById(meetingId);
         if (meeting != null){
             for (String userId : userIds) addAttendant(meeting, userId);
             meetingRepository.save(meeting);
         }
+        return meeting;
     }
 
     @Override
-    public void deleteAttendantBatch(String meetingId, List<String> userIds) {
+    public Meeting deleteAttendantBatch(String meetingId, List<String> userIds) {
         Meeting meeting = meetingRepository.findMeetingById(meetingId);
         if (meeting != null){
             for (String userId : userIds) deleteAttendant(meeting, userId);
             meetingRepository.save(meeting);
         }
+        return meeting;
     }
 
     private void addAttendant(Meeting meeting, String userId){
-        //TODO 发送信息让会议举办者知道有人加入了会议室，并告知加入者加入了会议
         Map<String, String> attendants = meeting.getAttendants();
         if (!attendants.containsKey(userId) && userId != null){
             attendants.put(userId, "");
@@ -228,7 +229,6 @@ public class MeetingServiceImp implements MeetingService {
     }
 
     private void deleteAttendant(Meeting meeting, String userId){
-        //TODO 发送信息让会议举办者知道有人退出了会议室，并告知退出者退出了会议
         Map<String, String> attendants = meeting.getAttendants();
         if (attendants.containsKey(userId) && userId != null){
             attendants.remove(userId);

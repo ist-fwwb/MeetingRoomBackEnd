@@ -86,10 +86,10 @@ public class MeetingController {
 
     @PostMapping("/{id}/attendants")
     public Meeting addMeetingAttendant(@PathVariable(name = "id") String id, @RequestBody List<String> userIds){
-        return null;
+        return meetingService.addAttendantBatch(id, userIds);
     }
 
-    @PostMapping("/{attendantNum}/attendants")
+    @PostMapping("/{attendantNum}/attendant")
     @ApiOperation("attend to the meeting By attendantNum or meetingId")
     public Meeting attend(@PathVariable(name = "attendantNum") String attendantNum,
                                           @RequestParam(name="userId") String userId){
@@ -141,6 +141,6 @@ public class MeetingController {
 
     @DeleteMapping("/{id}/attendants")
     public Meeting removeMeetingAttendant(@PathVariable(name = "id") String id, @RequestBody List<String> userIds){
-        return null;
+        return meetingService.deleteAttendantBatch(id, userIds);
     }
 }

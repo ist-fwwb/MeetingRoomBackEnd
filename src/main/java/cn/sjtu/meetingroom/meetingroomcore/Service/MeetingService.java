@@ -1,9 +1,6 @@
 package cn.sjtu.meetingroom.meetingroomcore.Service;
 
-import cn.sjtu.meetingroom.meetingroomcore.Domain.ForeignGuest;
-import cn.sjtu.meetingroom.meetingroomcore.Domain.Meeting;
-import cn.sjtu.meetingroom.meetingroomcore.Domain.MeetingRoom;
-import cn.sjtu.meetingroom.meetingroomcore.Domain.User;
+import cn.sjtu.meetingroom.meetingroomcore.Domain.*;
 import cn.sjtu.meetingroom.meetingroomcore.Enum.Status;
 
 import java.util.List;
@@ -27,6 +24,6 @@ public interface MeetingService {
     public boolean modify(Meeting meeting, String id);
     public boolean modifyMeetingTime(Meeting meeting, Meeting origin);
     public Meeting addForeignGuest(String id, List<ForeignGuest> foreignGuests);
-    public void addAttendantBatch(String meetingId, List<String> userIds);
-    public void deleteAttendantBatch(String meetingId, List<String> userIds);
+    public Meeting addAttendantBatch(String meetingId, List<String> userIds);
+    public Meeting deleteAttendantBatch(String meetingId, List<String> userIds);
 }
