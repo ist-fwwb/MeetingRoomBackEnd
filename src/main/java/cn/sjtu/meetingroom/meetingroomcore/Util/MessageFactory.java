@@ -54,4 +54,10 @@ public class MessageFactory {
     public static String createMeetingCancelledTitle() {
         return "会议取消通知";
     }
+
+    public static String createMeetingCancelledByHostBody(Meeting meeting) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("您的主题为");sb.append(meeting.getHeading());sb.append("的会议已经被Host取消");
+        return sb.toString();
+    }
 }

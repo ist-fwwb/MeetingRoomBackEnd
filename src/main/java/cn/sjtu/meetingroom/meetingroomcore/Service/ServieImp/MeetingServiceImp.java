@@ -5,10 +5,12 @@ import cn.sjtu.meetingroom.meetingroomcore.Dao.MeetingRoomRepository;
 import cn.sjtu.meetingroom.meetingroomcore.Dao.TimeSliceRepository;
 import cn.sjtu.meetingroom.meetingroomcore.Dao.UserRepository;
 import cn.sjtu.meetingroom.meetingroomcore.Domain.*;
+import cn.sjtu.meetingroom.meetingroomcore.Enum.Status;
 import cn.sjtu.meetingroom.meetingroomcore.Service.MeetingRoomService;
 import cn.sjtu.meetingroom.meetingroomcore.Service.MeetingService;
+import cn.sjtu.meetingroom.meetingroomcore.Service.MessageService;
 import cn.sjtu.meetingroom.meetingroomcore.Service.UserService;
-import cn.sjtu.meetingroom.meetingroomcore.Enum.Status;
+import cn.sjtu.meetingroom.meetingroomcore.Util.MessageFactory;
 import cn.sjtu.meetingroom.meetingroomcore.Util.Util;
 import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +38,8 @@ public class MeetingServiceImp implements MeetingService {
     UserService userService;
     @Autowired
     AmqpTemplate amqpTemplate;
+    @Autowired
+    MessageService messageService;
 
     @Value("${meeting.attendantNum.size}")
     int RandomNumberSize;
@@ -132,7 +136,10 @@ public class MeetingServiceImp implements MeetingService {
     public void cancelMeeting(String id){
         Meeting meeting = changeMeetingStatus(id, Status.Cancelled);
         modifyTimeSlice(meeting, null);
-        sendMessage(meeting);
+        for (String userId : meeting.getAttendants().keySet()){
+            messageService.create(userId, meeting.getId(), MessageFactory.createMeetingCancelledTitle(), MessageFactory.createMeetingCancelledByHostBody(meeting));
+        }
+        sendMessageToInvokeQueueNode(meeting);
     }
 
     @Override
@@ -143,7 +150,7 @@ public class MeetingServiceImp implements MeetingService {
     @Override
     public void stopMeeting(String id) {
         Meeting meeting = changeMeetingStatus(id, Status.Stopped);
-        sendMessage(meeting);
+        sendMessageToInvokeQueueNode(meeting);
     }
 
     private Meeting changeMeetingStatus(String id, Status status){
@@ -175,7 +182,7 @@ public class MeetingServiceImp implements MeetingService {
         if (meeting == null || origin == null || meeting.getTimestamp() < origin.getTimestamp()) return false;
         //MODIFY THE TIME
         if (isTimeModified(meeting, origin) && !modifyMeetingTime(meeting, origin)) return false;
-        if (meeting.getStatus().equals(Status.Cancelled) || meeting.getStatus().equals(Status.Stopped)) sendMessage(meeting);
+        if (meeting.getStatus().equals(Status.Cancelled) || meeting.getStatus().equals(Status.Stopped)) sendMessageToInvokeQueueNode(meeting);
         meeting.setTimestamp(Util.getTimeStamp());
         meetingRepository.save(meeting);
         return true;
@@ -283,7 +290,7 @@ public class MeetingServiceImp implements MeetingService {
         return true;
     }
 
-    private void sendMessage(Meeting meeting){
+    private void sendMessageToInvokeQueueNode(Meeting meeting){
         amqpTemplate.convertAndSend("node", meeting);
     }
 }
