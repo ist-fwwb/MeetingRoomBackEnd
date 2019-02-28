@@ -69,7 +69,11 @@ public class MeetingController {
         if (size != null) meetingRooms = meetingRoomService.findBySize(size, meetingRooms);
         if (utils != null) meetingRooms = meetingRoomService.findByUtils(utils, meetingRooms);
         Meeting meeting = meetingService.intelligentlyFindMeeting(origin, meetingRooms);
-        return meeting == null ? new Meeting() : meetingService.add(meeting);
+        if (meeting == null) return new Meeting();
+        else {
+            Meeting res = meetingService.add(meeting);
+            return res == null ? new Meeting() : res;
+        }
     }
 
     @PostMapping("/{id}/foreignGuest")
