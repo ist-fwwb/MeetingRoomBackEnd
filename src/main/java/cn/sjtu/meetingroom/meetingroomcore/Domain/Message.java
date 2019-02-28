@@ -4,10 +4,11 @@ import cn.sjtu.meetingroom.meetingroomcore.Enum.MessageStatus;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.io.Serializable;
 import java.util.Date;
 
 @Document
-public class Message {
+public class Message implements Serializable {
     @Id
     String id;
     String userId;

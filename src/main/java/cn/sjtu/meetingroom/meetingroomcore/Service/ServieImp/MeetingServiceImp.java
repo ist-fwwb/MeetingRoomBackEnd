@@ -173,10 +173,8 @@ public class MeetingServiceImp implements MeetingService {
 
     @Transactional
     public boolean modify(Meeting meeting, String id) {
-        //TODO 告知所有人会议信息被修改
         Meeting origin = meetingRepository.findMeetingById(id);
         if (meeting == null || origin == null || meeting.getTimestamp() < origin.getTimestamp()) return false;
-        //MODIFY THE TIME
         if (isTimeModified(meeting, origin) && !modifyMeetingTime(meeting, origin)) return false;
         if (meeting.getStatus().equals(Status.Cancelled) || meeting.getStatus().equals(Status.Stopped)) sendMessageToInvokeQueueNode(meeting);
         meeting.setTimestamp(Util.getTimeStamp());
@@ -233,6 +231,7 @@ public class MeetingServiceImp implements MeetingService {
         if (attendants.containsKey(userId) && userId != null){
             attendants.remove(userId);
             meeting.setTimestamp(Util.getTimeStamp());
+            meeting.setAttendants(attendants);
             User user = userRepository.findUserById(userId);
             messageService.create(userId, meeting.getId(), MessageFactory.createExitMeetingTitle(), MessageFactory.createExitMeetingBody(meeting));
             messageService.create(meeting.getHostId(), meeting.getId(), MessageFactory.createExitMeetingTitleHost(), MessageFactory.createExitMeetingBodyHost(meeting, user));
