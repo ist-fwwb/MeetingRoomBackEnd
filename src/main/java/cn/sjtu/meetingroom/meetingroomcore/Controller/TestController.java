@@ -1,6 +1,7 @@
 package cn.sjtu.meetingroom.meetingroomcore.Controller;
 
 import cn.sjtu.meetingroom.meetingroomcore.Dao.MeetingRepository;
+import cn.sjtu.meetingroom.meetingroomcore.Domain.Meeting;
 import cn.sjtu.meetingroom.meetingroomcore.Util.Util;
 import io.swagger.annotations.Api;
 import org.springframework.amqp.core.AmqpTemplate;
@@ -28,5 +29,12 @@ public class TestController {
     @GetMapping("/rabbitmq")
     public void testRabbitMQ(@RequestParam(name="meetingId") String id){
         amqpTemplate.convertAndSend("node", meetingRepository.findMeetingById(id));
+    }
+    @GetMapping("/testClone")
+    public boolean testClone(@RequestParam(name = "meetingId") String meetingId){
+        Meeting origin = meetingRepository.findMeetingById(meetingId);
+        origin.setEndTime(-1);
+        Meeting meeting = meetingRepository.findMeetingById(meetingId);
+        return origin.getEndTime() == meeting.getEndTime();
     }
 }

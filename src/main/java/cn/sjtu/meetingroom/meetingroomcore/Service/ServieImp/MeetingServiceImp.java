@@ -173,12 +173,10 @@ public class MeetingServiceImp implements MeetingService {
     public boolean modify(Meeting meeting, String id) {
         Meeting origin = meetingRepository.findMeetingById(id);
         if (meeting == null || origin == null || meeting.getTimestamp() < origin.getTimestamp()) return false;
-        meeting.setTimestamp(Util.getTimeStamp());
         //MODIFY THE TIME
-        if (isTimeModified(meeting, origin)){
-            modifyMeetingTime(meeting, origin);
-        }
+        if (isTimeModified(meeting, origin) && !modifyMeetingTime(meeting, origin)) return false;
         if (meeting.getStatus().equals(Status.Cancelled) || meeting.getStatus().equals(Status.Stopped)) sendMessage(meeting);
+        meeting.setTimestamp(Util.getTimeStamp());
         meetingRepository.save(meeting);
         return true;
     }
@@ -201,13 +199,14 @@ public class MeetingServiceImp implements MeetingService {
         return foreignGuests;
     }
 
-    private boolean modifyMeetingTime(Meeting meeting, Meeting origin) {
+    @Transactional
+    public boolean modifyMeetingTime(Meeting meeting, Meeting origin) {
         modifyTimeSlice(origin, null);
         if (!modifyTimeSlice(meeting, meeting.getId())) {
             modifyTimeSlice(origin, origin.getId());
-            return true;
+            return false;
         }
-        return false;
+        return true;
     }
 
     @Override

@@ -52,21 +52,29 @@ public class MeetingStatusNotifyScheduler {
         meetings = meetingService.findByDate(sdf.format(new Date()), meetings);
         for (Meeting meeting : meetings){
             if (isComing(meeting.getEndTime())){
+                meeting.setEndTime(meeting.getEndTime() + 1);
+                boolean meetingModifiedResult = meetingService.modifyMeetingTime(meeting, meetingRepository.findMeetingById(meeting.getId()));
                 User host = userRepository.findUserById(meeting.getHostId());
-                if (host != null && host.getDeviceId() != null) {
-                    PushFactory.push(host.getDeviceId(), MessageFactory.getMeetingEndTitleMessage(), MessageFactory.getMeetingEndBodyMessage(meeting));
+                if (meetingModifiedResult){
+                    //TODO 延时成功
+                    if (host != null && host.getDeviceId() != null) {
+                        PushFactory.push(host.getDeviceId(), MessageFactory.getMeetingEndTitleMessage(), MessageFactory.getMeetingEndBodyMessage(meeting));
+                    }
+                }
+                else {
+                    //TODO 延时失败，强行关闭
+                    meeting.setEndTime(meeting.getEndTime() - 1);
+                    meeting.setStatus(Status.Stopped);
+                    meetingService.modify(meeting, meeting.getId());
+                    if (host != null && host.getDeviceId() != null) {
+                        PushFactory.push(host.getDeviceId(), MessageFactory.getMeetingEndTitleMessage(), MessageFactory.getMeetingEndBodyMessage(meeting));
+                    }
                 }
             }
         }
     }
 
-    @Scheduled(cron = "0 0/30 * * *")
-    public void timeout(){
-        List<Meeting> meetings = meetingRepository.findMeetingsByStatus(Status.Running);
-        meetings = meetingService.findByDate(sdf.format(new Date()), meetings);
-    }
-
-    public boolean isComing(int comingTime){
+    private boolean isComing(int comingTime){
         Calendar calendar = Calendar.getInstance();
         int hour = calendar.get(Calendar.HOUR_OF_DAY);
         int minutes = calendar.get(Calendar.MINUTE);
