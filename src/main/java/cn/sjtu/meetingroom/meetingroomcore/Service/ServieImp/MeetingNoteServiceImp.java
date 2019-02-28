@@ -1,8 +1,14 @@
 package cn.sjtu.meetingroom.meetingroomcore.Service.ServieImp;
 
 import cn.sjtu.meetingroom.meetingroomcore.Dao.MeetingNoteRepository;
+import cn.sjtu.meetingroom.meetingroomcore.Dao.MeetingRepository;
+import cn.sjtu.meetingroom.meetingroomcore.Dao.UserRepository;
+import cn.sjtu.meetingroom.meetingroomcore.Domain.Meeting;
 import cn.sjtu.meetingroom.meetingroomcore.Domain.MeetingNote;
+import cn.sjtu.meetingroom.meetingroomcore.Domain.User;
 import cn.sjtu.meetingroom.meetingroomcore.Service.MeetingNoteService;
+import cn.sjtu.meetingroom.meetingroomcore.Service.MessageService;
+import cn.sjtu.meetingroom.meetingroomcore.Util.MessageFactory;
 import cn.sjtu.meetingroom.meetingroomcore.Util.Util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,19 +21,35 @@ import java.util.List;
 public class MeetingNoteServiceImp implements MeetingNoteService {
     @Autowired
     MeetingNoteRepository meetingNoteRepository;
+    @Autowired
+    MeetingRepository meetingRepository;
+    @Autowired
+    UserRepository userRepository;
+    @Autowired
+    MessageService messageService;
 
     @Override
     public MeetingNote saveHTMLType(MeetingNote meetingNote) {
+        notifyAttendants(meetingNote);
         return meetingNoteRepository.save(meetingNote);
     }
 
     @Override
     public MeetingNote saveVOICEType(MeetingNote meetingNote) {
-        //TODO 完成和语音转文字的对接
+        //TODO 完成和语音转文字服务器的对接
         meetingNoteRepository.save(meetingNote);
         WebClient.create().get().uri(Util.VoiceTransformURL + "?meetingNoteId=" + meetingNote.getId()).retrieve();
+        notifyAttendants(meetingNote);
         return meetingNote;
     }
+
+    private void notifyAttendants(MeetingNote meetingNote) {
+        Meeting meeting = meetingRepository.findMeetingById(meetingNote.getMeetingId());
+        User user = userRepository.findUserById(meetingNote.getOwnerId());
+        for (String userId : meeting.getAttendants().keySet())
+            messageService.create(userId, meeting.getId(), MessageFactory.createMeetingNoteAddTitle(), MessageFactory.createMeetingNotedAddBody(meeting, meetingNote, user));
+    }
+
 
     @Override
     public MeetingNote collect(String meetingNoteId, String userId) {

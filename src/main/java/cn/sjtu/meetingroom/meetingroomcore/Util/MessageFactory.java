@@ -1,7 +1,9 @@
 package cn.sjtu.meetingroom.meetingroomcore.Util;
 
 import cn.sjtu.meetingroom.meetingroomcore.Domain.Meeting;
+import cn.sjtu.meetingroom.meetingroomcore.Domain.MeetingNote;
 import cn.sjtu.meetingroom.meetingroomcore.Domain.QueueNode;
+import cn.sjtu.meetingroom.meetingroomcore.Domain.User;
 
 public class MessageFactory {
     public static String createMeetingStartTitleMessage(){
@@ -57,7 +59,19 @@ public class MessageFactory {
 
     public static String createMeetingCancelledByHostBody(Meeting meeting) {
         StringBuilder sb = new StringBuilder();
-        sb.append("您的主题为");sb.append(meeting.getHeading());sb.append("的会议已经被Host取消");
+        sb.append("您的主题为");sb.append(meeting.getHeading());sb.append("的会议已经被会议发起者取消");
+        return sb.toString();
+    }
+
+    public static String createMeetingNoteAddTitle() {
+        return "会议笔记更新";
+    }
+
+    public static String createMeetingNotedAddBody(Meeting meeting, MeetingNote meetingNote, User user) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("用户名为");sb.append(user.getName());sb.append("用户");
+        sb.append("为您的主题为");sb.append(meeting.getHeading());sb.append("的会议添加了会议笔记\n");
+        sb.append("会议笔记的主题为");sb.append(meetingNote.getTitle());
         return sb.toString();
     }
 }
