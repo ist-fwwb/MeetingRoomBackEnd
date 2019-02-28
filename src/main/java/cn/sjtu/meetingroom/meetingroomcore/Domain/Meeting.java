@@ -1,7 +1,7 @@
 package cn.sjtu.meetingroom.meetingroomcore.Domain;
 
-import cn.sjtu.meetingroom.meetingroomcore.Util.MeetingType;
-import cn.sjtu.meetingroom.meetingroomcore.Util.Status;
+import cn.sjtu.meetingroom.meetingroomcore.Enum.MeetingType;
+import cn.sjtu.meetingroom.meetingroomcore.Enum.Status;
 import io.swagger.annotations.ApiModelProperty;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;

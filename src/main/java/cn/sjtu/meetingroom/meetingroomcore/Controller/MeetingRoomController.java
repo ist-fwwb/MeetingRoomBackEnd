@@ -2,8 +2,8 @@ package cn.sjtu.meetingroom.meetingroomcore.Controller;
 
 import cn.sjtu.meetingroom.meetingroomcore.Domain.MeetingRoom;
 import cn.sjtu.meetingroom.meetingroomcore.Service.MeetingRoomService;
-import cn.sjtu.meetingroom.meetingroomcore.Util.MeetingRoomUtils;
-import cn.sjtu.meetingroom.meetingroomcore.Util.Size;
+import cn.sjtu.meetingroom.meetingroomcore.Enum.MeetingRoomUtils;
+import cn.sjtu.meetingroom.meetingroomcore.Enum.Size;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;

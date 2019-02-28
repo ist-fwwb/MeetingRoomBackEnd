@@ -1,8 +1,8 @@
 package cn.sjtu.meetingroom.meetingroomcore.Service;
 
 import cn.sjtu.meetingroom.meetingroomcore.Domain.MeetingRoom;
-import cn.sjtu.meetingroom.meetingroomcore.Util.MeetingRoomUtils;
-import cn.sjtu.meetingroom.meetingroomcore.Util.Size;
+import cn.sjtu.meetingroom.meetingroomcore.Enum.MeetingRoomUtils;
+import cn.sjtu.meetingroom.meetingroomcore.Enum.Size;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 

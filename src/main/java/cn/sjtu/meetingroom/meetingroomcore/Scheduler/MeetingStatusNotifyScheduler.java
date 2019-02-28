@@ -7,7 +7,7 @@ import cn.sjtu.meetingroom.meetingroomcore.Domain.User;
 import cn.sjtu.meetingroom.meetingroomcore.Service.MeetingService;
 import cn.sjtu.meetingroom.meetingroomcore.Util.MessageFactory;
 import cn.sjtu.meetingroom.meetingroomcore.Util.PushFactory;
-import cn.sjtu.meetingroom.meetingroomcore.Util.Status;
+import cn.sjtu.meetingroom.meetingroomcore.Enum.Status;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;

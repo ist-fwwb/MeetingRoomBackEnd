@@ -1,4 +1,4 @@
-package cn.sjtu.meetingroom.meetingroomcore.Util;
+package cn.sjtu.meetingroom.meetingroomcore.Enum;
 
 public enum MeetingNoteType {
     VOICE,

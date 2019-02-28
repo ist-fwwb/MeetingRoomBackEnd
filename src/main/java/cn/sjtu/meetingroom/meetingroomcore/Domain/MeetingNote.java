@@ -1,6 +1,6 @@
 package cn.sjtu.meetingroom.meetingroomcore.Domain;
 
-import cn.sjtu.meetingroom.meetingroomcore.Util.MeetingNoteType;
+import cn.sjtu.meetingroom.meetingroomcore.Enum.MeetingNoteType;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 

@@ -2,7 +2,7 @@ package cn.sjtu.meetingroom.meetingroomcore.Service;
 
 import cn.sjtu.meetingroom.meetingroomcore.Domain.Meeting;
 import cn.sjtu.meetingroom.meetingroomcore.Domain.User;
-import cn.sjtu.meetingroom.meetingroomcore.Util.Type;
+import cn.sjtu.meetingroom.meetingroomcore.Enum.Type;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 

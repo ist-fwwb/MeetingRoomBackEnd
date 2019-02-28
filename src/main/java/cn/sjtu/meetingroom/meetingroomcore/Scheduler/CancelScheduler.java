@@ -3,7 +3,7 @@ package cn.sjtu.meetingroom.meetingroomcore.Scheduler;
 import cn.sjtu.meetingroom.meetingroomcore.Dao.MeetingRepository;
 import cn.sjtu.meetingroom.meetingroomcore.Domain.Meeting;
 import cn.sjtu.meetingroom.meetingroomcore.Service.MeetingService;
-import cn.sjtu.meetingroom.meetingroomcore.Util.Status;
+import cn.sjtu.meetingroom.meetingroomcore.Enum.Status;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;

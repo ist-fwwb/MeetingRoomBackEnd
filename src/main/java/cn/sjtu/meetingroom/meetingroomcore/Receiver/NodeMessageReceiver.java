@@ -6,7 +6,7 @@ import cn.sjtu.meetingroom.meetingroomcore.Dao.UserRepository;
 import cn.sjtu.meetingroom.meetingroomcore.Domain.*;
 import cn.sjtu.meetingroom.meetingroomcore.Service.MeetingService;
 import cn.sjtu.meetingroom.meetingroomcore.Service.QueueNodeService;
-import cn.sjtu.meetingroom.meetingroomcore.Util.MeetingType;
+import cn.sjtu.meetingroom.meetingroomcore.Enum.MeetingType;
 import cn.sjtu.meetingroom.meetingroomcore.Util.MessageFactory;
 import cn.sjtu.meetingroom.meetingroomcore.Util.PushFactory;
 import cn.sjtu.meetingroom.meetingroomcore.Util.Util;

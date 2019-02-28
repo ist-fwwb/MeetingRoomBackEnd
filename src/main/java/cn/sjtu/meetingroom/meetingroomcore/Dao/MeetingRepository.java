@@ -1,7 +1,7 @@
 package cn.sjtu.meetingroom.meetingroomcore.Dao;
 
 import cn.sjtu.meetingroom.meetingroomcore.Domain.Meeting;
-import cn.sjtu.meetingroom.meetingroomcore.Util.Status;
+import cn.sjtu.meetingroom.meetingroomcore.Enum.Status;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.MongoRepository;

@@ -4,7 +4,7 @@ import cn.sjtu.meetingroom.meetingroomcore.Domain.ForeignGuest;
 import cn.sjtu.meetingroom.meetingroomcore.Domain.Meeting;
 import cn.sjtu.meetingroom.meetingroomcore.Domain.MeetingRoom;
 import cn.sjtu.meetingroom.meetingroomcore.Domain.User;
-import cn.sjtu.meetingroom.meetingroomcore.Util.Status;
+import cn.sjtu.meetingroom.meetingroomcore.Enum.Status;
 
 import java.util.List;
 
