@@ -2,8 +2,10 @@ package cn.sjtu.meetingroom.meetingroomcore.Scheduler;
 
 import cn.sjtu.meetingroom.meetingroomcore.Dao.MeetingRepository;
 import cn.sjtu.meetingroom.meetingroomcore.Domain.Meeting;
-import cn.sjtu.meetingroom.meetingroomcore.Service.MeetingService;
 import cn.sjtu.meetingroom.meetingroomcore.Enum.Status;
+import cn.sjtu.meetingroom.meetingroomcore.Service.MeetingService;
+import cn.sjtu.meetingroom.meetingroomcore.Service.MessageService;
+import cn.sjtu.meetingroom.meetingroomcore.Util.MessageFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -19,6 +21,8 @@ public class CancelScheduler {
     MeetingRepository meetingRepository;
     @Autowired
     MeetingService meetingService;
+    @Autowired
+    MessageService messageService;
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
     @Scheduled(cron = "0 10/40 * * * *")
@@ -27,8 +31,10 @@ public class CancelScheduler {
         List<Meeting> meetings = meetingRepository.findMeeingsByDateAndStatus(sdf.format(date), Status.Pending);
         for (Meeting meeting : meetings){
             if (isTimeOut(meeting.getStartTime(), meeting.getEndTime())) {
-                System.out.println("At time" + date + " Cancel the meeting " + meeting.getId());
                 meetingService.cancelMeeting(meeting.getId());
+                for (String userId : meeting.getAttendants().keySet()){
+                    messageService.create(userId, meeting.getId(), MessageFactory.createMeetingCancelledTitle(), MessageFactory.createMeetingCancelledByTimeOutBody(meeting));
+                }
             }
         }
     }

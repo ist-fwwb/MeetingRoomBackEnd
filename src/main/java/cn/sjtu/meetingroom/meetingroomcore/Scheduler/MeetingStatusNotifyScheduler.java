@@ -38,7 +38,7 @@ public class MeetingStatusNotifyScheduler {
             if (isComing(meeting.getStartTime())){
                 Map<String, String> attendants = meeting.getAttendants();
                 for (String id : attendants.keySet()) {
-                    messageService.create(id, meeting.getId(), MessageFactory.getMeetingStartTitleMessage(), MessageFactory.getMeetingStartBodyMessage(meeting));
+                    messageService.create(id, meeting.getId(), MessageFactory.createMeetingStartTitleMessage(), MessageFactory.createMeetingStartBodyMessage(meeting));
                 }
             }
         }
@@ -52,13 +52,12 @@ public class MeetingStatusNotifyScheduler {
             if (isComing(meeting.getEndTime())){
                 meeting.setEndTime(meeting.getEndTime() + 1);
                 if (meetingService.modifyMeetingTime(meeting, meetingRepository.findMeetingById(meeting.getId()))){
-                    //TODO 延时成功
-                    messageService.create(meeting.getHostId(), meeting.getId(), MessageFactory.getMeetingEndTitleMessage(), MessageFactory.getMeetingEndBodyMessage(meeting));
+                    messageService.create(meeting.getHostId(), meeting.getId(), MessageFactory.getMeetingEndTitleMessage(), MessageFactory.createMeetingEndBodyMessageSuccess());
                 }
                 else {
-                    //TODO 延时失败，强行关闭
                     meetingService.stopMeeting(meeting.getId());
-                    messageService.create(meeting.getHostId(), meeting.getId(), MessageFactory.getMeetingEndTitleMessage(), MessageFactory.getMeetingEndBodyMessage(meeting));
+                    messageService.create(meeting.getHostId(), meeting.getId(), MessageFactory.getMeetingEndTitleMessage(), MessageFactory.createMeetingEndBodyMessageFail());
+                    //TODO 延时失败，通知会议室APP改变状态
                 }
             }
         }
