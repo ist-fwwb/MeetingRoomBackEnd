@@ -49,8 +49,8 @@ public class MeetingController {
 
     @GetMapping("/{id}")
     @ApiOperation("get the detail information of a specified meeting")
-    public Meeting getMeeting(@PathVariable(name="id") String id){
-        return meetingService.findById(id);
+    public MeetingWrapper getMeeting(@PathVariable(name="id") String id){
+        return MeetingWrapper.create(meetingService.findById(id), userService, meetingRoomService, getErrorNum(true)) ;
     }
 
     @GetMapping("/{id}/attendant")
