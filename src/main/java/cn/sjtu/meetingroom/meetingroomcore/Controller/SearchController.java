@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.Collections;
 
 @RestController
-@RequestMapping(name = "/search")
+@RequestMapping("/search")
 public class SearchController {
     @GetMapping(name = "")
     public SearchResult search(@RequestParam(name = "request") String request){
