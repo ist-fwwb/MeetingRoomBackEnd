@@ -40,6 +40,7 @@ public class UserServiceImp implements UserService {
     public boolean isSatisfied(User user, Meeting meeting) {
         List<Meeting> meetings = meetingRepository.findMeeingsByDateAndStatus(meeting.getDate(), Status.Pending);
         for (Meeting m : meetings){
+            if (m.getId().equals(meeting.getId())) continue;
             if (m.getAttendants().containsKey(user.getId()) && meeting.isOverLapped(m)) return false;
         }
         return true;

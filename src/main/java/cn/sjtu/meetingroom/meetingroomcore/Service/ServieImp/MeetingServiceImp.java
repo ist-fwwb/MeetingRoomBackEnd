@@ -102,18 +102,14 @@ public class MeetingServiceImp implements MeetingService {
 
     @Transactional
     public Meeting add(Meeting meeting){
-        try {
-            meetingRepository.save(meeting);
-            completeMeetingAttributes(meeting);
-            if (!userService.isSatisfied(userRepository.findUserById(meeting.getHostId()), meeting)) throw new Exception();
-            if (!modifyTimeSlice(meeting, meeting.getId())) throw new Exception();
-            return meetingRepository.save(meeting);
-        }
-        catch (Exception e) {
-            e.printStackTrace();
+        meetingRepository.save(meeting);
+        completeMeetingAttributes(meeting);
+        if (!userService.isSatisfied(userRepository.findUserById(meeting.getHostId()), meeting) ||
+             !modifyTimeSlice(meeting, meeting.getId())   ) {
             meetingRepository.delete(meeting);
             return null;
         }
+        return meetingRepository.save(meeting);
     }
 
 
