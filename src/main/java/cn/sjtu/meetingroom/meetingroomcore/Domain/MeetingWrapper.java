@@ -12,6 +12,10 @@ import java.util.Map;
 public class MeetingWrapper extends Meeting {
 
     public static MeetingWrapper create(Meeting meeting, UserService userService, MeetingRoomService meetingRoomService, String errorNum){
+        if (errorNum.equals("400")) {
+            MeetingWrapper res = new MeetingWrapper();
+            res.setErrorNum(errorNum);
+        }
         MeetingWrapper res = new MeetingWrapper(meeting);
         Map<String, String> map = new HashMap<>();
         for (Map.Entry<String, String> entry : meeting.getAttendants().entrySet()){
@@ -39,6 +43,9 @@ public class MeetingWrapper extends Meeting {
     @ApiModelProperty(notes = "200 delegates ok , 400 delegates fail")
     private String errorNum;
     private Map<String, String> attendantsName;
+
+    public MeetingWrapper() {
+    }
 
     public String getErrorNum() {
         return errorNum;

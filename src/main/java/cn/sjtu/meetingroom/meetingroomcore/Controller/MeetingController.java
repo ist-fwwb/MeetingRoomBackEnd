@@ -88,6 +88,13 @@ public class MeetingController {
         return meetingService.add(meeting);
     }
 
+    @PostMapping("/v2")
+    @ApiOperation("register a meeting, version2")
+    public MeetingWrapper addMeetingV2(@RequestBody Meeting meeting){
+        Meeting res = meetingService.add(meeting);
+        return MeetingWrapper.create(meeting, userService, meetingRoomService, getErrorNum(res != null));
+    }
+
     @PostMapping("/{id}/attendants")
     public Meeting addMeetingAttendant(@PathVariable(name = "id") String id, @RequestBody List<String> userIds){
         return meetingService.addAttendantBatch(id, userIds);
