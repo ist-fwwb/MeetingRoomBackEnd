@@ -1,6 +1,9 @@
 package cn.sjtu.meetingroom.meetingroomcore.Controller;
 
 import cn.sjtu.meetingroom.meetingroomcore.Domain.SearchResult;
+import cn.sjtu.meetingroom.meetingroomcore.Domain.SearchResultWrapper;
+import cn.sjtu.meetingroom.meetingroomcore.Service.MeetingRoomService;
+import cn.sjtu.meetingroom.meetingroomcore.Service.UserService;
 import cn.sjtu.meetingroom.meetingroomcore.Util.Util;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -17,6 +20,7 @@ import org.apache.http.util.EntityUtils;
 import org.elasticsearch.client.Response;
 import org.elasticsearch.client.RestClient;
 import org.elasticsearch.client.RestClientBuilder;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -27,8 +31,15 @@ import java.util.Collections;
 @RestController
 @RequestMapping("/search")
 public class SearchController {
+
+    @Autowired
+    UserService userService;
+
+    @Autowired
+    MeetingRoomService meetingRoomService;
+
     @GetMapping(name = "")
-    public SearchResult search(@RequestParam(name = "request") String request){
+    public SearchResultWrapper search(@RequestParam(name = "request") String request){
         final CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
         credentialsProvider.setCredentials(AuthScope.ANY,
                 new UsernamePasswordCredentials("elastic", "Pzy19980525"));
@@ -47,10 +58,10 @@ public class SearchController {
             String requestRes = EntityUtils.toString(response.getEntity());
             JSONObject jsonObject = JSONObject.parseObject(requestRes);
             JSONObject totalHints = jsonObject.getJSONObject("hits");
-            return SearchResult.crete(totalHints);
+            return SearchResultWrapper.create(SearchResult.crete(totalHints), userService, meetingRoomService);
         } catch (Exception e) {
             e.printStackTrace();
-            return SearchResult.createNullSearchResult();
+            return SearchResultWrapper.create(SearchResult.createNullSearchResult(), userService, meetingRoomService);
         }
     }
 
