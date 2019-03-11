@@ -4,16 +4,16 @@ import cn.sjtu.meetingroom.meetingroomcore.Dao.MeetingRepository;
 import cn.sjtu.meetingroom.meetingroomcore.Dao.UserRepository;
 import cn.sjtu.meetingroom.meetingroomcore.Domain.Meeting;
 import cn.sjtu.meetingroom.meetingroomcore.Domain.User;
-import cn.sjtu.meetingroom.meetingroomcore.Service.UserService;
 import cn.sjtu.meetingroom.meetingroomcore.Enum.Status;
 import cn.sjtu.meetingroom.meetingroomcore.Enum.Type;
+import cn.sjtu.meetingroom.meetingroomcore.Service.UserService;
 import cn.sjtu.meetingroom.meetingroomcore.Util.UserFactory;
 import cn.sjtu.meetingroom.meetingroomcore.Util.Util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -49,7 +49,7 @@ public class UserServiceImp implements UserService {
     public User register(String enterpriseId, String phone, String password, String faceFile, String featureFile, String name){
         User user = userFactory.create(enterpriseId, phone, password, faceFile, featureFile, name);
         if (user != null)
-            WebClient.create().get().uri(Util.UserRegistryURL+"?fileName="+featureFile).retrieve();
+            new RestTemplate().getForObject(Util.UserRegistryURL+"?fileName="+featureFile, Object.class);
         return user;
     }
     public User modify(User user){

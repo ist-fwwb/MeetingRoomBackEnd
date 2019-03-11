@@ -27,6 +27,4 @@ pipeline:
     port: 22
     script:
       - /root/shell/deploy.sh meetingroom 31000
-      - sleep 60
-      - docker rmi $( docker images | grep none | gawk ' { print $3 } ')
 

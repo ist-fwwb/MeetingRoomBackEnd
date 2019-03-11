@@ -12,7 +12,7 @@ import cn.sjtu.meetingroom.meetingroomcore.Util.MessageFactory;
 import cn.sjtu.meetingroom.meetingroomcore.Util.Util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 
@@ -27,6 +27,8 @@ public class MeetingNoteServiceImp implements MeetingNoteService {
     UserRepository userRepository;
     @Autowired
     MessageService messageService;
+    private RestTemplate template = new RestTemplate();
+
 
     @Override
     public MeetingNote saveHTMLType(MeetingNote meetingNote) {
@@ -38,7 +40,7 @@ public class MeetingNoteServiceImp implements MeetingNoteService {
     public MeetingNote saveVOICEType(MeetingNote meetingNote) {
         //TODO 完成和语音转文字服务器的对接
         meetingNoteRepository.save(meetingNote);
-        WebClient.create().get().uri(Util.VoiceTransformURL + "?meetingNoteId=" + meetingNote.getId()).retrieve();
+        new RestTemplate().getForObject(Util.VoiceTransformURL + "/recognize/" + meetingNote.getId(), String.class);
         notifyAttendants(meetingNote);
         return meetingNote;
     }
