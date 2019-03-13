@@ -35,4 +35,36 @@ public class SearchResultWrapper {
         this.meetingRooms = searchResult.meetingRooms;
         this.totalCount = searchResult.totalCount;
     }
+
+    public List<MeetingNote> getMeetingNotes() {
+        return meetingNotes;
+    }
+
+    public void setMeetingNotes(List<MeetingNote> meetingNotes) {
+        this.meetingNotes = meetingNotes;
+    }
+
+    public List<User> getUsers() {
+        return users;
+    }
+
+    public void setUsers(List<User> users) {
+        this.users = users;
+    }
+
+    public List<MeetingRoom> getMeetingRooms() {
+        return meetingRooms;
+    }
+
+    public void setMeetingRooms(List<MeetingRoom> meetingRooms) {
+        this.meetingRooms = meetingRooms;
+    }
+
+    public int getTotalCount() {
+        return totalCount;
+    }
+
+    public void setTotalCount(int totalCount) {
+        this.totalCount = totalCount;
+    }
 }
